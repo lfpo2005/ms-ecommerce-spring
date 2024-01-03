@@ -1,8 +1,6 @@
-package dev.fernando.agileblog.services;
+package dev.luisoliveira.esquadrias.services;
 
-
-
-import dev.fernando.agileblog.models.UserModel;
+import dev.luisoliveira.esquadrias.models.UserModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

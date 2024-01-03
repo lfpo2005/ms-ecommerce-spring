@@ -1,4 +1,4 @@
-package dev.luisoliveira.storejava.enums;
+package dev.luisoliveira.esquadrias.enums;
 
 public enum PhoneType {
     FIX,

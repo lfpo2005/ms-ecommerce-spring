@@ -1,8 +1,8 @@
-package dev.fernando.agileblog.dtos;
+package dev.luisoliveira.esquadrias.dtos;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 
 @Data
 public class LoginDto {

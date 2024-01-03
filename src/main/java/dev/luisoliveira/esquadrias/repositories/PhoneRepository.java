@@ -1,6 +1,6 @@
-package dev.luisoliveira.storejava.repositories;
+package dev.luisoliveira.esquadrias.repositories;
 
-import dev.luisoliveira.storejava.models.PhoneModel;
+import dev.luisoliveira.esquadrias.models.PhoneModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

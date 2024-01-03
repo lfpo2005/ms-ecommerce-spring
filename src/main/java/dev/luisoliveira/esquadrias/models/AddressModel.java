@@ -1,8 +1,10 @@
-package dev.luisoliveira.storejava.models;
+package dev.luisoliveira.esquadrias.models;
+
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import dev.luisoliveira.storejava.enums.AddressType;
-import javax.persistence.*;
+import dev.luisoliveira.esquadrias.enums.AddressType;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -32,7 +34,21 @@ public class AddressModel implements Serializable {
     private String complement;
     @Column(length = 20)
     private String neighborhood;
+    @Size(max = 500)
+    private String description;
+    @Column(nullable = false)
+    private boolean active = true;
+    @Column(nullable = false)
+    private boolean isDeleted = false;
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private AddressType type;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private UserModel user;
+
+    @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
+    private CompanyModel company;
 }

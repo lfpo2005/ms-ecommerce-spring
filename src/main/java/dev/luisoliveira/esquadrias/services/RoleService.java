@@ -1,7 +1,7 @@
-package dev.fernando.agileblog.services;
+package dev.luisoliveira.esquadrias.services;
 
-import dev.fernando.agileblog.enums.RoleType;
-import dev.fernando.agileblog.models.RoleModel;
+import dev.luisoliveira.esquadrias.enums.RoleType;
+import dev.luisoliveira.esquadrias.models.RoleModel;
 
 import java.util.Optional;
 

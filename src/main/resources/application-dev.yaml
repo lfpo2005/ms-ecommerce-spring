@@ -1,1 +1,55 @@
+server:
+  port: 8091
+  forward-headers-strategy: native
+  servlet:
+    context-path: '/esquadrias'
 
+spring:
+  datasource:
+    url:  jdbc:postgresql://localhost:5432/esquadrias_dev?autoreconnect=true
+    username: postgres
+    password: 197197
+  type: com.zaxxer.hikari.HikariDataSource
+  hikari:
+    connection-timeout: 20000
+    minimum-idle: 200
+    maximum-pool-size: 550
+    idle-timeout: 10000
+    pool-name: PoolHikari
+    auto-commit: false
+  dbcp2:
+    pool-prepared-statements: true
+    max-open-prepared-statements: 550
+  transaction:
+    rollback-on-commit-failure: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql: true
+  output:
+    ansi:
+      enabled: Always
+  mvc:
+    resources:
+      add-mappings: false
+  servlet:
+    multipart:
+      enabled: true
+
+logging:
+  level:
+    com.blog: TRACE
+    root: INFO
+    org.springframework.cache: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate: INFO
+
+esquadrias:
+  auth:
+    jwtSecret: t7w!z%C*F-JaNdRgUkXp2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B&E)H@McQfTjWn
+    jwtExpirationMs: 14400000

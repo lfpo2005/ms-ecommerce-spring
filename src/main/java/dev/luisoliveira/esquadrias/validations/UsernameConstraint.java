@@ -1,9 +1,11 @@
-package dev.fernando.agileblog.validation;
+package dev.luisoliveira.esquadrias.validations;
 
-import javax.validation.Constraint;
-import javax.validation.Payload;
+
+
+import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
+
 import java.lang.annotation.*;
-
 @Documented
 @Constraint(validatedBy = UsernameConstraintImpl.class)
 @Target({ElementType.METHOD, ElementType.FIELD})

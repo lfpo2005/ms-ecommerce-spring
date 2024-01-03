@@ -1,13 +1,13 @@
-package dev.fernando.agileblog.repositories;
+package dev.luisoliveira.esquadrias.repositories;
 
-import dev.fernando.agileblog.enums.RoleType;
-import dev.fernando.agileblog.models.RoleModel;
+import dev.luisoliveira.esquadrias.enums.RoleType;
+import dev.luisoliveira.esquadrias.models.RoleModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public interface RoleRepository extends JpaRepository <RoleModel, UUID> {
+public interface RoleRepository extends JpaRepository<RoleModel, UUID> {
 
        Optional<RoleModel> findByRoleName(RoleType name);
 }

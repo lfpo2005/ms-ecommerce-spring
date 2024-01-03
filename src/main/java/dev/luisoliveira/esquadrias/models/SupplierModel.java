@@ -1,11 +1,13 @@
-package dev.luisoliveira.storejava.models;
+package dev.luisoliveira.esquadrias.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.hibernate.validator.constraints.br.CNPJ;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
@@ -18,30 +20,17 @@ public class SupplierModel implements Serializable {
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
         private UUID supplierId;
-        @CNPJ(message = "Cnpj está inválido")
-        @Column(nullable = false, unique = true, length = 14)
-        private String cnpj;
-        @Column(nullable = false, unique = true, length = 14)
-        private String stateRegistration;
-        @Column(length = 14)
-        private String municipalRegistration;
-        @Column(nullable = false, length = 50)
-        private String fantasyName;
-        @Column(nullable = false, length = 50)
-        private String corporateName;
-        @Column(nullable = false, length = 50)
-        private String category;
-        private String description;
-        @Column(nullable = false, length = 60)
-        private String email;
         @Column(nullable = false, length = 50)
         private String nameContact;
-        @Column(length = 50)
-        private String site;
+        @Column(nullable = false)
+        private boolean active = true;
+        @Column(nullable = false)
+        private boolean isDeleted = false;
+        @Size(max = 500)
+        private String description;
 
-        @ManyToOne
-        @JoinColumn(name = "phone_id", nullable = false)
-        private PhoneModel phone;
+        @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
+        private Set<PhoneModel> phones = new HashSet<>();
 
         @ManyToOne
         @JoinColumn(name = "address_id", nullable = false)

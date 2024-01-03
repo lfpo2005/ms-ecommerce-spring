@@ -1,6 +1,7 @@
-package dev.fernando.agileblog.repositories;
+package dev.luisoliveira.esquadrias.repositories;
 
-import dev.fernando.agileblog.models.UserModel;
+
+import dev.luisoliveira.esquadrias.models.UserModel;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

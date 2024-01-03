@@ -1,18 +1,21 @@
-package dev.fernando.agileblog.models;
+package dev.luisoliveira.esquadrias.models;
+
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import dev.fernando.agileblog.enums.RoleType;
+import dev.luisoliveira.esquadrias.enums.RoleType;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.UUID;
 
-@Data@JsonInclude(JsonInclude.Include.NON_NULL)
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -25,6 +28,9 @@ public class RoleModel implements GrantedAuthority, Serializable {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = true, length = 30)
     private RoleType roleName;
+
+    @Size(max = 500)
+    private String description;
 
     @Override
     @JsonIgnore

@@ -1,6 +1,7 @@
-package dev.luisoliveira.storejava.enums;
+package dev.luisoliveira.esquadrias.enums;
 
 public enum AddressType {
+
     CHARGE,
     COMMERCIAL,
     DELIVERY

@@ -1,12 +1,13 @@
-package dev.fernando.agileblog.controllers;
+package dev.luisoliveira.esquadrias.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import dev.fernando.agileblog.dtos.UserDto;
-import dev.fernando.agileblog.models.UserModel;
-import dev.fernando.agileblog.configs.security.AuthenticationCurrentUserService;
-import dev.fernando.agileblog.configs.security.UserDetailsImpl;
-import dev.fernando.agileblog.services.UserService;
-import dev.fernando.agileblog.specifications.SpecificationTemplate;
+
+import dev.luisoliveira.esquadrias.configs.security.AuthenticationCurrentUserService;
+import dev.luisoliveira.esquadrias.configs.security.UserDetailsImpl;
+import dev.luisoliveira.esquadrias.dtos.UserDto;
+import dev.luisoliveira.esquadrias.models.UserModel;
+import dev.luisoliveira.esquadrias.services.UserService;
+import dev.luisoliveira.esquadrias.specifications.SpecificationTemplate;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,6 +23,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
@@ -103,8 +106,8 @@ public class UserController {
         } else {
             var userModel = userModelOptional.get();
             userModel.setFullName(userDto.getFullName());
-            userModel.setPhoneNumber(userDto.getPhoneNumber());
-            userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+
+            userModel.setUpdateAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
             userService.save(userModel);
             log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
             log.info("User updated successfully ------> userId: {} ", userModel.getUserId());
@@ -128,7 +131,7 @@ public class UserController {
         } else {
             var userModel = userModelOptional.get();
             userModel.setPassword(userDto.getPassword());
-            userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+            userModel.setUpdateAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
             userService.updatePassword(userModel);
             log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
             log.info("User updated password successfully ------> userId: {} ", userModel.getUserId());
@@ -148,7 +151,7 @@ public class UserController {
         } else {
             var userModel = userModelOptional.get();
             userModel.setImageUrl(userDto.getImageUrl());
-            userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+            userModel.setUpdateAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
             userService.save(userModel);
             log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
             log.info("User updated Image successfully ------> userId: {} ", userModel.getUserId());

@@ -1,8 +1,8 @@
-package dev.fernando.agileblog.dtos;
+package dev.luisoliveira.esquadrias.dtos;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Data

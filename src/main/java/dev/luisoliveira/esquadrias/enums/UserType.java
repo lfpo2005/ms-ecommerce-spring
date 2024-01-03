@@ -1,4 +1,4 @@
-package dev.lfpo.ms.enums;
+package dev.luisoliveira.esquadrias.enums;
 
 public enum UserType {
     ADMIN,

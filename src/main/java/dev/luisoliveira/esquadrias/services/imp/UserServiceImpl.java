@@ -1,15 +1,16 @@
-package dev.fernando.agileblog.services.imp;
+package dev.luisoliveira.esquadrias.services.imp;
 
-import dev.fernando.agileblog.models.UserModel;
-import dev.fernando.agileblog.repositories.UserRepository;
-import dev.fernando.agileblog.services.UserService;
+
+import dev.luisoliveira.esquadrias.models.UserModel;
+import dev.luisoliveira.esquadrias.repositories.UserRepository;
+import dev.luisoliveira.esquadrias.services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

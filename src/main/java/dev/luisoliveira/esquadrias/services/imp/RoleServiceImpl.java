@@ -1,9 +1,9 @@
-package dev.fernando.agileblog.services.imp;
+package dev.luisoliveira.esquadrias.services.imp;
 
-import dev.fernando.agileblog.enums.RoleType;
-import dev.fernando.agileblog.models.RoleModel;
-import dev.fernando.agileblog.repositories.RoleRepository;
-import dev.fernando.agileblog.services.RoleService;
+import dev.luisoliveira.esquadrias.enums.RoleType;
+import dev.luisoliveira.esquadrias.models.RoleModel;
+import dev.luisoliveira.esquadrias.repositories.RoleRepository;
+import dev.luisoliveira.esquadrias.services.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package dev.fernando.agileblog.dtos;
+package dev.luisoliveira.esquadrias.dtos;
 
 import lombok.Data;
 import lombok.NonNull;

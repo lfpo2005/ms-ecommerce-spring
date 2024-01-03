@@ -1,6 +1,7 @@
-package dev.luisoliveira.storejava.services;
+package dev.luisoliveira.esquadrias.services;
 
-import dev.luisoliveira.storejava.models.PhoneModel;
+
+import dev.luisoliveira.esquadrias.models.PhoneModel;
 
 public interface PhoneService {
     PhoneModel save(PhoneModel phone);

@@ -1,17 +1,18 @@
-package dev.fernando.agileblog.controllers;
+package dev.luisoliveira.esquadrias.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import dev.fernando.agileblog.dtos.JwtDto;
-import dev.fernando.agileblog.dtos.LoginDto;
-import dev.fernando.agileblog.dtos.UserDto;
-import dev.fernando.agileblog.enums.RoleType;
-import dev.fernando.agileblog.enums.UserStatus;
-import dev.fernando.agileblog.enums.UserType;
-import dev.fernando.agileblog.models.RoleModel;
-import dev.fernando.agileblog.models.UserModel;
-import dev.fernando.agileblog.configs.security.JwtProvider;
-import dev.fernando.agileblog.services.RoleService;
-import dev.fernando.agileblog.services.UserService;
+
+import dev.luisoliveira.esquadrias.configs.security.JwtProvider;
+import dev.luisoliveira.esquadrias.dtos.JwtDto;
+import dev.luisoliveira.esquadrias.dtos.LoginDto;
+import dev.luisoliveira.esquadrias.dtos.UserDto;
+import dev.luisoliveira.esquadrias.enums.RoleType;
+import dev.luisoliveira.esquadrias.enums.UserType;
+import dev.luisoliveira.esquadrias.models.RoleModel;
+import dev.luisoliveira.esquadrias.models.UserModel;
+import dev.luisoliveira.esquadrias.services.RoleService;
+import dev.luisoliveira.esquadrias.services.UserService;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,14 +23,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -74,10 +74,9 @@ public class AuthenticationController {
 
         var userModel = new UserModel();
         BeanUtils.copyProperties(userDto, userModel);
-        userModel.setUserStatus(UserStatus.ACTIVE);
         userModel.setUserType(UserType.USER);
-        userModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
-        userModel.setLastUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
+        userModel.setCreatedAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
+        userModel.setUpdateAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
         userModel.getRoles().add(roleModel);
         userService.save(userModel);
         log.debug("POST registerUser userModel saved: ------> {}", userModel.getUserId());
@@ -96,9 +95,9 @@ public class AuthenticationController {
     @GetMapping("/logout")
     public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
-        }
+//        if (auth != null) {
+//            new SecurityContextLogoutHandler().logout(request, response, auth);
+//        }
 
         log.info("User logged out: {}", auth.getName());
         return new ResponseEntity(HttpStatus.OK);

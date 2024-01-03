@@ -1,11 +1,11 @@
-package dev.luisoliveira.storejava.models;
+package dev.luisoliveira.esquadrias.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -41,13 +41,18 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     @NotNull(message = "Descrição do produto deve ser informada")
     @Column(columnDefinition = "text", length = 2000, nullable = false)
     private String description;
+    @Size(max = 500)
+    private String classDescription;
+    @Column(nullable = false)
+    private boolean active = true;
+    @Column(nullable = false)
+    private boolean isDeleted = false;
     @NotNull(message = "O tipo da unidade deve ser informado")
     @Column(nullable = false)
     private String typeUnit;
     private BigDecimal price = BigDecimal.ZERO;
     private BigDecimal promotionalPrice = BigDecimal.ZERO;
     private boolean promotional = false;
-    private boolean active;
     @Column(nullable = false, unique = true, length = 5)
     private String weight;
     @Column(nullable = false, unique = true, length = 5)
@@ -73,9 +78,8 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private Instant deleteAt;
 
-    @NotNull(message = "A Categoria do Produto deve ser informada")
-    @ManyToOne(targetEntity = CategoryModel.class)
-    @JoinColumn(name = "category_product_id", nullable = false, foreignKey = @ForeignKey(value = ConstraintMode.CONSTRAINT, name = "category_product_id_fk"))
-    private CategoryModel category = new CategoryModel();
-
+    @NotNull(message = "The category must be informed")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    private CategoryModel category;
 }

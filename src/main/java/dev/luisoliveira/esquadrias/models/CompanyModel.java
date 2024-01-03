@@ -1,24 +1,27 @@
 package dev.luisoliveira.esquadrias.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.br.CNPJ;
 
-import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
-@Table(name = "TB_SUPPLIERS")
-public class SupplierModel implements Serializable {
+@Table(name = "TB_COMPANIES")
+public class CompanyModel implements Serializable {
         private static final long serialVersionUID = 1L;
 
         @Id
         @GeneratedValue(strategy = GenerationType.AUTO)
-        private UUID supplierId;
-        @CNPJ(message = "Cnpj está inválido")
+        private UUID companyId;
+        @CNPJ(message = "Cnpj is invalid")
         @Column(nullable = false, unique = true, length = 14)
         private String cnpj;
         @Column(nullable = false, unique = true, length = 14)
@@ -31,19 +34,31 @@ public class SupplierModel implements Serializable {
         private String corporateName;
         @Column(nullable = false, length = 50)
         private String category;
-        private String description;
         @Column(nullable = false, length = 60)
         private String email;
         @Column(nullable = false, length = 50)
         private String nameContact;
         @Column(length = 50)
         private String site;
+        @Size(max = 500)
+        private String description;
+        @Column(nullable = false)
+        private boolean active = true;
+        @Column(nullable = false)
+        private boolean isDeleted = false;
 
-        @ManyToOne
-        @JoinColumn(name = "phone_id", nullable = false)
-        private PhoneModel phone;
+        @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+        private Set<PhoneModel> phones = new HashSet<>();
 
-        @ManyToOne
-        @JoinColumn(name = "address_id", nullable = false)
+        @OneToOne(cascade = CascadeType.ALL)
+        @JoinColumn(name = "address_id", referencedColumnName = "addressId")
         private AddressModel address;
+
+        @OneToOne(cascade = CascadeType.ALL)
+        @JoinColumn(name = "feedstock_id", referencedColumnName = "feedstockId")
+        private FeedstockModel feedstock;
+
+        @ManyToOne
+        @JoinColumn(name = "user_id", nullable = false)
+        private UserModel responsibleUser;
 }

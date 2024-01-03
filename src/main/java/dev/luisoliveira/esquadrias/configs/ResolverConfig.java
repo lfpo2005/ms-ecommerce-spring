@@ -1,4 +1,4 @@
-package dev.fernando.agileblog.configs;
+package dev.luisoliveira.esquadrias.configs;
 
 import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
 import org.springframework.context.annotation.Configuration;

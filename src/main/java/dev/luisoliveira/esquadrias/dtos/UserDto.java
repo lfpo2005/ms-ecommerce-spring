@@ -1,16 +1,17 @@
-package dev.fernando.agileblog.dtos;
+package dev.luisoliveira.esquadrias.dtos;
 
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
-import dev.fernando.agileblog.validation.UsernameConstraint;
+import dev.luisoliveira.esquadrias.validations.UsernameConstraint;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.br.CPF;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
+
 import java.util.UUID;
 
 @Data
@@ -27,13 +28,13 @@ public class UserDto {
     private UUID userId;
 
     @NotBlank(groups = UserView.RegistrationPost.class)
-    @Size (min = 4, max = 50, groups = UserView.RegistrationPost.class)
+    @Size(min = 4, max = 50, groups = UserView.RegistrationPost.class)
     @UsernameConstraint(groups = UserView.RegistrationPost.class)
     @JsonView(UserView.RegistrationPost.class)
     private String username;
 
     @NotBlank(groups = UserView.RegistrationPost.class)
-    @Email (groups = UserView.RegistrationPost.class)
+    @Email(groups = UserView.RegistrationPost.class)
     @JsonView(UserView.RegistrationPost.class)
     private String email;
 
