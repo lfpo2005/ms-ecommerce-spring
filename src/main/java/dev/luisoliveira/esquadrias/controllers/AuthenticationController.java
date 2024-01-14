@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
@@ -75,8 +74,8 @@ public class AuthenticationController {
         var userModel = new UserModel();
         BeanUtils.copyProperties(userDto, userModel);
         userModel.setUserType(UserType.USER);
-        userModel.setCreatedAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
-        userModel.setUpdateAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
+        userModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+        userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
         userModel.getRoles().add(roleModel);
         userService.save(userModel);
         log.debug("POST registerUser userModel saved: ------> {}", userModel.getUserId());

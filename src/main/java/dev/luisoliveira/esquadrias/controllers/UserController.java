@@ -24,7 +24,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Clock;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
@@ -107,7 +107,7 @@ public class UserController {
             var userModel = userModelOptional.get();
             userModel.setFullName(userDto.getFullName());
 
-            userModel.setUpdateAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
+            userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
             userService.save(userModel);
             log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
             log.info("User updated successfully ------> userId: {} ", userModel.getUserId());
@@ -131,7 +131,7 @@ public class UserController {
         } else {
             var userModel = userModelOptional.get();
             userModel.setPassword(userDto.getPassword());
-            userModel.setUpdateAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
+            userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
             userService.updatePassword(userModel);
             log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
             log.info("User updated password successfully ------> userId: {} ", userModel.getUserId());
@@ -151,7 +151,7 @@ public class UserController {
         } else {
             var userModel = userModelOptional.get();
             userModel.setImageUrl(userDto.getImageUrl());
-            userModel.setUpdateAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
+            userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
             userService.save(userModel);
             log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
             log.info("User updated Image successfully ------> userId: {} ", userModel.getUserId());

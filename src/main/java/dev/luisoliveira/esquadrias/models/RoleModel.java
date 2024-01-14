@@ -29,9 +29,6 @@ public class RoleModel implements GrantedAuthority, Serializable {
     @Column(nullable = false, unique = true, length = 30)
     private RoleType roleName;
 
-    @Size(max = 500)
-    private String description;
-
     @Override
     @JsonIgnore
     public String getAuthority() {

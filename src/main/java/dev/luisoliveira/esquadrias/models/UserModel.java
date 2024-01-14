@@ -13,7 +13,7 @@ import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -44,7 +44,7 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType userType;
-    @CPF(message = "CPF is invalid")
+    @CPF(message = "cpf invalid, default is 000.000.000-00")
     @Column(length = 16, nullable = false, unique = true)
     private String cpf;
     @Column
@@ -53,11 +53,11 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     private String birthDate;
     @Column(nullable = false, updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private Instant updateAt;
+    private LocalDateTime updateAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private Instant deleteAt;
+    private LocalDateTime deleteAt;
 
     @Size(max = 500)
     private String description;
@@ -70,6 +70,10 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
 
     @OneToMany(mappedBy = "responsibleUser")
     private Set<CompanyModel> companies;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "employee_id", referencedColumnName = "employeeId")
+    private EmployeeModel employee;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany(fetch = FetchType.LAZY)
