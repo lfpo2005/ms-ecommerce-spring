@@ -3,6 +3,7 @@ package dev.luisoliveira.esquadrias.configs.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,7 +40,7 @@ public class WebSecurityConfig {
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "ROLE_AUDITOR > ROLE_DEVELOPER \n ROLE_DEVELOPER > ROLE_ADMIN \n ROLE_ADMIN > ROLE_MANAGER \n ROLE_MANAGER > ROLE_SELLER \n ROLE_SELLER > ROLE_CUSTOMER \n ROLE_CUSTOMER > ROLE_USER";
+        String hierarchy = "ROLE_DEVELOPER \n ROLE_DEVELOPER > ROLE_ADMIN \n ROLE_ADMIN > ROLE_MANAGER \n ROLE_MANAGER > ROLE_SELLER \n ROLE_SELLER > ROLE_CUSTOMER \n ROLE_CUSTOMER > ROLE_EMPLOYEE \n ROLE_EMPLOYEE > ROLE_USER";
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
     }
