@@ -1,10 +1,12 @@
 package dev.luisoliveira.esquadrias.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import dev.luisoliveira.esquadrias.enums.MeasurementUnit;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -17,6 +19,10 @@ public class InputCostsModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID inputCostsId;
+    private BigDecimal value;
+    private String measure;
+    private MeasurementUnit unit;
+    private double yield;
+    private BigDecimal yieldPerUnit;
 
-    // TODO: definir os tipos de custos de entrada
 }

@@ -53,8 +53,17 @@ public class UserDto {
     @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
     private String fullName;
 
+
+    @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
+    private String birthDate;
+
+
 //    @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
 //    private String phoneNumber;
+
+    @CPF(groups = {UserView.RegistrationPost.class, UserView.UserPut.class})
+    @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
+    private String cpf;
 
     @NotBlank (groups = UserView.ImagePut.class)
     @JsonView(UserView.ImagePut.class)

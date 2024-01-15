@@ -67,6 +67,10 @@ public class AuthenticationController {
             log.warn("Email {} is Already Taken!: ------> ", userDto.getEmail());
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is Already Taken!");
         }
+        if (userService.existsByCpf(userDto.getCpf())) {
+            log.warn("Cpf {} is Already Taken!: ------> ", userDto.getCpf());
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: CPF is Already Taken!");
+        }
         RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_USER)
                 .orElseThrow(() -> new RuntimeException("Error: Role is not Found."));
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
