@@ -15,6 +15,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled=true)
@@ -26,6 +33,11 @@ public class WebSecurityConfig {
 
     @Autowired
     AuthenticationEntryPointImpl authenticationEntryPoint;
+
+    public static final String[] LIST_CORS_URL = {
+            "http://localhost:4200"
+
+    };
 
     private static final String[] AUTH_WHITELIST = {
             "/auth/**"
@@ -39,15 +51,37 @@ public class WebSecurityConfig {
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "ROLE_AUDITOR > ROLE_DEVELOPER \n ROLE_DEVELOPER > ROLE_ADMIN \n ROLE_ADMIN > ROLE_MANAGER \n ROLE_MANAGER > ROLE_SELLER \n ROLE_SELLER > ROLE_CUSTOMER \n ROLE_CUSTOMER > ROLE_USER";
+        String hierarchy =
+                        "ROLE_DEVELOPER > ROLE_ADMIN \n" +
+                        "ROLE_ADMIN > ROLE_MANAGER \n" +
+                        "ROLE_MANAGER > ROLE_SELLER \n" +
+                        "ROLE_SELLER > ROLE_CUSTOMER \n" +
+                        "ROLE_CUSTOMER > ROLE_EMPLOYEE \n" +
+                        "ROLE_EMPLOYEE > ROLE_USER";
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
     }
 
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        List<String> allowedOrigins = Arrays.asList(LIST_CORS_URL);
+        configuration.setAllowedOrigins(allowedOrigins);
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
+    }
 
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // Add your custom JWT filter
+        http.addFilterBefore(authenticationJwtFilter(), UsernamePasswordAuthenticationFilter.class);
+
         http
                 // Configure exception handling with custom entry point
                 .exceptionHandling((exceptions) -> exceptions
@@ -64,11 +98,13 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
         );
 
-        // Add your custom JWT filter
-        http.addFilterBefore(authenticationJwtFilter(), UsernamePasswordAuthenticationFilter.class);
-
         // Disable CSRF (if using JWT or if CSRF is not needed)
-        http.csrf().disable();
+        http.csrf(csrf -> csrf.disable())
+                .headers(headers -> headers
+                                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*"))
+                                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization"))
+                                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Expose-Headers", "Authorization"))
+                );
 
         return http.build();
     }

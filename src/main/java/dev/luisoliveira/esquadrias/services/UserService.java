@@ -21,6 +21,7 @@ public interface UserService {
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
+    boolean existsByFullName(String fullName);
 
     Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable);
 
@@ -31,4 +32,7 @@ public interface UserService {
     UserModel updatePassword(UserModel userModel);
 
     UserModel updateUser(UserModel userModel);
+
+
+    boolean isValidBirthDate(String birthDate);
 }

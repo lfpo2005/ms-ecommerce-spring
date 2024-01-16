@@ -1,10 +1,12 @@
 package dev.luisoliveira.esquadrias.enums;
 
 public enum UserType {
+
+    DEVELOPER,
     ADMIN,
     MANAGER,
-    SECRETARY,
-    INSTRUCTOR,
-    STUDENT,
+    SELLER,
+    CUSTOMER,
+    EMPLOYEE,
     USER;
 }

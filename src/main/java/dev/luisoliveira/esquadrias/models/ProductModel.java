@@ -11,7 +11,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -72,11 +72,11 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private Integer clickQuantity = 0;
     @Column(nullable = false, updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private Instant createdAt;
+    private LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private Instant updateAt;
+    private LocalDateTime updateAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private Instant deleteAt;
+    private LocalDateTime deleteAt;
 
     @NotNull(message = "The category must be informed")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

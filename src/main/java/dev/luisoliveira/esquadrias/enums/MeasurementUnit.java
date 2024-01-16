@@ -3,10 +3,10 @@ package dev.luisoliveira.esquadrias.enums;
 public enum MeasurementUnit {
     KILOGRAM("kg"),
     LITER("L"),
-    METER("m"),
+    METER("mt"),
     PIECE("pc"),
-    GRAM("g"),
-    MILLILITER("ml"),
+    GRAM("gr"),
+    MILLILITER("mm"),
     CENTIMETER("cm"),
     BOX("box"),
     BAG("bag");

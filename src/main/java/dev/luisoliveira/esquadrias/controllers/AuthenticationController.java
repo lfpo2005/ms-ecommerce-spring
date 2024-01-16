@@ -12,6 +12,7 @@ import dev.luisoliveira.esquadrias.models.RoleModel;
 import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.services.RoleService;
 import dev.luisoliveira.esquadrias.services.UserService;
+import dev.luisoliveira.esquadrias.utils.CryptoUtils;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
@@ -29,9 +30,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.Clock;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @Log4j2
@@ -60,28 +62,55 @@ public class AuthenticationController {
 
         log.debug("POST registerUser UserDto received: ------> {}", userDto.toString());
 
-        if (userService.existsByUsername(userDto.getUsername())) {
-            log.warn("Username {} is Already Taken!: ------> ", userDto.getUsername());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Username is Already Taken!");
-        }
-        if (userService.existsByEmail(userDto.getEmail())) {
-            log.warn("Email {} is Already Taken!: ------> ", userDto.getEmail());
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is Already Taken!");
-        }
-        RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_USER)
-                .orElseThrow(() -> new RuntimeException("Error: Role is not Found."));
-        userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        try {
 
-        var userModel = new UserModel();
-        BeanUtils.copyProperties(userDto, userModel);
-        userModel.setUserType(UserType.USER);
-        userModel.setCreatedAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
-        userModel.setUpdateAt(Instant.now(Clock.system(ZoneId.of("UTC"))));
-        userModel.getRoles().add(roleModel);
-        userService.save(userModel);
-        log.debug("POST registerUser userModel saved: ------> {}", userModel.getUserId());
-        log.info("User saved successfully ------> userId: {} ", userModel.getUserId());
-        return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
+            if (userService.existsByUsername(userDto.getUsername())) {
+                log.warn("Username {} is Already Taken!: ------> ", userDto.getUsername());
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Username is Already Taken!");
+            }
+            if (userService.existsByEmail(userDto.getEmail())) {
+                log.warn("Email {} is Already Taken!: ------> ", userDto.getEmail());
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is Already Taken!");
+            }
+            if (userService.existsByFullName(userDto.getFullName())) {
+                log.warn("FullName {} is Already Taken!: ------> ", userDto.getFullName());
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: FullName is Already Taken!");
+            }
+
+            if (!userService.isValidBirthDate(userDto.getBirthDate())) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Invalid BirthDate format! Valid format: dd-MM-yyyy");
+            }
+
+            RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_USER)
+                    .orElseThrow(() -> new RuntimeException("Error: Role is not Found."));
+            userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
+
+
+            var userModel = new UserModel();
+            BeanUtils.copyProperties(userDto, userModel);
+            userModel.setUserType(UserType.USER);
+            userModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
+            userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
+            userModel.getRoles().add(roleModel);
+
+            try {
+                String encryptedCpf = CryptoUtils.encrypt(userDto.getCpf());
+                userModel.setCpf(encryptedCpf);
+            } catch (Exception e) {
+                log.error("Error encrypting CPF", e);
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error encrypting CPF");
+            }
+
+
+            userService.save(userModel);
+            log.debug("POST registerUser userModel saved: ------> {}", userModel.getUserId());
+            log.trace("User saved successfully ------> userId: {} ", userModel.getUserId());
+            return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
+
+        }catch (Exception e) {
+            log.error("Exception occurred: ", e);
+            throw  new RuntimeException(e);
+        }
     }
 
     @PostMapping("/login")
