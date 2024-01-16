@@ -5,12 +5,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import dev.luisoliveira.esquadrias.enums.AddressType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @Table(name = "TB_ADDRESS")
@@ -20,19 +23,19 @@ public class AddressModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID addressId;
-    @Column(length = 60)
-    private String address;
-    @Column(length = 6)
+    @Column(length = 60, nullable = false)
+    private String street;
+    @Column(length = 6, nullable = false)
     private String number;
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String city;
-    @Column(length = 2)
+    @Column(length = 2, nullable = false)
     private String state;
-    @Column(length = 10)
+    @Column(length = 10, nullable = false)
     private String zipCode;
     @Column(length = 50)
     private String complement;
-    @Column(length = 20)
+    @Column(length = 20, nullable = false)
     private String neighborhood;
     @Size(max = 500)
     private String description;

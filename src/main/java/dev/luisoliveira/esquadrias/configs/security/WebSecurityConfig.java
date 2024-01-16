@@ -7,6 +7,7 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,7 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Configuration
-//@EnableGlobalMethodSecurity(prePostEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled=true)
 @EnableWebSecurity
 public class WebSecurityConfig {
 
@@ -50,7 +51,13 @@ public class WebSecurityConfig {
     @Bean
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "ROLE_DEVELOPER \n ROLE_DEVELOPER > ROLE_ADMIN \n ROLE_ADMIN > ROLE_MANAGER \n ROLE_MANAGER > ROLE_SELLER \n ROLE_SELLER > ROLE_CUSTOMER \n ROLE_CUSTOMER > ROLE_EMPLOYEE \n ROLE_EMPLOYEE > ROLE_USER";
+        String hierarchy =
+                        "ROLE_DEVELOPER > ROLE_ADMIN \n" +
+                        "ROLE_ADMIN > ROLE_MANAGER \n" +
+                        "ROLE_MANAGER > ROLE_SELLER \n" +
+                        "ROLE_SELLER > ROLE_CUSTOMER \n" +
+                        "ROLE_CUSTOMER > ROLE_EMPLOYEE \n" +
+                        "ROLE_EMPLOYEE > ROLE_USER";
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
     }

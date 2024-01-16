@@ -8,7 +8,5 @@ public enum UserType {
     SELLER,
     CUSTOMER,
     EMPLOYEE,
-    INSTRUCTOR,
-    STUDENT,
     USER;
 }

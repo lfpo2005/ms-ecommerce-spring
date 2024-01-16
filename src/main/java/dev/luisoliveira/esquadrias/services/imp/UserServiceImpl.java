@@ -4,7 +4,7 @@ package dev.luisoliveira.esquadrias.services.imp;
 import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.repositories.UserRepository;
 import dev.luisoliveira.esquadrias.services.UserService;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -58,6 +58,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByCpf(cpf);
     }
 
+    @Transactional
     @Override
     public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
         return userRepository.findAll(spec, pageable);
