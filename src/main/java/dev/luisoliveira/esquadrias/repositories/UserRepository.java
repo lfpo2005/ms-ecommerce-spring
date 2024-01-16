@@ -13,13 +13,14 @@ public interface UserRepository extends JpaRepository<UserModel, UUID>, JpaSpeci
 
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
-    boolean existsByCpf(String cpf);
+    boolean existsByFullName(String fullName);
 
     @EntityGraph(attributePaths = "roles", type = EntityGraph.EntityGraphType.FETCH)
     Optional<UserModel> findByUsername(String username);
 
     @EntityGraph(attributePaths = "roles", type = EntityGraph.EntityGraphType.FETCH)
     Optional<UserModel> findById(UUID userId);
+
 
 
 }

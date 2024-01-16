@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.luisoliveira.esquadrias.enums.UserType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
@@ -33,6 +34,8 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     private UUID userId;
     @Column(nullable = false, unique = true, length = 50)
     private String username;
+
+    @Email(message = "Invalid email format. Please enter a valid email.")
     @Column(nullable = false, unique = true, length = 50)
     private String email;
     @Column(nullable = false, length = 255)
@@ -47,8 +50,10 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType userType;
-    @CPF(message = "cpf invalid, default is 000.000.000-00")
-    @Column(length = 16, nullable = false, unique = true)
+
+    @JsonIgnore
+   // @CPF(message = "cpf invalid, default is 000.000.000-00")
+    @Column(nullable = false)
     private String cpf;
     @Column
     private String imageUrl;

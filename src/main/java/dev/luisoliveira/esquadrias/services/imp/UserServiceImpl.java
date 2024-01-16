@@ -4,6 +4,7 @@ package dev.luisoliveira.esquadrias.services.imp;
 import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.repositories.UserRepository;
 import dev.luisoliveira.esquadrias.services.UserService;
+import dev.luisoliveira.esquadrias.utils.CryptoUtils;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -54,9 +57,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean existsByCpf(String cpf) {
-        return userRepository.existsByCpf(cpf);
+    public boolean existsByFullName(String fullName) {
+        return userRepository.existsByFullName(fullName);
     }
+
 
     @Transactional
     @Override
@@ -73,4 +77,14 @@ public class UserServiceImpl implements UserService {
     public UserModel updatePassword(UserModel userModel) {
         return save(userModel);
     }
+
+
+    @Override
+    public boolean isValidBirthDate(String birthDate) {
+        String datePattern = "^\\d{2}-\\d{2}-\\d{4}$";
+        Pattern pattern = Pattern.compile(datePattern);
+        Matcher matcher = pattern.matcher(birthDate.trim());
+        return matcher.matches();
+    }
+
 }

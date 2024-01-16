@@ -1,6 +1,7 @@
 package dev.luisoliveira.esquadrias.dtos;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import dev.luisoliveira.esquadrias.validations.UsernameConstraint;
@@ -50,6 +51,10 @@ public class UserDto {
     @JsonView(UserView.PasswordPut.class)
     private String oldPassword;
 
+    @CPF(groups = {UserView.RegistrationPost.class, UserView.UserPut.class})
+    @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
+    private String cpf;
+
     @NotBlank(groups =  {UserView.RegistrationPost.class, UserView.UserPut.class})
     @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
     private String fullName;
@@ -62,9 +67,6 @@ public class UserDto {
 //    @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
 //    private String phoneNumber;
 
-    @CPF(groups = {UserView.RegistrationPost.class, UserView.UserPut.class})
-    @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
-    private String cpf;
 
     @NotBlank (groups = UserView.ImagePut.class)
     @JsonView(UserView.ImagePut.class)
