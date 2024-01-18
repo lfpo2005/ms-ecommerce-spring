@@ -1,6 +1,7 @@
 package dev.luisoliveira.esquadrias.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import dev.luisoliveira.esquadrias.enums.AddressType;
 import jakarta.persistence.*;
@@ -39,19 +40,20 @@ public class AddressModel implements Serializable {
     private String neighborhood;
     @Size(max = 500)
     private String description;
-    @Column(nullable = false)
-    private boolean active = true;
-    @Column(nullable = false)
+    private boolean isActive = true;
     private boolean isDeleted = false;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AddressType type;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserModel user;
 
+
     @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
     private CompanyModel company;
 }
+//TODO: corrigir o relacionamento entre AddressModel e UserModel

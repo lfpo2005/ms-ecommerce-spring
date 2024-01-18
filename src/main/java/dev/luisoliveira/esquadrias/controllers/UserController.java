@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,7 +35,6 @@ import java.util.UUID;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-
 @Log4j2
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -44,16 +45,31 @@ public class UserController {
     UserService userService;
     @Autowired
     AuthenticationCurrentUserService authenticationCurrentUserService;
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<Page<UserModel>> getAllUsers(SpecificationTemplate.UserSpec spec,
-                                                       @PageableDefault(page = 0, size = 10, sort = "userId",
-                                                               direction = Sort.Direction.ASC) Pageable pageable,
+    public ResponseEntity<Page<UserModel>> getAllUsers(@RequestParam(required = false) Boolean isActive,
+                                                       @RequestParam(required = false) Boolean isDeleted,
+                                                       SpecificationTemplate.UserSpec spec,
+                                                       @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
                                                        Authentication authentication) {
+
         UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.info("Authentication {} ", userDetails.getUsername());
-        Page<UserModel> userModelPage = userService.findAll(spec, pageable);
+
+        Specification<UserModel> combinedSpec = Specification.where(spec);
+
+        if (isActive != null) {
+            combinedSpec = combinedSpec.and(SpecificationTemplate.UserSpec.isActive(isActive));
+        }
+
+        if (isDeleted != null) {
+            combinedSpec = combinedSpec.and(SpecificationTemplate.UserSpec.isDeleted(isDeleted));
+        }
+
+        Page<UserModel> userModelPage = userService.findAll(combinedSpec, pageable);
         if (!userModelPage.isEmpty()) {
             for (UserModel user : userModelPage.toList()) {
                 user.add(linkTo(methodOn(UserController.class).getOneUser(user.getUserId())).withSelfRel());
@@ -73,22 +89,76 @@ public class UserController {
             } else {
                 return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
             }
-        }else {
+        } else {
             throw new AccessDeniedException("Forbidden");
         }
     }
+
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Object> deleteUser(@PathVariable(value = "userId") UUID userId) {
-        log.debug("DELETE deleteUser userId received: ------> {}", userId);
+    @PutMapping("/{userId}/deactivate-delete-user")
+    public ResponseEntity<Object> deactivateAndDeleteUser(@PathVariable(value = "userId") UUID userId) {
+
+        log.debug("PUT deactivateUser UserDto received: ------> {}", userId.toString());
+
         Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (!userModelOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+
+        if (userModelOptional.isPresent() && userModelOptional.get().isDeleted() == true) {
+            log.debug("User not found, deactivate user ------> userId: {} ", userModelOptional.get().getUserId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already deleted");
         } else {
-            userService.delete(userModelOptional.get());
-//            log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
-            log.info("User deleted successfully ------> userId: {} ", userId);
-            return ResponseEntity.status(HttpStatus.OK).body("User deleted successfully.");
+            var userModel = userModelOptional.get();
+            userModel.setActive(false);
+            userModel.setDeleted(true);
+            userModel.setDeleteAt(LocalDateTime.now(ZoneId.of("UTC")));
+            userService.save(userModel);
+            log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
+            log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
+            return ResponseEntity.status(HttpStatus.OK).body(userModel);
+        }
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PutMapping("/{userId}/deactivate-user")
+    public ResponseEntity<Object> deactivateUser(@PathVariable(value = "userId") UUID userId) {
+
+        log.debug("PUT deactivateUser UserDto received: ------> {}", userId.toString());
+
+        Optional<UserModel> userModelOptional = userService.findById(userId);
+
+        if (userModelOptional.isPresent() && userModelOptional.get().isActive() == false) {
+            log.debug("User not found or is disabled user ------> userId: {} ", userModelOptional.get().getUserId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already disabled");
+        } else {
+            var userModel = userModelOptional.get();
+            userModel.setActive(false);
+            userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
+            userService.save(userModel);
+            log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
+            log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
+            return ResponseEntity.status(HttpStatus.OK).body(userModel);
+        }
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PutMapping("/{userId}/activate-user")
+    public ResponseEntity<Object> activateUser(@PathVariable(value = "userId") UUID userId) {
+
+        log.debug("PUT deactivateUser UserDto received: ------> {}", userId.toString());
+
+        Optional<UserModel> userModelOptional = userService.findById(userId);
+
+        if (userModelOptional.isPresent() && userModelOptional.get().isActive() == true) {
+            log.debug("User not found or is active -----> userId: {} ", userModelOptional.get().getUserId());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already active");
+        } else {
+            var userModel = userModelOptional.get();
+            userModel.setActive(true);
+            userModel.setDeleted(false);
+            userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
+            userService.save(userModel);
+            log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
+            log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
+            return ResponseEntity.status(HttpStatus.OK).body(userModel);
         }
     }
 
@@ -101,45 +171,47 @@ public class UserController {
 
         Optional<UserModel> userModelOptional = userService.findById(userId);
 
-        if (!userModelOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        } else {
+        if (userModelOptional.isPresent() && userModelOptional.get().isDeleted() == false) {
             var userModel = userModelOptional.get();
             userModel.setFullName(userDto.getFullName());
-
             userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
             userService.save(userModel);
             log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
             log.info("User updated successfully ------> userId: {} ", userModel.getUserId());
             return ResponseEntity.status(HttpStatus.OK).body(userModel);
+        } else {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
     }
 
-    @PutMapping("/{userId}/password")
+    @PatchMapping("/{userId}/password")
     public ResponseEntity<Object> updatePassword(@PathVariable(value = "userId") UUID userId,
                                                  @RequestBody @Validated(UserDto.UserView.PasswordPut.class)
                                                  @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto) {
 
-        log.debug("PUT updatePassword UserDto received: ------> {}", userDto.toString());
+        log.debug("Request to update password for userId: {}", userId);
         Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (!userModelOptional.isPresent()) {
-            log.warn("Mismatched old password userId {} ", userDto.getUserId());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
-        if (!userModelOptional.get().getPassword().equals(userDto.getOldPassword())) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Mismatched old password!");
-        } else {
+
+        if (userModelOptional.isPresent() && !userModelOptional.get().isDeleted()) {
             var userModel = userModelOptional.get();
-            userModel.setPassword(userDto.getPassword());
-            userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.updatePassword(userModel);
-            log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
-            log.info("User updated password successfully ------> userId: {} ", userModel.getUserId());
-            return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
+            if (!passwordEncoder.matches(userDto.getOldPassword(), userModel.getPassword())) {
+                log.debug("Mismatched old password for userId: {}", userId);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Mismatched old password!");
+            } else {
+                userModel.setPassword(passwordEncoder.encode(userDto.getPassword()));
+                userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
+                userService.updatePassword(userModel);
+                log.info("Password updated successfully for userId: {}", userId);
+                return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
+            }
+        } else {
+            log.debug("User not found or deleted for userId: {}", userId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
         }
     }
 
-    @PutMapping("/{userId}/image")
+    @PatchMapping("/{userId}/image")
     public ResponseEntity<Object> updateImage(@PathVariable(value = "userId") UUID userId,
                                               @RequestBody @Validated(UserDto.UserView.ImagePut.class)
                                               @JsonView(UserDto.UserView.ImagePut.class) UserDto userDto) {

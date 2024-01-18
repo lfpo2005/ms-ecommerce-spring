@@ -16,6 +16,27 @@ public class SpecificationTemplate {
             @Spec(path = "email", spec = Like.class),
             @Spec(path = "fullName", spec = Like.class)
     })
-    public interface UserSpec extends Specification<UserModel> {}
+    public interface UserSpec extends Specification<UserModel> {
+        public static Specification<UserModel> isActive(Boolean isActive) {
+            return (root, query, criteriaBuilder) -> {
+                if (isActive == null) {
+                    return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
+                }
+                return criteriaBuilder.equal(root.get("active"), isActive);
+            };
+        }
 
-   }
+        public static Specification<UserModel> isDeleted(Boolean isDeleted) {
+            return (root, query, criteriaBuilder) -> {
+                if (isDeleted == null) {
+                    return criteriaBuilder.isTrue(criteriaBuilder.literal(false));
+                }
+                return criteriaBuilder.equal(root.get("isDeleted"), isDeleted);
+            };
+        }
+    }
+
+
+
+
+}

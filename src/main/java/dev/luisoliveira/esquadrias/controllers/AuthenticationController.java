@@ -1,7 +1,6 @@
 package dev.luisoliveira.esquadrias.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-
 import dev.luisoliveira.esquadrias.configs.security.JwtProvider;
 import dev.luisoliveira.esquadrias.dtos.JwtDto;
 import dev.luisoliveira.esquadrias.dtos.LoginDto;
@@ -13,6 +12,8 @@ import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.services.RoleService;
 import dev.luisoliveira.esquadrias.services.UserService;
 import dev.luisoliveira.esquadrias.utils.CryptoUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
@@ -24,16 +25,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @RestController
 @Log4j2
@@ -121,18 +120,14 @@ public class AuthenticationController {
         String jwt = jwtProvider.generateJwt(authentication);
         return ResponseEntity.ok(new JwtDto(jwt));
     }
-    @GetMapping("/logout")
-    public ResponseEntity logout(HttpServletRequest request, HttpServletResponse response) {
+    @RequestMapping(value="/logout", method = RequestMethod.POST)
+    public ResponseEntity<?> logoutPage (HttpServletRequest request, HttpServletResponse response) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if (auth != null) {
-//            new SecurityContextLogoutHandler().logout(request, response, auth);
-//        }
-
-        log.info("User logged out: {}", auth.getName());
-        return new ResponseEntity(HttpStatus.OK);
+        if (auth != null){
+            new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        return ResponseEntity.ok().build();
     }
-
-
     @GetMapping("/")
     public String index(){
         log.trace("TRACE");
