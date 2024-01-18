@@ -47,23 +47,6 @@ public class UserController {
     PasswordEncoder passwordEncoder;
 
 
-//    @PreAuthorize("hasAnyRole('ADMIN')")
-//    @GetMapping
-//    public ResponseEntity<Page<UserModel>> getAllUsers(SpecificationTemplate.UserSpec spec,
-//                                                       @PageableDefault(page = 0, size = 10, sort = "userId",
-//                                                               direction = Sort.Direction.ASC) Pageable pageable,
-//                                                       Authentication authentication) {
-//        UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
-//        log.info("Authentication {} ", userDetails.getUsername());
-//        Page<UserModel> userModelPage = userService.findAll(spec, pageable);
-//        if (!userModelPage.isEmpty()) {
-//            for (UserModel user : userModelPage.toList()) {
-//                user.add(linkTo(methodOn(UserController.class).getOneUser(user.getUserId())).withSelfRel());
-//            }
-//        }
-//        return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
-//    }
-
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(@RequestParam(required = false) Boolean isActive,
@@ -107,23 +90,6 @@ public class UserController {
         }
         return combinedSpec;
     }
-
-
-//    @PreAuthorize("hasAnyRole('ADMIN')")
-//    @GetMapping("/{userId}")
-//    public ResponseEntity<Object> getOneUser(@PathVariable(value = "userId") UUID userId) {
-//        UUID currentUserId = authenticationCurrentUserService.getCurrentUser().getUserId();
-//        if (currentUserId.equals(userId)) {
-//            Optional<UserModel> userModelOptional = userService.findById(userId);
-//            if (!userModelOptional.isPresent()) {
-//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-//            } else {
-//                return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
-//            }
-//        } else {
-//            throw new AccessDeniedException("Forbidden");
-//        }
-//    }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/{userId}")

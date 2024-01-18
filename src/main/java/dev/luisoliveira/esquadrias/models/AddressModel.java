@@ -51,7 +51,7 @@ public class AddressModel implements Serializable {
     private AddressType type;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private UserModel user;
 
     @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)

@@ -73,7 +73,7 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     private String description;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER )
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY )
     @Fetch(FetchMode.SUBSELECT)
     private Set<AddressModel> address = new HashSet<>();
 
