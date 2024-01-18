@@ -39,7 +39,7 @@ public class SpecificationTemplate {
                     if (email == null) {
                         return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                     }
-                    return criteriaBuilder.like(criteriaBuilder.lower(root.get("email")), "%" + email.toLowerCase() + "%");
+                    return criteriaBuilder.equal(criteriaBuilder.lower(root.get("email")), email);
                 };
             }
 

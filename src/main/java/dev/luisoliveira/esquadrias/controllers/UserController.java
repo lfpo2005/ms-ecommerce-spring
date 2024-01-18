@@ -76,7 +76,20 @@ public class UserController {
 
         UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.info("Authentication {} ", userDetails.getUsername());
+        
+        // Filtros para buscar usuarios
+        final Specification<UserModel> combinedSpec = getUserModelSpecification(isActive, isDeleted, email, fullName, spec);
 
+        Page<UserModel> userModelPage = userService.findAll(combinedSpec, pageable);
+        if (!userModelPage.isEmpty()) {
+            for (UserModel user : userModelPage.toList()) {
+                user.add(linkTo(methodOn(UserController.class).getOneUser(user.getUserId())).withSelfRel());
+            }
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
+    }
+
+    private static Specification<UserModel> getUserModelSpecification(Boolean isActive, Boolean isDeleted, String email, String fullName, SpecificationTemplate.UserSpec spec) {
         Specification<UserModel> combinedSpec = Specification.where(spec);
 
         if (isActive != null) {
@@ -92,14 +105,7 @@ public class UserController {
         if (fullName != null) {
             combinedSpec = combinedSpec.and(SpecificationTemplate.UserSpec.fullName(fullName));
         }
-
-        Page<UserModel> userModelPage = userService.findAll(combinedSpec, pageable);
-        if (!userModelPage.isEmpty()) {
-            for (UserModel user : userModelPage.toList()) {
-                user.add(linkTo(methodOn(UserController.class).getOneUser(user.getUserId())).withSelfRel());
-            }
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
+        return combinedSpec;
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
