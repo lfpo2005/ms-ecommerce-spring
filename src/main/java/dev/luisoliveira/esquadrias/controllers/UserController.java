@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import dev.luisoliveira.esquadrias.configs.security.AuthenticationCurrentUserService;
 import dev.luisoliveira.esquadrias.configs.security.UserDetailsImpl;
 import dev.luisoliveira.esquadrias.dtos.UserDto;
+import dev.luisoliveira.esquadrias.models.AddressModel;
 import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.services.UserService;
 import dev.luisoliveira.esquadrias.specifications.SpecificationTemplate;
@@ -27,8 +28,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -108,6 +108,23 @@ public class UserController {
         return combinedSpec;
     }
 
+
+//    @PreAuthorize("hasAnyRole('ADMIN')")
+//    @GetMapping("/{userId}")
+//    public ResponseEntity<Object> getOneUser(@PathVariable(value = "userId") UUID userId) {
+//        UUID currentUserId = authenticationCurrentUserService.getCurrentUser().getUserId();
+//        if (currentUserId.equals(userId)) {
+//            Optional<UserModel> userModelOptional = userService.findById(userId);
+//            if (!userModelOptional.isPresent()) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+//            } else {
+//                return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
+//            }
+//        } else {
+//            throw new AccessDeniedException("Forbidden");
+//        }
+//    }
+
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "userId") UUID userId) {
@@ -117,13 +134,18 @@ public class UserController {
             if (!userModelOptional.isPresent()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
             } else {
-                return ResponseEntity.status(HttpStatus.OK).body(userModelOptional.get());
+                UserModel user = userModelOptional.get();
+                // Buscar os endereços do usuário
+                Set<AddressModel> addresses = user.getAddress();
+                Map<String, Object> response = new HashMap<>();
+                response.put("user", user);
+                response.put("addresses", addresses);
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             }
         } else {
             throw new AccessDeniedException("Forbidden");
         }
     }
-
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/{userId}/deactivate-delete-user")
     public ResponseEntity<Object> deactivateAndDeleteUser(@PathVariable(value = "userId") UUID userId) {
