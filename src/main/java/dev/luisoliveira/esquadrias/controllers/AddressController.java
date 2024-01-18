@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import dev.luisoliveira.esquadrias.dtos.AddressDto;
 import dev.luisoliveira.esquadrias.enums.AddressType;
 import dev.luisoliveira.esquadrias.models.AddressModel;
+import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.services.AddressService;
+import dev.luisoliveira.esquadrias.services.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,28 +28,35 @@ public class AddressController {
     @Autowired
     AddressService addressService;
 
+    @Autowired
+    UserService userService;
+
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/{userId}/createAddress")
-    public ResponseEntity<Object> registerAddress(@RequestBody @Validated(AddressDto.AddressView.RegistrationPost.class)
+    @PostMapping("/users/{userId}/createAddress")
+    public ResponseEntity<Object> registerAddress(@PathVariable(value = "userId") UUID userId,
+                                                  @RequestBody @Validated(AddressDto.AddressView.RegistrationPost.class)
                                                   @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto) {
 
         log.debug("POST registerAddress AddressDto received: ------> {}", addressDto.toString());
+        Optional<UserModel> userModelOptional = userService.findById(userId);
 
         try {
+            if (!userModelOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+            }
             if (addressDto.getAddressId() != null) {
-                return ResponseEntity.badRequest().body("The addressId field must be null");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The addressId field must be null");
             }
             var addressModel = new AddressModel();
             BeanUtils.copyProperties(addressDto, addressModel);
-            addressModel.setType(AddressType.RESIDENTIAL);
+            addressModel.setType(AddressType.RESIDENTIAL); //Todo: implementar tipo de endereço dinamico
+            addressModel.setUser(userModelOptional.get());
             addressService.save(addressModel);
             return ResponseEntity.status(HttpStatus.CREATED).body(addressModel);
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
-
-
         }
     }
     @PreAuthorize("hasAnyRole('USER')")

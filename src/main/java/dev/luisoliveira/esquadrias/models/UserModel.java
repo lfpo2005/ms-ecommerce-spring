@@ -10,6 +10,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.br.CPF;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -44,7 +46,7 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Column(nullable = false, unique = true, length = 150)
     private String fullName;
     @Column(nullable = false)
-    private boolean active = true;
+    private boolean isActive = true;
     @Column(nullable = false)
     private boolean isDeleted = false;
     @Column(nullable = false)
@@ -70,8 +72,9 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Size(max = 500)
     private String description;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY )
+    @Fetch(FetchMode.SUBSELECT)
     private Set<AddressModel> address = new HashSet<>();
 
     @JsonIgnore

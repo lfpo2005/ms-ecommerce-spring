@@ -39,15 +39,13 @@ public class AddressDto {
     @JsonView({AddressDto.AddressView.RegistrationPost.class, AddressDto.AddressView.UserPut.class})
     private String zipCode;
 
-    @NotBlank(groups =  {AddressDto.AddressView.RegistrationPost.class, AddressDto.AddressView.UserPut.class})
-    @JsonView({AddressDto.AddressView.RegistrationPost.class, AddressDto.AddressView.UserPut.class})
+   @JsonView({AddressDto.AddressView.RegistrationPost.class, AddressDto.AddressView.UserPut.class})
     private String complement;
 
     @NotBlank(groups =  {AddressDto.AddressView.RegistrationPost.class, AddressDto.AddressView.UserPut.class})
     @JsonView({AddressDto.AddressView.RegistrationPost.class, AddressDto.AddressView.UserPut.class})
     private String neighborhood;
 
-    @NotBlank(groups =  {AddressDto.AddressView.RegistrationPost.class, AddressDto.AddressView.UserPut.class})
     @JsonView({AddressDto.AddressView.RegistrationPost.class, AddressDto.AddressView.UserPut.class})
     private String description;
 }

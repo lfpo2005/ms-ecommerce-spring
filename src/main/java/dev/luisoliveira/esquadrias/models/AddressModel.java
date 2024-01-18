@@ -3,6 +3,7 @@ package dev.luisoliveira.esquadrias.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.luisoliveira.esquadrias.enums.AddressType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -47,11 +48,9 @@ public class AddressModel implements Serializable {
     @Enumerated(EnumType.STRING)
     private AddressType type;
 
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private UserModel user;
-
 
     @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
     private CompanyModel company;

@@ -25,8 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.Clock;
-import java.time.LocalDateTime;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
@@ -48,10 +46,30 @@ public class UserController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+
+//    @PreAuthorize("hasAnyRole('ADMIN')")
+//    @GetMapping
+//    public ResponseEntity<Page<UserModel>> getAllUsers(SpecificationTemplate.UserSpec spec,
+//                                                       @PageableDefault(page = 0, size = 10, sort = "userId",
+//                                                               direction = Sort.Direction.ASC) Pageable pageable,
+//                                                       Authentication authentication) {
+//        UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
+//        log.info("Authentication {} ", userDetails.getUsername());
+//        Page<UserModel> userModelPage = userService.findAll(spec, pageable);
+//        if (!userModelPage.isEmpty()) {
+//            for (UserModel user : userModelPage.toList()) {
+//                user.add(linkTo(methodOn(UserController.class).getOneUser(user.getUserId())).withSelfRel());
+//            }
+//        }
+//        return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
+//    }
+
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     public ResponseEntity<Page<UserModel>> getAllUsers(@RequestParam(required = false) Boolean isActive,
                                                        @RequestParam(required = false) Boolean isDeleted,
+                                                       @RequestParam(required = false) String email,
+                                                       @RequestParam(required = false) String fullName,
                                                        SpecificationTemplate.UserSpec spec,
                                                        @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
                                                        Authentication authentication) {
@@ -67,6 +85,12 @@ public class UserController {
 
         if (isDeleted != null) {
             combinedSpec = combinedSpec.and(SpecificationTemplate.UserSpec.isDeleted(isDeleted));
+        }
+        if (email != null) {
+            combinedSpec = combinedSpec.and(SpecificationTemplate.UserSpec.email(email));
+        }
+        if (fullName != null) {
+            combinedSpec = combinedSpec.and(SpecificationTemplate.UserSpec.fullName(fullName));
         }
 
         Page<UserModel> userModelPage = userService.findAll(combinedSpec, pageable);
