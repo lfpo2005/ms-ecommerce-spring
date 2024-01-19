@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserModel> findById(UUID userId) {
-        return userRepository.findByIdWithAddresses(userId);
+        return userRepository.findByIdWithAddressesAndPhones(userId);
     }
 
     @Transactional

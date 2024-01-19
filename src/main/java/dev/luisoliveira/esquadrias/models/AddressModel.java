@@ -57,4 +57,3 @@ public class AddressModel implements Serializable {
     @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
     private CompanyModel company;
 }
-//TODO: corrigir o relacionamento entre AddressModel e UserModel

@@ -6,6 +6,7 @@ import dev.luisoliveira.esquadrias.configs.security.AuthenticationCurrentUserSer
 import dev.luisoliveira.esquadrias.configs.security.UserDetailsImpl;
 import dev.luisoliveira.esquadrias.dtos.UserDto;
 import dev.luisoliveira.esquadrias.models.AddressModel;
+import dev.luisoliveira.esquadrias.models.PhoneModel;
 import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.services.UserService;
 import dev.luisoliveira.esquadrias.specifications.SpecificationTemplate;
@@ -101,11 +102,14 @@ public class UserController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
             } else {
                 UserModel user = userModelOptional.get();
-                // Buscar os endereços do usuário
+
                 Set<AddressModel> addresses = user.getAddress();
+                Set<PhoneModel> phones = user.getPhones();
+
                 Map<String, Object> response = new HashMap<>();
                 response.put("user", user);
                 response.put("addresses", addresses);
+                response.put("phones", phones);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
         } else {

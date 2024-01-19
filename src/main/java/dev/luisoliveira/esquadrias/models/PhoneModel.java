@@ -1,6 +1,8 @@
 package dev.luisoliveira.esquadrias.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.luisoliveira.esquadrias.enums.PhoneType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -16,13 +18,18 @@ import java.util.UUID;
 public class PhoneModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
+
+    @JsonIgnore
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID phoneId;
     @Column(nullable = false, length = 15)
     private String phoneNumber;
+
+    @JsonIgnore
     @Column(nullable = false)
     private boolean active = true;
+    @JsonIgnore
     @Column(nullable = false)
     private boolean isDeleted = false;
     @Column(nullable = false)
@@ -32,8 +39,8 @@ public class PhoneModel implements Serializable {
     @Size(max = 500)
     private String description;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private UserModel user;
 
     @ManyToOne(fetch = FetchType.LAZY)

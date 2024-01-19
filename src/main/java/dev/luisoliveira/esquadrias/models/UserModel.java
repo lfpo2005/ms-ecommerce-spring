@@ -52,9 +52,7 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType userType;
-
     @JsonIgnore
-   // @CPF(message = "cpf invalid, default is 000.000.000-00")
     @Column(nullable = false)
     private String cpf;
     @Column
@@ -68,17 +66,17 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     private LocalDateTime updateAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime deleteAt;
-
     @Size(max = 500)
     private String description;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY )
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Fetch(FetchMode.SUBSELECT)
     private Set<AddressModel> address = new HashSet<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<PhoneModel> phones = new HashSet<>();
 
     @JsonIgnore

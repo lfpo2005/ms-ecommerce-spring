@@ -59,23 +59,23 @@ public class AddressController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
         }
     }
-    @PreAuthorize("hasAnyRole('USER')")
-    @GetMapping("/{addressId}")
-    public ResponseEntity<Object> getAddress(@PathVariable UUID addressId) {
-        try {
-            Optional<AddressModel> addressModelOptional = addressService.findById(addressId);
-            if (addressModelOptional == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address not found");
-            }
-            return ResponseEntity.ok(addressModelOptional);
-        } catch (Exception e) {
-            log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
-        }
-    }
+//    @PreAuthorize("hasAnyRole('USER')")
+//    @GetMapping("/{addressId}")
+//    public ResponseEntity<Object> getAddress(@PathVariable UUID addressId) {
+//        try {
+//            Optional<AddressModel> addressModelOptional = addressService.findById(addressId);
+//            if (addressModelOptional == null) {
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address not found");
+//            }
+//            return ResponseEntity.ok(addressModelOptional);
+//        } catch (Exception e) {
+//            log.error("Specific error occurred", e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+//        }
+//    }
 
     @PreAuthorize("hasAnyRole('USER')")
-    @PutMapping("/{userId}/createAddress/{addressId}")
+    @PutMapping("/{userId}/updateAddress/{addressId}")
     public ResponseEntity<Object> updateAddress(@PathVariable UUID addressId,
                                                 @RequestBody
                                                 @Validated(AddressDto.AddressView.RegistrationPost.class)
