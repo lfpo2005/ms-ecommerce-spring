@@ -14,6 +14,8 @@ public interface UserService {
 
     Optional<UserModel> findById(UUID userId);
 
+    Optional<UserModel> findByIdWithAddressesAndPhones(UUID userId);
+
     void delete(UserModel userModel);
 
     UserModel save(UserModel userModel);

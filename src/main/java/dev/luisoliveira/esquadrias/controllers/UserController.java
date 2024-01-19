@@ -97,7 +97,7 @@ public class UserController {
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "userId") UUID userId) {
         UUID currentUserId = authenticationCurrentUserService.getCurrentUser().getUserId();
         if (currentUserId.equals(userId)) {
-            Optional<UserModel> userModelOptional = userService.findById(userId);
+            Optional<UserModel> userModelOptional = userService.findByIdWithAddressesAndPhones(userId);
             if (!userModelOptional.isPresent()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
             } else {
