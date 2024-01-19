@@ -33,7 +33,7 @@ public class EmployeeModel implements Serializable {
     @Size(max = 500)
     private String description;
 
-    @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "employee", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private UserModel user;
 
 }

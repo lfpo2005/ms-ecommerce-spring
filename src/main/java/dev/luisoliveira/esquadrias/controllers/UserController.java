@@ -57,9 +57,9 @@ public class UserController {
                                                        SpecificationTemplate.UserSpec spec,
                                                        @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
                                                        Authentication authentication) {
-
-        UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        log.info("Authentication {} ", userDetails.getUsername());
+//
+//        UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
+//        log.info("Authentication {} ", userDetails.getUsername());
         
         // Filtros para buscar usuarios
         final Specification<UserModel> combinedSpec = getUserModelSpecification(isActive, isDeleted, email, fullName, spec);
@@ -101,21 +101,25 @@ public class UserController {
             if (!userModelOptional.isPresent()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
             } else {
-                UserModel user = userModelOptional.get();
-
-                Set<AddressModel> addresses = user.getAddress();
-                Set<PhoneModel> phones = user.getPhones();
-
-                Map<String, Object> response = new HashMap<>();
-                response.put("user", user);
-                response.put("addresses", addresses);
-                response.put("phones", phones);
-                return ResponseEntity.status(HttpStatus.OK).body(response);
+                return ResponseEntity.status(HttpStatus.OK).body(getStringObjectMap(userModelOptional));
             }
         } else {
             throw new AccessDeniedException("Forbidden");
         }
     }
+
+    private static Map<String, Object> getStringObjectMap(Optional<UserModel> userModelOptional) {
+        UserModel user = userModelOptional.get();
+
+        Set<AddressModel> addresses = user.getAddress();
+        Set<PhoneModel> phones = user.getPhones();
+        Map<String, Object> response = new HashMap<>();
+        response.put("user", user);
+        response.put("addresses", addresses);
+        response.put("phones", phones);
+        return response;
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/{userId}/deactivate-delete-user")
     public ResponseEntity<Object> deactivateAndDeleteUser(@PathVariable(value = "userId") UUID userId) {

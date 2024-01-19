@@ -3,8 +3,10 @@ package dev.luisoliveira.esquadrias.controllers;
 import com.fasterxml.jackson.annotation.JsonView;
 import dev.luisoliveira.esquadrias.dtos.PhoneDto;
 import dev.luisoliveira.esquadrias.enums.PhoneType;
+import dev.luisoliveira.esquadrias.models.CompanyModel;
 import dev.luisoliveira.esquadrias.models.PhoneModel;
 import dev.luisoliveira.esquadrias.models.UserModel;
+import dev.luisoliveira.esquadrias.services.CompanyService;
 import dev.luisoliveira.esquadrias.services.PhoneService;
 import dev.luisoliveira.esquadrias.services.UserService;
 import lombok.extern.log4j.Log4j2;
@@ -31,9 +33,12 @@ public class PhoneController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    CompanyService companyService;
+
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/users/{userId}/createPhone")
-    public ResponseEntity<Object> registerPhone(@PathVariable(value = "userId") UUID userId,
+    public ResponseEntity<Object> registerPhoneForUser(@PathVariable(value = "userId") UUID userId,
                                                   @RequestBody @Validated(PhoneDto.PhoneView.RegistrationPost.class)
                                                   @JsonView(PhoneDto.PhoneView.RegistrationPost.class) PhoneDto phoneDto) {
 
@@ -49,7 +54,6 @@ public class PhoneController {
             }
             var phoneModel = new PhoneModel();
             BeanUtils.copyProperties(phoneDto, phoneModel);
-            //phoneModel.setPhoneType(PhoneType.MOBILE); //Todo: implementar tipo de fone dinamico
             phoneModel.setUser(userModelOptional.get());
             phoneService.save(phoneModel);
             return ResponseEntity.status(HttpStatus.CREATED).body(phoneModel);
@@ -59,6 +63,35 @@ public class PhoneController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
         }
     }
+
+    @PreAuthorize("hasAnyRole('USER')")
+    @PostMapping("/companies/{companyId}/createPhone")
+    public ResponseEntity<Object> registerPhoneForCompany(@PathVariable(value = "companyId") UUID companyId,
+                                                          @RequestBody @Validated(PhoneDto.PhoneView.RegistrationPost.class)
+                                                          @JsonView(PhoneDto.PhoneView.RegistrationPost.class) PhoneDto phoneDto) {
+
+        log.debug("POST registerPhoneForCompany PhoneDto received: ------> {}", phoneDto.toString());
+        Optional<CompanyModel> companyModelOptional = companyService.findById(companyId);
+
+        try {
+            if (!companyModelOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Company not found");
+            }
+            if (phoneDto.getPhoneId() != null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The phoneId field must be null");
+            }
+            var phoneModel = new PhoneModel();
+            BeanUtils.copyProperties(phoneDto, phoneModel);
+            phoneModel.setCompany(companyModelOptional.get());
+            phoneService.save(phoneModel);
+            return ResponseEntity.status(HttpStatus.CREATED).body(phoneModel);
+
+        } catch (Exception e) {
+            log.error("Specific error occurred", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+        }
+    }
+
 //    @PreAuthorize("hasAnyRole('USER')")
 //    @GetMapping("/{phoneId}")
 //    public ResponseEntity<Object> getPhone(@PathVariable UUID phoneId) {

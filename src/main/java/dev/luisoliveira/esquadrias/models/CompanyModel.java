@@ -1,12 +1,18 @@
 package dev.luisoliveira.esquadrias.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -22,11 +28,11 @@ public class CompanyModel implements Serializable {
         @GeneratedValue(strategy = GenerationType.AUTO)
         private UUID companyId;
         @CNPJ(message = "Cnpj is invalid")
-        @Column(nullable = false, unique = true, length = 14)
+        @Column(nullable = false, unique = true, length = 20)
         private String cnpj;
-        @Column(nullable = false, unique = true, length = 14)
+        @Column(unique = true, length = 20)
         private String stateRegistration;
-        @Column(length = 14)
+        @Column(length = 20)
         private String municipalRegistration;
         @Column(nullable = false, length = 50)
         private String fantasyName;
@@ -42,23 +48,38 @@ public class CompanyModel implements Serializable {
         private String site;
         @Size(max = 500)
         private String description;
+
         @Column(nullable = false)
         private boolean active = true;
         @Column(nullable = false)
         private boolean isDeleted = false;
 
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+        private LocalDateTime createdAt;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+        private LocalDateTime updateAt;
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
+        private LocalDateTime deleteAt;
+
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+        @Fetch(FetchMode.SUBSELECT)
         private Set<PhoneModel> phones = new HashSet<>();
 
         @OneToOne(cascade = CascadeType.ALL)
+
         @JoinColumn(name = "address_id", referencedColumnName = "addressId")
         private AddressModel address;
 
+        @JsonIgnore
         @OneToOne(cascade = CascadeType.ALL)
         @JoinColumn(name = "feedstock_id", referencedColumnName = "feedstockId")
         private FeedstockModel feedstock;
 
+        @JsonIgnore
         @ManyToOne
         @JoinColumn(name = "user_id", nullable = false)
         private UserModel responsibleUser;
+
+
 }

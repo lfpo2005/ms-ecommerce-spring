@@ -53,7 +53,7 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Enumerated(EnumType.STRING)
     private UserType userType;
     @JsonIgnore
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String cpf;
     @Column
     private String imageUrl;
@@ -80,7 +80,7 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     private Set<PhoneModel> phones = new HashSet<>();
 
     @JsonIgnore
-    @OneToMany(mappedBy = "responsibleUser")
+    @OneToMany(mappedBy = "responsibleUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<CompanyModel> companies;
 
     @JsonIgnore
