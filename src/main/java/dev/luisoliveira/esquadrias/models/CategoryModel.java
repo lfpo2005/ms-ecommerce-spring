@@ -1,6 +1,7 @@
 package dev.luisoliveira.esquadrias.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -8,6 +9,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -28,10 +30,12 @@ public class CategoryModel implements Serializable {
     private String name;
     @Size(max = 500)
     private String classDescription;
+    @JsonIgnore
     @Column(nullable = false)
     private boolean active = true;
+    @JsonIgnore
     @Column(nullable = false)
-    private boolean isDeleted = false;
+    private boolean deleted = false;
     @Column(nullable = false, updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime createdAt;

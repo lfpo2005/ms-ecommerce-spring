@@ -34,10 +34,24 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId);
 
     }
+
+    @Transactional
+    @Override
+    public Optional<UserModel> findByIdWithAddressesAndPhones(UUID userId) {
+        Optional<UserModel> userModelOptional = userRepository.findByIdWithAddressesAndPhones(userId);
+        if (userModelOptional.isPresent()) {
+            userModelOptional.get().getAddress().size();
+            userModelOptional.get().getPhones().size();
+        }
+        return userModelOptional;
+    }
+
+/*
     @Override
     public Optional<UserModel> findByIdWithAddressesAndPhones(UUID userId) {
         return userRepository.findByIdWithAddressesAndPhones(userId);
     }
+*/
 
     @Transactional
     @Override

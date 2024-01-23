@@ -16,21 +16,21 @@ public class SpecificationTemplate {
             @Spec(path = "active", spec = Equal.class)
         })
     public interface UserSpec extends Specification<UserModel> {
-            public static Specification<UserModel> isActive(Boolean isActive) {
+            public static Specification<UserModel> active(Boolean active) {
                 return (root, query, criteriaBuilder) -> {
-                    if (isActive == null) {
+                    if (active == null) {
                         return criteriaBuilder.isTrue(criteriaBuilder.literal(true));
                     }
-                    return criteriaBuilder.equal(root.get("isActive"), isActive);
+                    return criteriaBuilder.equal(root.get("active"), active);
                 };
             }
 
-            public static Specification<UserModel> isDeleted(Boolean isDeleted) {
+            public static Specification<UserModel> deleted(Boolean deleted) {
                 return (root, query, criteriaBuilder) -> {
-                    if (isDeleted == null) {
+                    if (deleted == null) {
                         return criteriaBuilder.isTrue(criteriaBuilder.literal(false));
                     }
-                    return criteriaBuilder.equal(root.get("isDeleted"), isDeleted);
+                    return criteriaBuilder.equal(root.get("deleted"), deleted);
                 };
             }
 

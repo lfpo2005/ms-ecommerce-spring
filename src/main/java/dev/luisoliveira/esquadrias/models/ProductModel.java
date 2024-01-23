@@ -1,6 +1,7 @@
 package dev.luisoliveira.esquadrias.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -43,10 +44,12 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private String description;
     @Size(max = 500)
     private String classDescription;
+    @JsonIgnore
     @Column(nullable = false)
     private boolean active = true;
+    @JsonIgnore
     @Column(nullable = false)
-    private boolean isDeleted = false;
+    private boolean deleted = false;
     @NotNull(message = "O tipo da unidade deve ser informado")
     @Column(nullable = false)
     private String typeUnit;

@@ -5,5 +5,6 @@ public enum PhoneType {
     MOBILE,
     WORK,
     COMMERCIAL,
+    COMPANY,
     CONTACT
 }

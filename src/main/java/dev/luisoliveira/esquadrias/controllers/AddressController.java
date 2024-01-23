@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import dev.luisoliveira.esquadrias.dtos.AddressDto;
 import dev.luisoliveira.esquadrias.enums.AddressType;
 import dev.luisoliveira.esquadrias.models.AddressModel;
+import dev.luisoliveira.esquadrias.models.CompanyModel;
 import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.services.AddressService;
+import dev.luisoliveira.esquadrias.services.CompanyService;
 import dev.luisoliveira.esquadrias.services.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
@@ -31,9 +33,12 @@ public class AddressController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    CompanyService companyService;
+
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/users/{userId}/createAddress")
-    public ResponseEntity<Object> registerAddress(@PathVariable(value = "userId") UUID userId,
+    @PostMapping("/users/{userId}/createUserAddress")
+    public ResponseEntity<Object> registerUserAddress(@PathVariable(value = "userId") UUID userId,
                                                   @RequestBody @Validated(AddressDto.AddressView.RegistrationPost.class)
                                                   @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto) {
 
@@ -49,8 +54,36 @@ public class AddressController {
             }
             var addressModel = new AddressModel();
             BeanUtils.copyProperties(addressDto, addressModel);
-            addressModel.setType(AddressType.RESIDENTIAL); //Todo: implementar tipo de endereço dinamico
+            addressModel.setType(AddressType.RESIDENTIAL);
             addressModel.setUser(userModelOptional.get());
+            addressService.save(addressModel);
+            return ResponseEntity.status(HttpStatus.CREATED).body(addressModel);
+
+        } catch (Exception e) {
+            log.error("Specific error occurred", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+        }
+    }
+    @PreAuthorize("hasAnyRole('USER')")
+    @PostMapping("/company/{companyId}/createCompanyAddress")
+    public ResponseEntity<Object> registerCompanyAddress(@PathVariable(value = "companyId") UUID companyId,
+                                                      @RequestBody @Validated(AddressDto.AddressView.RegistrationPost.class)
+                                                      @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto) {
+
+        log.debug("POST registerAddress AddressDto received: ------> {}", addressDto.toString());
+        Optional<CompanyModel> companyModelOptional = companyService.findById(companyId);
+
+        try {
+            if (!companyModelOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Company not found");
+            }
+            if (addressDto.getAddressId() != null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The addressId field must be null");
+            }
+            var addressModel = new AddressModel();
+            BeanUtils.copyProperties(addressDto, addressModel);
+            addressModel.setType(AddressType.COMPANY);
+            addressModel.setCompany(companyModelOptional.get());
             addressService.save(addressModel);
             return ResponseEntity.status(HttpStatus.CREATED).body(addressModel);
 

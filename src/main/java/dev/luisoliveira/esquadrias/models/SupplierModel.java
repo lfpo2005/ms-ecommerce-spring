@@ -1,5 +1,6 @@
 package dev.luisoliveira.esquadrias.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -22,13 +23,14 @@ public class SupplierModel implements Serializable {
         private UUID supplierId;
         @Column(nullable = false, length = 50)
         private String nameContact;
+        @JsonIgnore
         @Column(nullable = false)
         private boolean active = true;
+        @JsonIgnore
         @Column(nullable = false)
-        private boolean isDeleted = false;
+        private boolean deleted = false;
         @Size(max = 500)
         private String description;
-
         @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)
         private Set<PhoneModel> phones = new HashSet<>();
 

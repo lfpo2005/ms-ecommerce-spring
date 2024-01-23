@@ -1,15 +1,19 @@
 package dev.luisoliveira.esquadrias.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dev.luisoliveira.esquadrias.dtos.resposeDto.AddressDTO;
 import dev.luisoliveira.esquadrias.enums.AddressType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -43,17 +47,29 @@ public class AddressModel implements Serializable {
     private String neighborhood;
     @Size(max = 500)
     private String description;
-    private boolean isActive = true;
-    private boolean isDeleted = false;
-
+    @JsonIgnore
+    @Column(nullable = false)
+    private boolean active = true;
+    @JsonIgnore
+    @Column(nullable = false)
+    private boolean deleted = false;
+    @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AddressType type;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private UserModel user;
 
-    @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private CompanyModel company;
+
+    public AddressDTO convertToAddressDTO() {
+      var addressDTO = new AddressDTO();
+        BeanUtils.copyProperties(this, addressDTO);
+        addressDTO.getType(this.getType().toString());
+        return addressDTO;
+    }
 }

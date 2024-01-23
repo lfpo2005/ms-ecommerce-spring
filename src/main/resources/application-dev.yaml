@@ -6,7 +6,7 @@ server:
 
 spring:
   datasource:
-    url:  jdbc:postgresql://localhost:5432/esquadrias_dev?autoreconnect=true
+    url:  jdbc:postgresql://localhost:5432/esquadrias_dev_new?autoreconnect=true
     username: postgres
     password: 197197
   type: com.zaxxer.hikari.HikariDataSource

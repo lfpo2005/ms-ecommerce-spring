@@ -25,11 +25,7 @@ public interface UserRepository extends JpaRepository<UserModel, UUID>, JpaSpeci
     @EntityGraph(attributePaths = "roles", type = EntityGraph.EntityGraphType.FETCH)
     Optional<UserModel> findById(UUID userId);
 
-
-//    @Query("SELECT u FROM UserModel u JOIN FETCH u.address WHERE u.userId = :userId")
-//    Optional<UserModel> findByIdWithAddresses(@Param("userId") UUID userId);
-
-    @Query("SELECT u FROM UserModel u JOIN FETCH u.address JOIN FETCH u.phones WHERE u.userId = :userId")
+    @Query("SELECT u FROM UserModel u JOIN FETCH u.phones JOIN FETCH u.address WHERE u.userId = :userId")
     Optional<UserModel> findByIdWithAddressesAndPhones(@Param("userId") UUID userId);
 
 }

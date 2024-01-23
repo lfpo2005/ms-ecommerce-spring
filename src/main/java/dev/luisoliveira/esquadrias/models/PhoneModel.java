@@ -3,10 +3,12 @@ package dev.luisoliveira.esquadrias.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dev.luisoliveira.esquadrias.dtos.resposeDto.PhoneDTO;
 import dev.luisoliveira.esquadrias.enums.PhoneType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -31,7 +33,7 @@ public class PhoneModel implements Serializable {
     private boolean active = true;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean isDeleted = false;
+    private boolean deleted = false;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PhoneType phoneType;
@@ -51,4 +53,10 @@ public class PhoneModel implements Serializable {
     @JoinColumn(name = "supplierId")
     private SupplierModel supplier;
 
+    public PhoneDTO convertToPhoneDTO() {
+        PhoneDTO phoneDTO = new PhoneDTO();
+        BeanUtils.copyProperties(this, phoneDTO);
+        phoneDTO.getPhoneType(this.getPhoneType().toString());
+        return phoneDTO;
+    }
 }

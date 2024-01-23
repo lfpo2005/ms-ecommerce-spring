@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dev.luisoliveira.esquadrias.dtos.resposeDto.CompanyWithDetailsDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.br.CNPJ;
+import org.springframework.beans.BeanUtils;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -17,7 +20,10 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
 @Table(name = "TB_COMPANIES")
@@ -37,7 +43,7 @@ public class CompanyModel implements Serializable {
         @Column(nullable = false, length = 50)
         private String fantasyName;
         @Column(nullable = false, length = 50)
-        private String corporateName;
+        private String CompanyName;
         @Column(nullable = false, length = 50)
         private String category;
         @Column(nullable = false, length = 60)
@@ -48,12 +54,12 @@ public class CompanyModel implements Serializable {
         private String site;
         @Size(max = 500)
         private String description;
-
+        @JsonIgnore
         @Column(nullable = false)
         private boolean active = true;
+        @JsonIgnore
         @Column(nullable = false)
-        private boolean isDeleted = false;
-
+        private boolean deleted = false;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
         private LocalDateTime createdAt;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
@@ -62,14 +68,14 @@ public class CompanyModel implements Serializable {
         private LocalDateTime deleteAt;
 
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-        @OneToMany(mappedBy = "company", cascade = CascadeType.ALL, orphanRemoval = true)
+        @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
         @Fetch(FetchMode.SUBSELECT)
         private Set<PhoneModel> phones = new HashSet<>();
 
-        @OneToOne(cascade = CascadeType.ALL)
-
-        @JoinColumn(name = "address_id", referencedColumnName = "addressId")
-        private AddressModel address;
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+        @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+        @Fetch(FetchMode.SUBSELECT)
+        private Set<AddressModel> address = new HashSet<>();
 
         @JsonIgnore
         @OneToOne(cascade = CascadeType.ALL)
@@ -80,6 +86,12 @@ public class CompanyModel implements Serializable {
         @ManyToOne
         @JoinColumn(name = "user_id", nullable = false)
         private UserModel responsibleUser;
+
+        public CompanyWithDetailsDTO convertToCompanyEventDto(){
+            var companyWithDetailsDTO = new CompanyWithDetailsDTO();
+            BeanUtils.copyProperties(this, companyWithDetailsDTO);
+            return companyWithDetailsDTO;
+        }
 
 
 }
