@@ -6,5 +6,6 @@ public enum AddressType {
     CHARGE,
     COMMERCIAL,
     COMPANY,
+     EMPLOYEE,
     DELIVERY
 }

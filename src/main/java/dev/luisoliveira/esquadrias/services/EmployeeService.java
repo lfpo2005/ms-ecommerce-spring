@@ -7,11 +7,12 @@ import java.util.UUID;
 
 public interface EmployeeService {
 
-//    Optional<EmployeeModel> findById(UUID employeeId);
 
     EmployeeModel save(EmployeeModel employeeId);
 
     boolean existsByFullName(String fullName);
 
     boolean existsByEmail(String email);
+
+    Optional<EmployeeModel> findById(UUID employeeId);
 }

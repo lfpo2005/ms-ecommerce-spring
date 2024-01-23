@@ -14,10 +14,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     EmployeeRepository employeeRepository;
-//    @Override
-//    public Optional<EmployeeModel> findById(UUID employeeId) {
-//        return employeeRepository.findById(employeeId);
-//    }
+    @Override
+    public Optional<EmployeeModel> findById(UUID employeeId) {
+        return employeeRepository.findById(employeeId);
+    }
 
     @Override
     public EmployeeModel save(EmployeeModel employeeModel) {

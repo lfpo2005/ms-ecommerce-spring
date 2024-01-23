@@ -35,7 +35,7 @@ public class CompanyDto {
 
     @NotBlank(groups =  {CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
     @JsonView({CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
-    private String corporateName;
+    private String companyName;
 
     @NotBlank(groups =  {CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
     @JsonView({CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})

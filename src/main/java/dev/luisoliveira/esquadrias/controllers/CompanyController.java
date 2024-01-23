@@ -39,8 +39,8 @@ public class CompanyController {
     UserService userService;
 
     @PreAuthorize("hasAnyRole('CUSTOMER')")
-    @PostMapping("/users/{companyId}/createCompany")
-    public ResponseEntity<Object> registerCompany(@PathVariable(value = "companyId") UUID userId,
+    @PostMapping("/users/{userId}/createCompany")
+    public ResponseEntity<Object> registerCompany(@PathVariable(value = "userId") UUID userId,
                                                   @RequestBody @Validated(CompanyDto.CompanyView.RegistrationPost.class)
                                                   @JsonView(CompanyDto.CompanyView.RegistrationPost.class) CompanyDto companyDto) {
 

@@ -5,9 +5,11 @@ import dev.luisoliveira.esquadrias.dtos.AddressDto;
 import dev.luisoliveira.esquadrias.enums.AddressType;
 import dev.luisoliveira.esquadrias.models.AddressModel;
 import dev.luisoliveira.esquadrias.models.CompanyModel;
+import dev.luisoliveira.esquadrias.models.EmployeeModel;
 import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.services.AddressService;
 import dev.luisoliveira.esquadrias.services.CompanyService;
+import dev.luisoliveira.esquadrias.services.EmployeeService;
 import dev.luisoliveira.esquadrias.services.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
@@ -36,6 +38,9 @@ public class AddressController {
     @Autowired
     CompanyService companyService;
 
+    @Autowired
+    EmployeeService employeeService;
+
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/users/{userId}/createUserAddress")
     public ResponseEntity<Object> registerUserAddress(@PathVariable(value = "userId") UUID userId,
@@ -56,6 +61,34 @@ public class AddressController {
             BeanUtils.copyProperties(addressDto, addressModel);
             addressModel.setType(AddressType.RESIDENTIAL);
             addressModel.setUser(userModelOptional.get());
+            addressService.save(addressModel);
+            return ResponseEntity.status(HttpStatus.CREATED).body(addressModel);
+
+        } catch (Exception e) {
+            log.error("Specific error occurred", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+        }
+    }
+    @PreAuthorize("hasAnyRole('USER')")
+    @PostMapping("/employee/{employeeId}/registerEmployeeAddress")
+    public ResponseEntity<Object> registerEmployeeAddress(@PathVariable(value = "employeeId") UUID employeeId,
+                                                         @RequestBody @Validated(AddressDto.AddressView.RegistrationPost.class)
+                                                         @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto) {
+
+        log.debug("POST registerEmployeeAddress AddressDto received: ------> {}", addressDto.toString());
+        Optional<EmployeeModel> employeeModelOptional = employeeService.findById(employeeId);
+
+        try {
+            if (!employeeModelOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
+            }
+            if (addressDto.getAddressId() != null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The addressId field must be null");
+            }
+            var addressModel = new AddressModel();
+            BeanUtils.copyProperties(addressDto, addressModel);
+            addressModel.setType(AddressType.EMPLOYEE);
+            addressModel.setCompany(employeeModelOptional.get().getCompany());
             addressService.save(addressModel);
             return ResponseEntity.status(HttpStatus.CREATED).body(addressModel);
 

@@ -66,6 +66,10 @@ public class AddressModel implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private CompanyModel company;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    private EmployeeModel employee;
+
     public AddressRespDTO convertToAddressDTO() {
       var addressDTO = new AddressRespDTO();
         BeanUtils.copyProperties(this, addressDTO);
