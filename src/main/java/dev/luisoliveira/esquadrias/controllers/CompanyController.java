@@ -2,9 +2,7 @@ package dev.luisoliveira.esquadrias.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import dev.luisoliveira.esquadrias.dtos.CompanyDto;
-import dev.luisoliveira.esquadrias.dtos.resposeDto.AddressDTO;
 import dev.luisoliveira.esquadrias.dtos.resposeDto.CompanyWithDetailsDTO;
-import dev.luisoliveira.esquadrias.dtos.resposeDto.PhoneDTO;
 import dev.luisoliveira.esquadrias.models.AddressModel;
 import dev.luisoliveira.esquadrias.models.CompanyModel;
 import dev.luisoliveira.esquadrias.models.PhoneModel;
@@ -97,7 +95,7 @@ public class CompanyController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
         }
     }
-    // TODO: Analisar qual metodo usar getOneCompanyJDBC ou getOneCompany
+    // TODO: Analisar qual metodo usar getOneCompanyJDBC ou getOneCompany se for o getOneCompany verificar se necessario o uso dos DTOs e convertes
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/{companyId}/jdbc")
     public ResponseEntity<Object> getOneCompanyJDBC(@PathVariable("companyId") UUID companyId) {

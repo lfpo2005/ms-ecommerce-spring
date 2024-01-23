@@ -1,12 +1,10 @@
 package dev.luisoliveira.esquadrias.dtos.resposeDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.luisoliveira.esquadrias.models.UserModel;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Set;
 import java.util.UUID;
 

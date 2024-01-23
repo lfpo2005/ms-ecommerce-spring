@@ -4,13 +4,12 @@ package dev.luisoliveira.esquadrias.services.imp;
 import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.repositories.UserRepository;
 import dev.luisoliveira.esquadrias.services.UserService;
-import dev.luisoliveira.esquadrias.utils.CryptoUtils;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;

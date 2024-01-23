@@ -1,58 +1,27 @@
-public CompanyModel getByIdWithAddressesAndPhones(UUID companyId) {
-        String sql = "SELECT c.*, p.phone_id, p.phone_number, p.phone_type, a.address_id, a.street, a.city " +
-        "FROM tb_companies c " +
-        "LEFT JOIN tb_phones p ON c.company_id = p.company_company_id " +
-        "LEFT JOIN tb_address a ON c.company_id = a.company_company_id " +
-        "WHERE c.company_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{companyId}, new ResultSetExtractor<CompanyModel>() {
-    Set<UUID> processedPhones = new HashSet<>();
-        Set<UUID> processedAddresses = new HashSet<>();
-            @Override
-            public CompanyModel extractData(ResultSet rs) throws SQLException, DataAccessException {
-            CompanyModel company = null;
-            while (rs.next()) {
-            if (company == null) {
-            company = new CompanyModel();
-            company.setCompanyId((UUID) rs.getObject("company_id"));
-            company.setCnpj(rs.getString("cnpj"));
-            company.setFantasyName(rs.getString("fantasy_name"));
-            company.setCorporateName(rs.getString("corporate_name"));
-            company.setCategory(rs.getString("category"));
-            company.setEmail(rs.getString("email"));
-            company.setNameContact(rs.getString("name_contact"));
-            company.setSite(rs.getString("site"));
-            company.setDescription(rs.getString("description"));
-            company.setMunicipalRegistration(rs.getString("municipal_registration"));
-            company.setStateRegistration(rs.getString("state_registration"));
-            company.setCreatedAt(rs.getObject("created_at", LocalDateTime.class));
+public CompanyWithDetailsDTO getByIdWithAddressesAndPhones(UUID companyId) {
+        String sql = "..."; // Sua consulta SQL
 
-            company.setPhones(new HashSet<>());
-                company.setAddress(new HashSet<>());
-                    }
-                    UUID addressId = rs.getObject("address_id", UUID.class);
-                    if (addressId != null && !processedAddresses.contains(addressId)) {
-                    AddressModel address = new AddressModel();
-                    address.setAddressId(addressId);
-                    address.setStreet(rs.getString("street"));
-                    address.setCity(rs.getString("city"));
-                    company.getAddress().add(address);
-                    processedAddresses.add(addressId);
-                    }
+        return jdbcTemplate.query(sql, new Object[]{companyId}, rs -> {
+        CompanyModel company = null;
+        Set<UUID> processedPhones = new HashSet<>();
+    Set<UUID> processedAddresses = new HashSet<>();
 
-                    UUID phoneId = rs.getObject("phone_id", UUID.class);
-                    if (phoneId != null && !processedPhones.contains(phoneId)) {
-                    PhoneModel phone = new PhoneModel();
-                    phone.setPhoneId(phoneId);
-                    phone.setPhoneNumber(rs.getString("phone_number"));
-                    phone.setPhoneType(PhoneType.valueOf(rs.getString("phone_type")));
-                    company.getPhones().add(phone);
-                    processedPhones.add(phoneId);
-                    }
+        while (rs.next()) {
+        if (company == null) {
+        company = new CompanyModel();
+        // Preenche os dados de CompanyModel a partir do ResultSet
+        company.setCompanyId(UUID.fromString(rs.getString("company_id")));
+        company.setCnpj(rs.getString("cnpj"));
+        // ... outros campos de CompanyModel ...
+        company.setPhones(new HashSet<>());
+            company.setAddress(new HashSet<>());
+                }
 
-                    }
-                    return company;
-                    }
-                    });
-                    }
+                // Lógica para adicionar telefones e endereços ao CompanyModel
+                // ...
 
-
+                }
+                // Depois de preencher o CompanyModel, converte-o para CompanyWithDetailsDTO
+                return company.convertToCompanyEventDto();
+                });
+                }

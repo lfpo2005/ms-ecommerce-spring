@@ -1,7 +1,7 @@
 package dev.luisoliveira.esquadrias.dtos.resposeDto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.luisoliveira.esquadrias.enums.AddressType;
+import dev.luisoliveira.esquadrias.models.AddressModel;
 import lombok.Data;
 
 import java.util.UUID;
@@ -21,7 +21,8 @@ public class AddressDTO {
     private boolean active;
     private AddressType type;
 
-
-    public void getType(String string) {
+    public void setType(String typeString) {
+        this.type = AddressType.valueOf(typeString);
     }
+
 }

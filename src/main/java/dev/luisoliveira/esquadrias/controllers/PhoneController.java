@@ -2,7 +2,6 @@ package dev.luisoliveira.esquadrias.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import dev.luisoliveira.esquadrias.dtos.PhoneDto;
-import dev.luisoliveira.esquadrias.enums.PhoneType;
 import dev.luisoliveira.esquadrias.models.CompanyModel;
 import dev.luisoliveira.esquadrias.models.PhoneModel;
 import dev.luisoliveira.esquadrias.models.UserModel;

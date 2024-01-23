@@ -7,12 +7,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.luisoliveira.esquadrias.dtos.resposeDto.CompanyWithDetailsDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.br.CNPJ;
 import org.springframework.beans.BeanUtils;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -82,7 +84,6 @@ public class CompanyModel implements Serializable {
         @JoinColumn(name = "feedstock_id", referencedColumnName = "feedstockId")
         private FeedstockModel feedstock;
 
-        @JsonIgnore
         @ManyToOne
         @JoinColumn(name = "user_id", nullable = false)
         private UserModel responsibleUser;
@@ -92,6 +93,4 @@ public class CompanyModel implements Serializable {
             BeanUtils.copyProperties(this, companyWithDetailsDTO);
             return companyWithDetailsDTO;
         }
-
-
 }

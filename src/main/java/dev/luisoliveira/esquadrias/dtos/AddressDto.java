@@ -2,7 +2,6 @@ package dev.luisoliveira.esquadrias.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
-import dev.luisoliveira.esquadrias.enums.AddressType;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 

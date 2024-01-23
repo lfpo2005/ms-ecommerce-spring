@@ -1,7 +1,6 @@
 package dev.luisoliveira.esquadrias.dtos;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import dev.luisoliveira.esquadrias.validations.UsernameConstraint;
@@ -11,7 +10,6 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.validator.constraints.br.CPF;
-
 
 import java.util.UUID;
 

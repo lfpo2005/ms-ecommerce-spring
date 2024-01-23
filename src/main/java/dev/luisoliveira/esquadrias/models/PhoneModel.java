@@ -56,7 +56,9 @@ public class PhoneModel implements Serializable {
     public PhoneDTO convertToPhoneDTO() {
         PhoneDTO phoneDTO = new PhoneDTO();
         BeanUtils.copyProperties(this, phoneDTO);
-        phoneDTO.getPhoneType(this.getPhoneType().toString());
+        if (this.getPhoneType() != null) {
+            phoneDTO.setPhoneType(this.getPhoneType().toString());
+        }
         return phoneDTO;
     }
 }

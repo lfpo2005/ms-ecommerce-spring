@@ -69,7 +69,9 @@ public class AddressModel implements Serializable {
     public AddressDTO convertToAddressDTO() {
       var addressDTO = new AddressDTO();
         BeanUtils.copyProperties(this, addressDTO);
-        addressDTO.getType(this.getType().toString());
+        if (this.getType() != null) {
+            addressDTO.setType(this.getType().toString());
+        }
         return addressDTO;
     }
 }

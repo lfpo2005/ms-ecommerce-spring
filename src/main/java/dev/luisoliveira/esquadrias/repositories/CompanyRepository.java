@@ -1,7 +1,6 @@
 package dev.luisoliveira.esquadrias.repositories;
 
 import dev.luisoliveira.esquadrias.models.CompanyModel;
-import dev.luisoliveira.esquadrias.models.PhoneModel;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,6 +1,7 @@
 package dev.luisoliveira.esquadrias.dtos.resposeDto;
 
 import dev.luisoliveira.esquadrias.enums.PhoneType;
+import dev.luisoliveira.esquadrias.models.PhoneModel;
 import lombok.Data;
 
 import java.util.UUID;
@@ -14,6 +15,7 @@ public class PhoneDTO {
     private PhoneType phoneType;
     private String description;
 
-    public void getPhoneType(String string) {
+    public void setPhoneType(String typeString) {
+        this.phoneType = PhoneType.valueOf(typeString);
     }
 }
