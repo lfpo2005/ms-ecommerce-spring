@@ -12,6 +12,7 @@ import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.services.RoleService;
 import dev.luisoliveira.esquadrias.services.UserService;
 import dev.luisoliveira.esquadrias.utils.CryptoUtils;
+import dev.luisoliveira.esquadrias.utils.DateUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -74,7 +75,7 @@ public class AuthenticationController {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: FullName is Already Taken!");
             }
 
-            if (!userService.isValidBirthDate(userDto.getBirthDate())) {
+            if (!DateUtil.isValidBirthDate(userDto.getBirthDate())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Invalid BirthDate format! Valid format: dd-MM-yyyy");
             }
 
@@ -97,7 +98,6 @@ public class AuthenticationController {
                 log.error("Error encrypting CPF", e);
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error encrypting CPF");
             }
-
 
             userService.save(userModel);
             log.debug("POST registerUser userModel saved: ------> {}", userModel.getUserId());

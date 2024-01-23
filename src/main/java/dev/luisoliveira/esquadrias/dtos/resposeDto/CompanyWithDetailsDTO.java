@@ -28,8 +28,8 @@ public class CompanyWithDetailsDTO {
     private LocalDateTime createdAt ;
    // private FeedstockModel feedstock;
     private UserModel responsibleUser;
-    private Set<AddressDTO> addresses;
-    private Set<PhoneDTO> phones;
+    private Set<AddressRespDTO> addresses;
+    private Set<PhoneRespDTO> phones;
 
 
 }

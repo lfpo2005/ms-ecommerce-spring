@@ -1,13 +1,12 @@
 package dev.luisoliveira.esquadrias.dtos.resposeDto;
 
 import dev.luisoliveira.esquadrias.enums.AddressType;
-import dev.luisoliveira.esquadrias.models.AddressModel;
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
-public class AddressDTO {
+public class AddressRespDTO {
 
     private UUID addressId;
     private String street;

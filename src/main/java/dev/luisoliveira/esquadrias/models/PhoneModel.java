@@ -3,7 +3,7 @@ package dev.luisoliveira.esquadrias.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import dev.luisoliveira.esquadrias.dtos.resposeDto.PhoneDTO;
+import dev.luisoliveira.esquadrias.dtos.resposeDto.PhoneRespDTO;
 import dev.luisoliveira.esquadrias.enums.PhoneType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -53,12 +53,12 @@ public class PhoneModel implements Serializable {
     @JoinColumn(name = "supplierId")
     private SupplierModel supplier;
 
-    public PhoneDTO convertToPhoneDTO() {
-        PhoneDTO phoneDTO = new PhoneDTO();
-        BeanUtils.copyProperties(this, phoneDTO);
+    public PhoneRespDTO convertToPhoneDTO() {
+        PhoneRespDTO phoneRespDTO = new PhoneRespDTO();
+        BeanUtils.copyProperties(this, phoneRespDTO);
         if (this.getPhoneType() != null) {
-            phoneDTO.setPhoneType(this.getPhoneType().toString());
+            phoneRespDTO.setPhoneType(this.getPhoneType().toString());
         }
-        return phoneDTO;
+        return phoneRespDTO;
     }
 }

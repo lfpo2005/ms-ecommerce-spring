@@ -1,9 +1,8 @@
 package dev.luisoliveira.esquadrias.repositories;
 
-import dev.luisoliveira.esquadrias.dtos.resposeDto.AddressDTO;
+import dev.luisoliveira.esquadrias.dtos.resposeDto.AddressRespDTO;
 import dev.luisoliveira.esquadrias.dtos.resposeDto.CompanyWithDetailsDTO;
-import dev.luisoliveira.esquadrias.dtos.resposeDto.PhoneDTO;
-import dev.luisoliveira.esquadrias.enums.PhoneType;
+import dev.luisoliveira.esquadrias.dtos.resposeDto.PhoneRespDTO;
 import dev.luisoliveira.esquadrias.models.AddressModel;
 import dev.luisoliveira.esquadrias.models.CompanyModel;
 import dev.luisoliveira.esquadrias.models.PhoneModel;
@@ -65,7 +64,7 @@ public class CompanyJdbcDao {
 
                 UUID addressId = rs.getObject("address_id", UUID.class);
                 if (addressId != null && !processedAddresses.contains(addressId)) {
-                    AddressDTO address = new AddressDTO();
+                    AddressRespDTO address = new AddressRespDTO();
                     address.setAddressId(addressId);
                     address.setStreet(rs.getString("street"));
                     address.setCity(rs.getString("city"));
@@ -76,7 +75,7 @@ public class CompanyJdbcDao {
                 }
                 UUID phoneId = rs.getObject("phone_id", UUID.class);
                 if (phoneId != null && !processedPhones.contains(phoneId)) {
-                    PhoneDTO phone = new PhoneDTO();
+                    PhoneRespDTO phone = new PhoneRespDTO();
                     phone.setPhoneId(phoneId);
                     phone.setPhoneNumber(rs.getString("phone_number"));
                     phone.setPhoneType(rs.getString("type"));// this line is the problem

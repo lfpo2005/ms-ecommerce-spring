@@ -1,8 +1,8 @@
 package dev.luisoliveira.esquadrias.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
+
 import dev.luisoliveira.esquadrias.dtos.CompanyDto;
-import dev.luisoliveira.esquadrias.dtos.resposeDto.CompanyWithDetailsDTO;
 import dev.luisoliveira.esquadrias.models.AddressModel;
 import dev.luisoliveira.esquadrias.models.CompanyModel;
 import dev.luisoliveira.esquadrias.models.PhoneModel;
@@ -96,27 +96,27 @@ public class CompanyController {
         }
     }
     // TODO: Analisar qual metodo usar getOneCompanyJDBC ou getOneCompany se for o getOneCompany verificar se necessario o uso dos DTOs e convertes
-    @PreAuthorize("hasAnyRole('ADMIN')")
-    @GetMapping("/{companyId}/jdbc")
-    public ResponseEntity<Object> getOneCompanyJDBC(@PathVariable("companyId") UUID companyId) {
-
-        try {
-            Optional<CompanyWithDetailsDTO> companyModelOptional = companyService.getByIdWithAddressesAndPhones(companyId);
-            if (companyModelOptional.isPresent()) {
-                CompanyWithDetailsDTO company = companyModelOptional.get();
-
-                log.info("GET getOneCompany CompanyModel found: ------> {}", companyModelOptional.get().toString());
-                return ResponseEntity.status(HttpStatus.OK).body(company);
-
-            } else {
-                log.debug("GET getOneCompany CompanyModel found: ------> {}", companyModelOptional.get().toString());
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Company not found");            }
-
-        } catch (Exception e) {
-            log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
-        }
-    }
+//    @PreAuthorize("hasAnyRole('ADMIN')")
+//    @GetMapping("/{companyId}/jdbc")
+//    public ResponseEntity<Object> getOneCompanyJDBC(@PathVariable("companyId") UUID companyId) {
+//
+//        try {
+//            Optional<CompanyWithDetailsDTO> companyModelOptional = companyService.getByIdWithAddressesAndPhones(companyId);
+//            if (companyModelOptional.isPresent()) {
+//                CompanyWithDetailsDTO company = companyModelOptional.get();
+//
+//                log.info("GET getOneCompany CompanyModel found: ------> {}", companyModelOptional.get().toString());
+//                return ResponseEntity.status(HttpStatus.OK).body(company);
+//
+//            } else {
+//                log.debug("GET getOneCompany CompanyModel found: ------> {}", companyModelOptional.get().toString());
+//                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Company not found");            }
+//
+//        } catch (Exception e) {
+//            log.error("Specific error occurred", e);
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+//        }
+//    }
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
     public ResponseEntity<Object> getAllCompany(@PageableDefault(page = 0, size = 10, sort = "companyId", direction = Sort.Direction.ASC) Pageable pageable) {

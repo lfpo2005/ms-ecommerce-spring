@@ -97,12 +97,4 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Override
-    public boolean isValidBirthDate(String birthDate) {
-        String datePattern = "^\\d{2}-\\d{2}-\\d{4}$";
-        Pattern pattern = Pattern.compile(datePattern);
-        Matcher matcher = pattern.matcher(birthDate.trim());
-        return matcher.matches();
-    }
-
 }

@@ -88,6 +88,10 @@ public class CompanyModel implements Serializable {
         @JoinColumn(name = "user_id", nullable = false)
         private UserModel responsibleUser;
 
+        @OneToMany(mappedBy = "company")
+        private Set<EmployeeModel> employees = new HashSet<>();
+
+
         public CompanyWithDetailsDTO convertToCompanyEventDto(){
             var companyWithDetailsDTO = new CompanyWithDetailsDTO();
             BeanUtils.copyProperties(this, companyWithDetailsDTO);

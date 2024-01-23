@@ -1,13 +1,12 @@
 package dev.luisoliveira.esquadrias.dtos.resposeDto;
 
 import dev.luisoliveira.esquadrias.enums.PhoneType;
-import dev.luisoliveira.esquadrias.models.PhoneModel;
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
-public class PhoneDTO {
+public class PhoneRespDTO {
 
     private UUID phoneId;
     private String phoneNumber;

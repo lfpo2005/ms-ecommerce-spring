@@ -4,7 +4,7 @@ package dev.luisoliveira.esquadrias.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import dev.luisoliveira.esquadrias.dtos.resposeDto.AddressDTO;
+import dev.luisoliveira.esquadrias.dtos.resposeDto.AddressRespDTO;
 import dev.luisoliveira.esquadrias.enums.AddressType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -66,8 +66,8 @@ public class AddressModel implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private CompanyModel company;
 
-    public AddressDTO convertToAddressDTO() {
-      var addressDTO = new AddressDTO();
+    public AddressRespDTO convertToAddressDTO() {
+      var addressDTO = new AddressRespDTO();
         BeanUtils.copyProperties(this, addressDTO);
         if (this.getType() != null) {
             addressDTO.setType(this.getType().toString());

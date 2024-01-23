@@ -34,7 +34,4 @@ public interface UserService {
     UserModel updatePassword(UserModel userModel);
 
     UserModel updateUser(UserModel userModel);
-
-
-    boolean isValidBirthDate(String birthDate);
 }
