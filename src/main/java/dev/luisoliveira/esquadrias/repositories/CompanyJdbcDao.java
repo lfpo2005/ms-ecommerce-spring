@@ -8,6 +8,7 @@ import dev.luisoliveira.esquadrias.models.UserModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -15,6 +16,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Repository
+@Transactional
 public class CompanyJdbcDao {
 
     private final JdbcTemplate jdbcTemplate;

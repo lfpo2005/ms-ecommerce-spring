@@ -27,13 +27,11 @@ public class CompanyServiceImpl implements CompanyService {
         return companyRepository.save(company);
     }
 
-    @Transactional
     @Override
     public Optional<CompanyModel> findById(UUID companyId) {
         return companyRepository.findById(companyId);
     }
 
-    @Transactional
     @Override
     public Optional<CompanyWithDetailsDTO> getByIdWithAddressesAndPhones(UUID companyId) {
         CompanyWithDetailsDTO company = companyJdbcDao.getByIdWithAddressesAndPhones(companyId);
