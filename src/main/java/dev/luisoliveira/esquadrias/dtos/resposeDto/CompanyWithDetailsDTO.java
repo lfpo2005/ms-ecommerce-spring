@@ -22,7 +22,7 @@ public class CompanyWithDetailsDTO {
     private String nameContact;
     private String site;
     private String description;
-    private boolean active;
+    private Boolean active;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt ;

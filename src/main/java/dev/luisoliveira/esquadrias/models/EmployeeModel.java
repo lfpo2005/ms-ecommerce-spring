@@ -49,10 +49,10 @@ public class EmployeeModel implements Serializable {
     private LocalDateTime dismissalDate;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean active = true;
+    private Boolean active = true;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean deleted = false;
+    private Boolean deleted = false;
     private String workCardNumber;
     private String function;
 

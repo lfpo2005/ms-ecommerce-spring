@@ -46,16 +46,16 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private String classDescription;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean active = true;
+    private Boolean active = true;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean deleted = false;
+    private Boolean deleted = false;
     @NotNull(message = "O tipo da unidade deve ser informado")
     @Column(nullable = false)
     private String typeUnit;
     private BigDecimal price = BigDecimal.ZERO;
     private BigDecimal promotionalPrice = BigDecimal.ZERO;
-    private boolean promotional = false;
+    private Boolean promotional = false;
     @Column(nullable = false, unique = true, length = 5)
     private String weight;
     @Column(nullable = false, unique = true, length = 5)
@@ -71,7 +71,7 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private String imageThumbnailUrl;
     private Integer stockQuantity = 0;
     private Integer stockMinimum = 0;
-    private boolean alertStockQuantity = false;
+    private Boolean alertStockQuantity = false;
     private Integer clickQuantity = 0;
     @Column(nullable = false, updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")

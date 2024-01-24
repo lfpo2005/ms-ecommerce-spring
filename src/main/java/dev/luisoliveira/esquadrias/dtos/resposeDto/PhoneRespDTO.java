@@ -10,7 +10,7 @@ public class PhoneRespDTO {
 
     private UUID phoneId;
     private String phoneNumber;
-    private boolean active = true;
+    private Boolean active = true;
     private PhoneType phoneType;
     private String description;
 

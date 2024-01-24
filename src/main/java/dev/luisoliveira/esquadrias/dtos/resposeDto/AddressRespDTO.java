@@ -17,7 +17,7 @@ public class AddressRespDTO {
     private String complement;
     private String neighborhood;
     private String description;
-    private boolean active;
+    private Boolean active;
     private AddressType type;
 
     public void setType(String typeString) {

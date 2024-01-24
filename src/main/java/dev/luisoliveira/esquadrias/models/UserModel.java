@@ -49,10 +49,13 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     private String fullName;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean active = true;
+    private Boolean active = true;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean deleted = false;
+    private Boolean deleted = false;
+    @Column(nullable = false)
+    @JsonIgnore
+    private Boolean business = false;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType userType;
@@ -93,6 +96,5 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleModel> roles = new HashSet<>();
-
 
 }

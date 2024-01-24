@@ -154,7 +154,7 @@ public class UserController {
 
         Optional<UserModel> userModelOptional = userService.findById(userId);
 
-        if (userModelOptional.isPresent() && userModelOptional.get().isDeleted() == true) {
+        if (userModelOptional.isPresent() && userModelOptional.get().getDeleted() == true) {
             log.debug("User not found, deactivate user ------> userId: {} ", userModelOptional.get().getUserId());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already deleted");
         } else {
@@ -177,7 +177,7 @@ public class UserController {
 
         Optional<UserModel> userModelOptional = userService.findById(userId);
 
-        if (userModelOptional.isPresent() && userModelOptional.get().isActive() == false) {
+        if (userModelOptional.isPresent() && userModelOptional.get().getActive() == false) {
             log.debug("User not found or is disabled user ------> userId: {} ", userModelOptional.get().getUserId());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already disabled");
         } else {
@@ -199,7 +199,7 @@ public class UserController {
 
         Optional<UserModel> userModelOptional = userService.findById(userId);
 
-        if (userModelOptional.isPresent() && userModelOptional.get().isActive() == true) {
+        if (userModelOptional.isPresent() && userModelOptional.get().getActive() == true) {
             log.debug("User not found or is active -----> userId: {} ", userModelOptional.get().getUserId());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already active");
         } else {
@@ -223,7 +223,7 @@ public class UserController {
 
         Optional<UserModel> userModelOptional = userService.findById(userId);
 
-        if (userModelOptional.isPresent() && userModelOptional.get().isDeleted() == false) {
+        if (userModelOptional.isPresent() && userModelOptional.get().getDeleted() == false) {
             var userModel = userModelOptional.get();
             userModel.setFullName(userDto.getFullName());
             userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
@@ -245,7 +245,7 @@ public class UserController {
         log.debug("Request to update password for userId: {}", userId);
         Optional<UserModel> userModelOptional = userService.findById(userId);
 
-        if (userModelOptional.isPresent() && !userModelOptional.get().isDeleted()) {
+        if (userModelOptional.isPresent() && !userModelOptional.get().getDeleted()) {
             var userModel = userModelOptional.get();
             if (!passwordEncoder.matches(userDto.getOldPassword(), userModel.getPassword())) {
                 log.debug("Mismatched old password for userId: {}", userId);

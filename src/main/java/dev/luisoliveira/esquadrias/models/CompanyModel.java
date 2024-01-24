@@ -58,10 +58,10 @@ public class CompanyModel implements Serializable {
         private String description;
         @JsonIgnore
         @Column(nullable = false)
-        private boolean active = true;
+        private Boolean active = true;
         @JsonIgnore
         @Column(nullable = false)
-        private boolean deleted = false;
+        private Boolean deleted = false;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
         private LocalDateTime createdAt;
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")

@@ -20,10 +20,10 @@ public interface UserService {
 
     UserModel save(UserModel userModel);
 
-    boolean existsByUsername(String username);
+    Boolean existsByUsername(String username);
 
-    boolean existsByEmail(String email);
-    boolean existsByFullName(String fullName);
+    Boolean existsByEmail(String email);
+    Boolean existsByFullName(String fullName);
 
     Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable);
 

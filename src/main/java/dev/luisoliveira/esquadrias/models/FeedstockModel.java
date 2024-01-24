@@ -33,16 +33,12 @@ public class FeedstockModel implements Serializable {
     private String classDescription;
     @Size(max = 500)
     private String description;
-    @JsonIgnore
-    private boolean active = true;
-    @JsonIgnore
-    @Column(nullable = false)
-    private boolean deleted = false;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime expirationDate;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private CategoryModel category;
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    private CategoryModel category;
 
 }

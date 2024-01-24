@@ -10,9 +10,9 @@ public interface EmployeeService {
 
     EmployeeModel save(EmployeeModel employeeId);
 
-    boolean existsByFullName(String fullName);
+    Boolean existsByFullName(String fullName);
 
-    boolean existsByEmail(String email);
+    Boolean existsByEmail(String email);
 
     Optional<EmployeeModel> findById(UUID employeeId);
 }

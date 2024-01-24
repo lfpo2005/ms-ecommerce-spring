@@ -25,10 +25,10 @@ public class SupplierModel implements Serializable {
         private String nameContact;
         @JsonIgnore
         @Column(nullable = false)
-        private boolean active = true;
+        private Boolean active = true;
         @JsonIgnore
         @Column(nullable = false)
-        private boolean deleted = false;
+        private Boolean deleted = false;
         @Size(max = 500)
         private String description;
         @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)

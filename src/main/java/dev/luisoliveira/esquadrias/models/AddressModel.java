@@ -49,10 +49,10 @@ public class AddressModel implements Serializable {
     private String description;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean active = true;
+    private Boolean active = true;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean deleted = false;
+    private Boolean deleted = false;
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

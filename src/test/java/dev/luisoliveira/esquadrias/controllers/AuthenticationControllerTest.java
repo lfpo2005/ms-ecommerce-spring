@@ -50,7 +50,7 @@ class AuthenticationControllerTest {
         when(userService.existsByUsername(userDto.getUsername())).thenReturn(false);
         when(userService.existsByEmail(userDto.getEmail())).thenReturn(false);
         when(userService.existsByFullName(userDto.getFullName())).thenReturn(false);
-        when(userService.isValidBirthDate(userDto.getBirthDate())).thenReturn(true);
+        //when(userService.isValidBirthDate(userDto.getBirthDate())).thenReturn(true);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -70,7 +70,7 @@ class AuthenticationControllerTest {
         when(userService.existsByUsername(userDto.getUsername())).thenReturn(false);
         when(userService.existsByEmail(userDto.getEmail())).thenReturn(false);
         when(userService.existsByFullName(userDto.getFullName())).thenReturn(false);
-        when(userService.isValidBirthDate(userDto.getBirthDate())).thenReturn(false);
+        //when(userService.isValidBirthDate(userDto.getBirthDate())).thenReturn(false);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)

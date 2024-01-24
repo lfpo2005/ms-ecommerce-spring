@@ -30,10 +30,10 @@ public class PhoneModel implements Serializable {
 
     @JsonIgnore
     @Column(nullable = false)
-    private boolean active = true;
+    private Boolean active = true;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean deleted = false;
+    private Boolean deleted = false;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PhoneType phoneType;

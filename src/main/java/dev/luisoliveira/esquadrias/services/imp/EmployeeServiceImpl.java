@@ -26,12 +26,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public boolean existsByFullName(String fullName) {
+    public Boolean existsByFullName(String fullName) {
         return employeeRepository.existsByFullName(fullName);
     }
 
     @Override
-    public boolean existsByEmail(String email) {
+    public Boolean existsByEmail(String email) {
         return employeeRepository.existsByEmail(email);
     }
 }

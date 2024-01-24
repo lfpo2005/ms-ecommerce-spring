@@ -31,10 +31,10 @@ public class CategoryModel implements Serializable {
     private String classDescription;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean active = true;
+    private Boolean active = true;
     @JsonIgnore
     @Column(nullable = false)
-    private boolean deleted = false;
+    private Boolean deleted = false;
     @Column(nullable = false, updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime createdAt;
@@ -53,9 +53,9 @@ public class CategoryModel implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     private Set<ProductModel> products;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY )
-    @Fetch(FetchMode.SUBSELECT)
-    private Set<FeedstockModel> feedstocks;
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY )
+//    @Fetch(FetchMode.SUBSELECT)
+//    private Set<FeedstockModel> feedstocks;
 
 }
