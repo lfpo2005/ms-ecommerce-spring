@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import dev.luisoliveira.esquadrias.configs.security.UserDetailsImpl;
 import dev.luisoliveira.esquadrias.dtos.DepreciationDto;
 import dev.luisoliveira.esquadrias.models.DepreciationModel;
-import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.services.DepreciationService;
 import dev.luisoliveira.esquadrias.services.UserService;
 import lombok.extern.log4j.Log4j2;
@@ -13,12 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -41,7 +38,6 @@ public class DepreciationController {
         try {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetails.getUserId();
-        //Optional<UserModel> currentUser = userService.findById(userDetails.getUserId());
 
         log.info("Authentication {} ", userDetails.getUsername());
 
@@ -54,6 +50,7 @@ public class DepreciationController {
                 BeanUtils.copyProperties(depreciationDto, depreciation);
                 depreciation.setUser(userId);
                 depreciationService.save(depreciation);
+                log.info("POST registerDepreciation DepreciationDto received: ------> {}", depreciationDto.toString());
                 return ResponseEntity.status(HttpStatus.CREATED).body(depreciation);
 
         } catch (Exception e) {
@@ -68,13 +65,15 @@ public class DepreciationController {
             // Extrai o ID do usuário logado
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
+            log.info("Authentication {} ", userDetails.getUsername());
 
             // Chama o serviço passando o ID do usuário
-            List<DepreciationModel> depreciations = depreciationService.findAllByUserId(userId);
-            return ResponseEntity.ok(depreciations);
+            List<DepreciationModel> depreciation = depreciationService.findAllByUserId(userId);
+            log.info("Depreciation {} ", depreciation);
+            return ResponseEntity.ok(depreciation);
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
 

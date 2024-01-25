@@ -1,5 +1,6 @@
 package dev.luisoliveira.esquadrias.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
@@ -17,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
-@Table(name = "TB_DEPRECIATIONS")
+@Table(name = "TB_DEPRECIATION")
 public class DepreciationModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -33,6 +34,7 @@ public class DepreciationModel implements Serializable {
     @DecimalMin(value = "0.0", inclusive = false, message = "value must be greater than 0")
     private BigDecimal value;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserModel user;

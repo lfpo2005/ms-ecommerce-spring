@@ -1,8 +1,6 @@
 package dev.luisoliveira.esquadrias.services.imp;
 
-import dev.luisoliveira.esquadrias.dtos.resposeDto.CompanyWithDetailsDTO;
 import dev.luisoliveira.esquadrias.models.CompanyModel;
-import dev.luisoliveira.esquadrias.repositories.CompanyJdbcDao;
 import dev.luisoliveira.esquadrias.repositories.CompanyRepository;
 import dev.luisoliveira.esquadrias.services.CompanyService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +18,6 @@ public class CompanyServiceImpl implements CompanyService {
     @Autowired
     CompanyRepository companyRepository;
 
-    @Autowired
-    CompanyJdbcDao companyJdbcDao;
     @Override
     public CompanyModel save(CompanyModel company) {
         return companyRepository.save(company);
@@ -31,13 +27,6 @@ public class CompanyServiceImpl implements CompanyService {
     public Optional<CompanyModel> findById(UUID companyId) {
         return companyRepository.findById(companyId);
     }
-
-    @Override
-    public Optional<CompanyWithDetailsDTO> getByIdWithAddressesAndPhones(UUID companyId) {
-        CompanyWithDetailsDTO company = companyJdbcDao.getByIdWithAddressesAndPhones(companyId);
-        return Optional.ofNullable(company);
-    }
-
 
 
     @Transactional

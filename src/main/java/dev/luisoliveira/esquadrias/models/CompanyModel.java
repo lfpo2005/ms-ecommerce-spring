@@ -1,10 +1,6 @@
 package dev.luisoliveira.esquadrias.models;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import dev.luisoliveira.esquadrias.dtos.resposeDto.CompanyWithDetailsDTO;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -14,7 +10,6 @@ import lombok.Setter;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.br.CNPJ;
-import org.springframework.beans.BeanUtils;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -84,17 +79,12 @@ public class CompanyModel implements Serializable {
         @JoinColumn(name = "feedstock_id", referencedColumnName = "feedstockId")
         private FeedstockModel feedstock;
 
+        @JsonBackReference
         @ManyToOne
         @JoinColumn(name = "user_id", nullable = false)
         private UserModel responsibleUser;
 
+        @JsonIgnore
         @OneToMany(mappedBy = "company")
         private Set<EmployeeModel> employees = new HashSet<>();
-
-
-        public CompanyWithDetailsDTO convertToCompanyEventDto(){
-            var companyWithDetailsDTO = new CompanyWithDetailsDTO();
-            BeanUtils.copyProperties(this, companyWithDetailsDTO);
-            return companyWithDetailsDTO;
-        }
 }

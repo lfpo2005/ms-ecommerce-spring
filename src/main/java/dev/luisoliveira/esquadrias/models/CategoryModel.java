@@ -32,17 +32,12 @@ public class CategoryModel implements Serializable {
     @JsonIgnore
     @Column(nullable = false)
     private Boolean active = true;
-    @JsonIgnore
-    @Column(nullable = false)
-    private Boolean deleted = false;
+
     @Column(nullable = false, updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime updateAt;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private LocalDateTime deleteAt;
-
 
     @ManyToOne
     @JoinColumn(name = "category_parent_id")

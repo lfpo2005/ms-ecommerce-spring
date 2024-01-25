@@ -26,9 +26,7 @@ public class SupplierModel implements Serializable {
         @JsonIgnore
         @Column(nullable = false)
         private Boolean active = true;
-        @JsonIgnore
-        @Column(nullable = false)
-        private Boolean deleted = false;
+
         @Size(max = 500)
         private String description;
         @OneToMany(mappedBy = "supplier", cascade = CascadeType.ALL, orphanRemoval = true)

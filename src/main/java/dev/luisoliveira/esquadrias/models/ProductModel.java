@@ -47,9 +47,6 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     @JsonIgnore
     @Column(nullable = false)
     private Boolean active = true;
-    @JsonIgnore
-    @Column(nullable = false)
-    private Boolean deleted = false;
     @NotNull(message = "O tipo da unidade deve ser informado")
     @Column(nullable = false)
     private String typeUnit;
@@ -78,8 +75,6 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime updateAt;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private LocalDateTime deleteAt;
 
     @NotNull(message = "The category must be informed")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

@@ -1,7 +1,6 @@
 package dev.luisoliveira.esquadrias.services;
 
 
-import dev.luisoliveira.esquadrias.dtos.resposeDto.CompanyWithDetailsDTO;
 import dev.luisoliveira.esquadrias.models.CompanyModel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,5 +18,4 @@ public interface CompanyService {
 
     Page<CompanyModel> findAll(Pageable pageable);
 
-    Optional<CompanyWithDetailsDTO> getByIdWithAddressesAndPhones(UUID companyId);
 }

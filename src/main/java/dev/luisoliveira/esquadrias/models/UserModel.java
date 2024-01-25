@@ -86,9 +86,9 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @Fetch(FetchMode.SUBSELECT)
     private Set<PhoneModel> phones = new HashSet<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "responsibleUser", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<CompanyModel> companies;
+    @OneToOne(mappedBy = "responsibleUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CompanyModel company;
+
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany(fetch = FetchType.LAZY)

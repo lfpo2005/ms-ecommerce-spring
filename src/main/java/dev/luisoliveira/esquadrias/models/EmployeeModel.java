@@ -50,9 +50,7 @@ public class EmployeeModel implements Serializable {
     @JsonIgnore
     @Column(nullable = false)
     private Boolean active = true;
-    @JsonIgnore
-    @Column(nullable = false)
-    private Boolean deleted = false;
+
     private String workCardNumber;
     private String function;
 

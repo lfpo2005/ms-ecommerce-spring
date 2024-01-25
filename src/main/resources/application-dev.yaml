@@ -45,7 +45,7 @@ logging:
   level:
     com.luisoliveira.esquadrias: TRACE
     root: INFO
-    org.springframework.cache: TRACE
+    org.springframework.cache: INFO
     org.springframework.web: TRACE
     org.hibernate: INFO
 
