@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -32,8 +33,8 @@ public class DepreciationController {
 
     @PostMapping("/createDepreciation")
     public ResponseEntity<Object> registerDepreciation(Authentication authentication,
-                                                       @RequestBody @Validated(DepreciationDto.DepreciationView.RegistrationPost.class)
-                                                       @JsonView(DepreciationDto.DepreciationView.RegistrationPost.class) DepreciationDto depreciationDto) {
+                                                       @RequestBody @Validated(DepreciationDto.DepreciationView.DepreciationPost.class)
+                                                       @JsonView(DepreciationDto.DepreciationView.DepreciationPost.class) DepreciationDto depreciationDto) {
 
         try {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -61,6 +62,7 @@ public class DepreciationController {
 
     @GetMapping
     public ResponseEntity<Object> findAllDepreciation(Authentication authentication) {
+
         try {
             // Extrai o ID do usuário logado
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -71,6 +73,78 @@ public class DepreciationController {
             List<DepreciationModel> depreciation = depreciationService.findAllByUserId(userId);
             log.info("Depreciation {} ", depreciation);
             return ResponseEntity.ok(depreciation);
+        } catch (Exception e) {
+            log.error("Specific error occurred", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/{depreciationId}/getOneDepreciation")
+    public ResponseEntity<Object> getOneDepreciation(@PathVariable("depreciationId") UUID depreciationId,
+                                                     Authentication authentication) {
+
+        try {
+            // Extrai o ID do usuário logado
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            UUID userId = userDetails.getUserId();
+            log.info("Authentication {} ", userDetails.getUsername());
+
+            // Busca a depreciação pelo ID
+            Optional<DepreciationModel> depreciationOptional = depreciationService.findById(depreciationId);
+
+            if (depreciationOptional.isPresent()) {
+                DepreciationModel depreciation = depreciationOptional.get();
+
+                // Verifica se a depreciação pertence ao usuário logado
+                if (depreciation.getUser().getUserId().equals(userId)) {
+                    return ResponseEntity.ok(depreciation);
+                } else {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Depreciation not found");
+            }
+
+        } catch (Exception e) {
+            log.error("Specific error occurred", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+        }
+    }
+
+
+    @PutMapping("/{depreciationId}/updateDepreciation")
+    public ResponseEntity<Object> updateDepreciation(@PathVariable UUID depreciationId,
+                                                     @RequestBody
+                                                     @Validated(DepreciationDto.DepreciationView.DepreciationPut.class)
+                                                     @JsonView(DepreciationDto.DepreciationView.DepreciationPut.class)
+                                                     DepreciationDto depreciationDto, Authentication authentication ) {
+        try {
+            // Extrai o ID do usuário logado
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            UUID userId = userDetails.getUserId();
+            log.info("Authentication {} ", userDetails.getUsername());
+
+            // Busca a depreciação pelo ID
+            Optional<DepreciationModel> depreciationOptional = depreciationService.findById(depreciationId);
+
+            if (depreciationOptional.isPresent()) {
+                DepreciationModel depreciation = depreciationOptional.get();
+
+                // Verifica se a depreciação pertence ao usuário logado
+                if (depreciation.getUser().getUserId().equals(userId)) {
+                    var depreciationModel = depreciationOptional.get();
+                    depreciationModel.setEquipment(depreciationDto.getEquipment());
+                    depreciationModel.setEquipment(depreciationDto.getEquipment());
+                    depreciationModel.setQuantityEquipment(depreciationDto.getQuantityEquipment());
+                    depreciationModel.setPriceEquipment(depreciationDto.getPriceEquipment());
+                    return ResponseEntity.ok(depreciationService.save(depreciationModel));
+
+                } else {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Depreciation not found");
+            }
         } catch (Exception e) {
             log.error("Specific error occurred", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());

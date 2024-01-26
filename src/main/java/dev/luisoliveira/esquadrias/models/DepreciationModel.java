@@ -32,7 +32,7 @@ public class DepreciationModel implements Serializable {
 
     @NotNull(message = "value is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "value must be greater than 0")
-    private BigDecimal value;
+    private BigDecimal priceEquipment;
 
     @JsonIgnore
     @ManyToOne

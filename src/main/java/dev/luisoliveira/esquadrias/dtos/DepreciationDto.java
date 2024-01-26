@@ -13,18 +13,17 @@ import java.util.UUID;
 public class DepreciationDto {
 
     public interface DepreciationView{
-        public static interface RegistrationPost {}
-        public static interface UserPut {}
+        public static interface DepreciationPost {}
+        public static interface DepreciationPut {}
     }
     
     private UUID depreciationId;
     
-    @NotBlank(groups =  {DepreciationDto.DepreciationView.RegistrationPost.class, DepreciationDto.DepreciationView.UserPut.class})
-    @JsonView({DepreciationDto.DepreciationView.RegistrationPost.class, DepreciationDto.DepreciationView.UserPut.class})
+    @NotBlank(groups =  {DepreciationView.DepreciationPost.class, DepreciationView.DepreciationPut.class})
+    @JsonView({DepreciationView.DepreciationPost.class, DepreciationView.DepreciationPut.class})
     private String equipment;
-    @NotBlank(groups =  {DepreciationDto.DepreciationView.RegistrationPost.class, DepreciationDto.DepreciationView.UserPut.class})
-    @JsonView({DepreciationDto.DepreciationView.RegistrationPost.class, DepreciationDto.DepreciationView.UserPut.class})
-    private String quantityEquipment;
-    @JsonView({DepreciationDto.DepreciationView.RegistrationPost.class, DepreciationDto.DepreciationView.UserPut.class})
-    private BigDecimal value;
+    @JsonView({DepreciationView.DepreciationPost.class, DepreciationView.DepreciationPut.class})
+    private Integer quantityEquipment;
+    @JsonView({DepreciationView.DepreciationPost.class, DepreciationView.DepreciationPut.class})
+    private BigDecimal priceEquipment;
 }

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,6 +36,11 @@ public class DepreciationServiceImpl implements DepreciationService {
     @Override
     public boolean existsByEquipmentAndUserId(String equipment, UUID userId) {
         return depreciationRepository.existsByEquipmentAndUser_UserId(equipment, userId);
+    }
+
+    @Override
+    public Optional<DepreciationModel> findById(UUID depreciationId) {
+        return depreciationRepository.findById(depreciationId);
     }
 
 }
