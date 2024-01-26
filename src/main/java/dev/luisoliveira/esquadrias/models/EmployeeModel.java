@@ -64,6 +64,9 @@ public class EmployeeModel implements Serializable {
     @Size(max = 500)
     private String description;
 
+    @Size(max = 500)
+    private String reasonDismissal;
+
     @ManyToOne
     @JoinColumn(name = "company_id")
     private CompanyModel company;

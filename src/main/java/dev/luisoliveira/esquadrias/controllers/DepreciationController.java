@@ -113,7 +113,7 @@ public class DepreciationController {
 
 
     @PutMapping("/{depreciationId}/updateDepreciation")
-    public ResponseEntity<Object> updateDepreciation(@PathVariable UUID depreciationId,
+    public ResponseEntity<Object> updateDepreciation(@PathVariable("depreciationId") UUID depreciationId,
                                                      @RequestBody
                                                      @Validated(DepreciationDto.DepreciationView.DepreciationPut.class)
                                                      @JsonView(DepreciationDto.DepreciationView.DepreciationPut.class)

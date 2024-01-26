@@ -83,6 +83,7 @@ public class PhoneController {
         try {
             Optional<CompanyModel> companyOptional = userCompanyValidationUtil.validateUserAndCompany();
             if (!companyOptional.isPresent()) {
+                log.warn("User not authenticated, not found or company not found");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated, not found or company not found");
             }
 
