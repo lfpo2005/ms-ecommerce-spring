@@ -11,6 +11,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,7 @@ public class DepreciationController {
     @Autowired
     UserService userService;
 
+    @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/createDepreciation")
     public ResponseEntity<Object> registerDepreciation(Authentication authentication,
                                                        @RequestBody @Validated(DepreciationDto.DepreciationView.DepreciationPost.class)
@@ -39,27 +41,25 @@ public class DepreciationController {
         try {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetails.getUserId();
-
         log.info("Authentication {} ", userDetails.getUsername());
-
 
             if (depreciationService.existsByEquipmentAndUserId(depreciationDto.getEquipment(), userId)) {
                 log.warn("Depreciation {} is already Taken!: ------> ", depreciationDto.getDepreciationId());
                 return ResponseEntity.badRequest().body("Error: Depreciation is Already Taken!");
             }
-                var depreciation = new DepreciationModel();
-                BeanUtils.copyProperties(depreciationDto, depreciation);
-                depreciation.setUser(userId);
-                depreciationService.save(depreciation);
+                var depreciationModel = new DepreciationModel();
+                BeanUtils.copyProperties(depreciationDto, depreciationModel);
+                depreciationModel.setUser(userId);
+                depreciationService.save(depreciationModel);
                 log.info("POST registerDepreciation DepreciationDto received: ------> {}", depreciationDto.toString());
-                return ResponseEntity.status(HttpStatus.CREATED).body(depreciation);
+                return ResponseEntity.status(HttpStatus.CREATED).body(depreciationModel);
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
-
+    @PreAuthorize("hasAnyRole('USER')")
     @GetMapping
     public ResponseEntity<Object> findAllDepreciation(Authentication authentication) {
 
@@ -79,7 +79,7 @@ public class DepreciationController {
         }
     }
 
-    @GetMapping("/{depreciationId}/getOneDepreciation")
+    @GetMapping("/{depreciationId}")
     public ResponseEntity<Object> getOneDepreciation(@PathVariable("depreciationId") UUID depreciationId,
                                                      Authentication authentication) {
 
@@ -143,6 +143,7 @@ public class DepreciationController {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
                 }
             } else {
+                log.warn("GET getOneDepreciation DepreciationDto received: ------> {}", depreciationOptional.toString());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Depreciation not found");
             }
         } catch (Exception e) {

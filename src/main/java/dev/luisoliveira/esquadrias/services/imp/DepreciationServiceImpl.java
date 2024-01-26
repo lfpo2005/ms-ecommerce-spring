@@ -1,6 +1,7 @@
 package dev.luisoliveira.esquadrias.services.imp;
 
 import dev.luisoliveira.esquadrias.models.DepreciationModel;
+import dev.luisoliveira.esquadrias.repositories.DepreciationRepository;
 import dev.luisoliveira.esquadrias.services.DepreciationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
