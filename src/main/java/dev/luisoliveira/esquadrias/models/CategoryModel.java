@@ -1,6 +1,7 @@
 package dev.luisoliveira.esquadrias.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -28,18 +29,15 @@ public class CategoryModel implements Serializable {
     private String name;
     @Size(max = 500)
     private String classDescription;
+    @JsonIgnore
     @Column(nullable = false)
-    private boolean active = true;
-    @Column(nullable = false)
-    private boolean isDeleted = false;
+    private Boolean active = true;
+
     @Column(nullable = false, updatable = false)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime createdAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime updateAt;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
-    private LocalDateTime deleteAt;
-
 
     @ManyToOne
     @JoinColumn(name = "category_parent_id")
@@ -50,9 +48,9 @@ public class CategoryModel implements Serializable {
     @Fetch(FetchMode.SUBSELECT)
     private Set<ProductModel> products;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY )
-    @Fetch(FetchMode.SUBSELECT)
-    private Set<FeedstockModel> feedstocks;
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY )
+//    @Fetch(FetchMode.SUBSELECT)
+//    private Set<FeedstockModel> feedstocks;
 
 }

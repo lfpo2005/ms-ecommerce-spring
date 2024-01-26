@@ -3,22 +3,26 @@ package dev.luisoliveira.esquadrias.exceptions;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.luisoliveira.esquadrias.exceptions.helper.GenericErrorsEnum;
 import dev.luisoliveira.esquadrias.exceptions.helper.MessagesEnum;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.orm.jpa.JpaSystemException;
+import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingRequestHeaderException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-@ControllerAdvice
+import java.sql.SQLException;
+
+@RestControllerAdvice
 @Slf4j
-public class ControllerExceptionHandler {
+public class GlobalExceptionHandler {
 
     @Autowired
     ObjectMapper om;
@@ -87,7 +91,7 @@ public class ControllerExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(Exception.class)
+    @ExceptionHandler({Exception.class, RuntimeException.class, Throwable.class})
     public ResponseEntity<Error> standardException(Exception e) {
         log.error(e.getClass().getSimpleName(), e);
         var response = new Error(
@@ -99,4 +103,22 @@ public class ControllerExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+
+    @ExceptionHandler(value = {DataIntegrityViolationException.class,
+            ConstraintViolationException.class, SQLException.class, TransactionSystemException.class, JpaSystemException.class})
+    public ResponseEntity<Object> handleExceptionDataIntegrate(Exception ex){
+        log.error(ex.getClass().getSimpleName(), ex);
+        var response = new Error(
+                GenericErrorsEnum.BAD_REQUEST.getCode(),
+                GenericErrorsEnum.BAD_REQUEST.getReason(),
+                ex.getMessage(),
+                GenericErrorsEnum.BAD_REQUEST.getDescription()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
+
 }

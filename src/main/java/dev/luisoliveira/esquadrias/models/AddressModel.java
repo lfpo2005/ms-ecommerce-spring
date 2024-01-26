@@ -1,11 +1,17 @@
 package dev.luisoliveira.esquadrias.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.luisoliveira.esquadrias.enums.AddressType;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -16,7 +22,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Entity
-@Table(name = "TB_ADDRESS")
+@Table(name = "TB_ADDRESSES")
 public class AddressModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
@@ -39,19 +45,25 @@ public class AddressModel implements Serializable {
     private String neighborhood;
     @Size(max = 500)
     private String description;
+    @JsonIgnore
     @Column(nullable = false)
-    private boolean active = true;
-    @Column(nullable = false)
-    private boolean isDeleted = false;
+    private Boolean active = true;
 
+    @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AddressType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private UserModel user;
 
-    @OneToOne(mappedBy = "address", fetch = FetchType.LAZY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
     private CompanyModel company;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    private EmployeeModel employee;
+
 }

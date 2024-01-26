@@ -3,6 +3,7 @@ package dev.luisoliveira.esquadrias.configs.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -34,13 +36,23 @@ public class WebSecurityConfig {
     @Autowired
     AuthenticationEntryPointImpl authenticationEntryPoint;
 
+    @Autowired
+    private Environment env;
+
+
     public static final String[] LIST_CORS_URL = {
             "http://localhost:4200"
 
     };
 
     private static final String[] AUTH_WHITELIST = {
-            "/auth/**"
+            "/auth/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/v3/api-docs",
+            "/v3/api-docs.yaml",
+            "/v3/api-docs.yaml/**"
     };
 
     @Bean
@@ -90,6 +102,11 @@ public class WebSecurityConfig {
                 // Define session management policy
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .logout((logout) -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
                 );
 
         // Define authorization requests
@@ -97,6 +114,15 @@ public class WebSecurityConfig {
                 .requestMatchers(AUTH_WHITELIST).permitAll()
                 .anyRequest().authenticated()
         );
+
+        /*        http.authorizeHttpRequests((authorize) -> {
+            authorize.requestMatchers(AUTH_WHITELIST).permitAll();
+            if (env.acceptsProfiles(Profiles.of("dev"))) {
+                authorize.anyRequest().permitAll();
+            } else {
+                authorize.anyRequest().authenticated();
+            }
+        });*/
 
         // Disable CSRF (if using JWT or if CSRF is not needed)
         http.csrf(csrf -> csrf.disable())

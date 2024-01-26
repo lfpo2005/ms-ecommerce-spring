@@ -9,8 +9,12 @@ import dev.luisoliveira.esquadrias.enums.UserType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
-import lombok.*;
-import org.hibernate.validator.constraints.br.CPF;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
@@ -43,17 +47,20 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     private String password;
     @Column(nullable = false, unique = true, length = 150)
     private String fullName;
+    @JsonIgnore
     @Column(nullable = false)
-    private boolean active = true;
+    private Boolean active = true;
+    @JsonIgnore
     @Column(nullable = false)
-    private boolean isDeleted = false;
+    private Boolean deleted = false;
+    @Column(nullable = false)
+    @JsonIgnore
+    private Boolean business = false;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserType userType;
-
     @JsonIgnore
-   // @CPF(message = "cpf invalid, default is 000.000.000-00")
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String cpf;
     @Column
     private String imageUrl;
@@ -66,26 +73,22 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     private LocalDateTime updateAt;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime deleteAt;
-
     @Size(max = 500)
     private String description;
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<AddressModel> address = new HashSet<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Fetch(FetchMode.SUBSELECT)
     private Set<PhoneModel> phones = new HashSet<>();
 
-    @JsonIgnore
-    @OneToMany(mappedBy = "responsibleUser")
-    private Set<CompanyModel> companies;
+    @OneToOne(mappedBy = "responsibleUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CompanyModel company;
 
-    @JsonIgnore
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "employee_id", referencedColumnName = "employeeId")
-    private EmployeeModel employee;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany(fetch = FetchType.LAZY)
@@ -93,4 +96,5 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleModel> roles = new HashSet<>();
+
 }

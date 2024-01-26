@@ -14,14 +14,16 @@ public interface UserService {
 
     Optional<UserModel> findById(UUID userId);
 
+    Optional<UserModel> findByIdWithAddressesAndPhones(UUID userId);
+
     void delete(UserModel userModel);
 
     UserModel save(UserModel userModel);
 
-    boolean existsByUsername(String username);
+    Boolean existsByUsername(String username);
 
-    boolean existsByEmail(String email);
-    boolean existsByFullName(String fullName);
+    Boolean existsByEmail(String email);
+    Boolean existsByFullName(String fullName);
 
     Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable);
 
@@ -32,7 +34,4 @@ public interface UserService {
     UserModel updatePassword(UserModel userModel);
 
     UserModel updateUser(UserModel userModel);
-
-
-    boolean isValidBirthDate(String birthDate);
 }

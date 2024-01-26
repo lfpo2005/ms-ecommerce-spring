@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum GenericErrorsEnum {
-    BAD_REQUEST("400", "INVALID_ARGUMENT", "Client specified an invalid argument, request body or query param"),
+    BAD_REQUEST("400", "INVALID_ARGUMENT", "Client specified an invalid argument, request body, query param or filed is invalid"),
     UNAUTHORIZED("401", "UNAUTHORIZED", "O cliente deve se autenticar para obter a resposta solicitada."),
     FORBIDDEN("403", "PERMISSION_DENIED", "Authenticated user has no permission to access the requested resource"),
     NOT_FOUND("404", "NOT_FOUND", "A specified resource is not found"),

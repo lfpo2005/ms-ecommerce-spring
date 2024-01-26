@@ -1,6 +1,9 @@
 package dev.luisoliveira.esquadrias.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.luisoliveira.esquadrias.configs.security.JwtProvider;
+import dev.luisoliveira.esquadrias.dtos.LoginDto;
+import dev.luisoliveira.esquadrias.dtos.UserDto;
 import dev.luisoliveira.esquadrias.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -36,51 +38,134 @@ class AuthenticationControllerTest {
     private JwtProvider jwtProvider;
 
     @Test
-    public void registerUser_WithValidUser_ReturnsCreatedStatus() throws Exception {
+    public void registerUser_WithValidUserAndNonExistingUsernameEmailAndFullName_ReturnsCreatedStatus() throws Exception {
+        UserDto userDto = new UserDto();
+        userDto.setUsername("newuser");
+        userDto.setEmail("newuser@example.com");
+        userDto.setFullName("New User");
+        userDto.setPassword("password");
+        userDto.setCpf("350.015.810-28");
+        userDto.setBirthDate("01-01-2000");
+
+        when(userService.existsByUsername(userDto.getUsername())).thenReturn(false);
+        when(userService.existsByEmail(userDto.getEmail())).thenReturn(false);
+        when(userService.existsByFullName(userDto.getFullName())).thenReturn(false);
+        //when(userService.isValidBirthDate(userDto.getBirthDate())).thenReturn(true);
+
         mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\": \"testuser\", \"fullName\": \"fullName novo\", \"password\": \"password\", \"email\": \"test@example.com\"}"))
+                        .content(new ObjectMapper().writeValueAsString(userDto)))
                 .andExpect(MockMvcResultMatchers.status().isCreated());
     }
 
     @Test
-    public void registerUser_WithExistingUsername_ReturnsConflictStatus() throws Exception {
-        when(userService.existsByUsername("testuser")).thenReturn(true);
+    public void registerUser_WithInvalidBirthDateFormat_ReturnsBadRequestStatus() throws Exception {
+        UserDto userDto = new UserDto();
+        userDto.setUsername("newuser");
+        userDto.setEmail("newuser@example.com");
+        userDto.setFullName("New User");
+        userDto.setPassword("password");
+        userDto.setBirthDate("2000-01-01");
+
+        when(userService.existsByUsername(userDto.getUsername())).thenReturn(false);
+        when(userService.existsByEmail(userDto.getEmail())).thenReturn(false);
+        when(userService.existsByFullName(userDto.getFullName())).thenReturn(false);
+        //when(userService.isValidBirthDate(userDto.getBirthDate())).thenReturn(false);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\": \"testuser\", \"fullName\": \"fullName novo\", \"password\": \"password\", \"email\": \"test1@example.com\"}"))
+                        .content(new ObjectMapper().writeValueAsString(userDto)))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    public void registerUser_WithExistingUsername_ReturnsConflictStatus() throws Exception {
+        UserDto userDto = new UserDto();
+        userDto.setUsername("existinguser");
+        userDto.setEmail("newuser@example.com");
+        userDto.setFullName("New User");
+        userDto.setPassword("password");
+        userDto.setBirthDate("01-01-2000");
+
+        when(userService.existsByUsername(userDto.getUsername())).thenReturn(true);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(userDto)))
                 .andExpect(MockMvcResultMatchers.status().isConflict());
     }
 
     @Test
     public void registerUser_WithExistingEmail_ReturnsConflictStatus() throws Exception {
-        when(userService.existsByEmail("test@example.com")).thenReturn(true);
+        UserDto userDto = new UserDto();
+        userDto.setUsername("newuser");
+        userDto.setEmail("existinguser@example.com");
+        userDto.setFullName("New User");
+        userDto.setPassword("password");
+        userDto.setBirthDate("01-01-2000");
+
+        when(userService.existsByEmail(userDto.getEmail())).thenReturn(true);
 
         mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\": \"testuser1\", \"fullName\": \"fullName novo\", \"password\": \"password\", \"email\": \"test@example.com\"}"))
+                        .content(new ObjectMapper().writeValueAsString(userDto)))
                 .andExpect(MockMvcResultMatchers.status().isConflict());
     }
 
     @Test
-    @WithMockUser
-    public void authenticateUser_WithValidCredentials_ReturnsJwtToken() throws Exception {
-        // Mock do AuthenticationManager para retornar uma autenticação válida
-        when(authenticationManager.authenticate(any()))
-                .thenReturn(new TestingAuthenticationToken("testuser", "123123", "ROLE_USER"));
+    public void registerUser_WithExistingFullName_ReturnsConflictStatus() throws Exception {
+        UserDto userDto = new UserDto();
+        userDto.setUsername("newuser");
+        userDto.setEmail("newuser@example.com");
+        userDto.setFullName("Existing User");
+        userDto.setPassword("password");
+        userDto.setBirthDate("01-01-2000");
 
-        // Mock do JwtProvider para retornar um token de teste
-        when(jwtProvider.generateJwt(any(Authentication.class))).thenReturn("dummy-jwt-token");
+        when(userService.existsByFullName(userDto.getFullName())).thenReturn(true);
 
-        // Execução do teste: realizando uma requisição POST para o endpoint de login
-        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/signup")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"username\": \"testuser\", \"password\": \"password\"}"))
-                // Verifica se a resposta é 200 OK
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                // Verifica se o token existe
-                .andExpect(MockMvcResultMatchers.jsonPath("$.token").exists());
+                        .content(new ObjectMapper().writeValueAsString(userDto)))
+                .andExpect(MockMvcResultMatchers.status().isConflict());
     }
 
+    @Test
+    public void authenticateUser_WithValidCredentials_ReturnsJwtDto() throws Exception {
+        LoginDto loginDto = new LoginDto();
+        loginDto.setUsername("existinguser");
+        loginDto.setPassword("password");
+
+        when(authenticationManager.authenticate(any())).thenReturn(new TestingAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
+        when(jwtProvider.generateJwt(any())).thenReturn("jwtToken");
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(loginDto)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.token").value("jwtToken"));
+    }
+
+    @Test
+    public void logout_WithAuthenticatedUser_ReturnsOkStatus() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(new TestingAuthenticationToken("existinguser", "password"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/logout"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void logout_WithUnauthenticatedUser_ReturnsOkStatus() throws Exception {
+        SecurityContextHolder.getContext().setAuthentication(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.post("/auth/logout"))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    public void index_ReturnsExpectedMessage() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/auth/"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("Logging Spring Boot..."));
+    }
 }
+

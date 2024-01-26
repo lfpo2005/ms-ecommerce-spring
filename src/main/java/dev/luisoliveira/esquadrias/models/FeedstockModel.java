@@ -2,7 +2,6 @@ package dev.luisoliveira.esquadrias.models;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import dev.luisoliveira.esquadrias.enums.MeasurementUnit;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
@@ -32,14 +31,12 @@ public class FeedstockModel implements Serializable {
     private String classDescription;
     @Size(max = 500)
     private String description;
-    private boolean active = true;
-    @Column(nullable = false)
-    private boolean isDeleted = false;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime expirationDate;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private CategoryModel category;
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+//    private CategoryModel category;
 
 }
