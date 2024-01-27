@@ -3,6 +3,7 @@ package dev.luisoliveira.esquadrias.controllers;
 import com.fasterxml.jackson.annotation.JsonView;
 import dev.luisoliveira.esquadrias.configs.security.UserDetailsImpl;
 import dev.luisoliveira.esquadrias.dtos.FixedCostDto;
+
 import dev.luisoliveira.esquadrias.models.FixedCostModel;
 import dev.luisoliveira.esquadrias.services.FixedCostService;
 import dev.luisoliveira.esquadrias.services.UserService;
