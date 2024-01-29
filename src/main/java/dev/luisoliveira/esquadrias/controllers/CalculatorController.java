@@ -5,9 +5,11 @@ import dev.luisoliveira.esquadrias.services.CalculatorService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.math.BigDecimal;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Log4j2
@@ -18,45 +20,25 @@ public class CalculatorController {
     @Autowired
     CalculatorService calculatorService;
 
-    @GetMapping("/sum-all-services")
-    public BigDecimal sumAllEntities() {
-        BigDecimal totalDepreciation = calculatorService.sumAllDepreciationValues();
-        BigDecimal totalFixedCosts = calculatorService.sumAllFixedCostsValues();
-        BigDecimal totalVariableCosts = calculatorService.sumAllVariableCostsValues();
-        BigDecimal totalEmployees = calculatorService.sumAllEmployeesValues();
-        return totalDepreciation
-                .add(totalFixedCosts)
-                .add(totalVariableCosts)
-                .add(totalEmployees);
-
-    }
-
-
-    @GetMapping("/sum-taxes")
-    public Integer sumTaxes() {
-        Integer total = calculatorService.sumAllTaxesValues();
-        return (total);
-    }
-    @GetMapping("/sum-profit")
-    public Integer sumProfit() {
-        Integer total = calculatorService.sumAllProfitValues();
-        return (total);
-    }
-    @GetMapping("/sum-commission")
-    public Integer sumCommission() {
-        Integer total = calculatorService.sumAllCommissionValues();
-        return (total);
-    }
-
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/sumAllValues")
     public ResponseEntity<SumAllValues> getFinancialsumAllValues() {
+
+
         SumAllValues sumAllServices = calculatorService.sumAllServices();
-        SumAllValues sumAllTaxes = calculatorService.sumAllTaxes();
+        SumAllValues sumAllTaxes = calculatorService.sumFindAllTaxes();
         SumAllValues calculatedTotalMonthly = calculatorService.totalMonthly();
 
-
         SumAllValues sumAllValues = new SumAllValues();
-        sumAllValues.setTotalSumTaxes(sumAllTaxes.getTotalSumTaxes());
+        sumAllValues.setTotalDepreciation(sumAllServices.getTotalDepreciation());
+        sumAllValues.setTotalFixedCosts(sumAllServices.getTotalFixedCosts());
+        sumAllValues.setTotalVariableCosts(sumAllServices.getTotalVariableCosts());
+        sumAllValues.setTotalEmployeeCosts(sumAllServices.getTotalEmployeeCosts());
+        sumAllValues.setTotalTaxes(sumAllTaxes.getTotalTaxes());
+        sumAllValues.setTotalProfit(sumAllTaxes.getTotalProfit());
+        sumAllValues.setTotalCommission(sumAllTaxes.getTotalCommission());
+
+        sumAllValues.setTotalSumTaxesCommissionProfit(sumAllTaxes.getTotalSumTaxesCommissionProfit());
         sumAllValues.setTotalSumServices(sumAllServices.getTotalSumServices());
         sumAllValues.setTotalMonthly(calculatedTotalMonthly.getTotalMonthly());
 

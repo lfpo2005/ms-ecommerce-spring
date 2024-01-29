@@ -23,3 +23,8 @@ public class TaxesModel extends BaseFieldsCalculation {
     private UUID taxesId;
 
 }
+//    private TaxesModel sumFindAllTaxes() {
+//        TaxesModel taxesModel = new TaxesModel();
+//        taxesModel.setValuePercentage(taxesRepository.sumAllTaxesValues());
+//        return taxesModel;
+//    }

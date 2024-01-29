@@ -5,7 +5,7 @@ import dev.luisoliveira.esquadrias.models.SumAllValues;
 import java.math.BigDecimal;
 
 public interface CalculatorService {
-    BigDecimal sumAllDepreciationValues();
+/*    BigDecimal sumAllDepreciationValues();
 
     BigDecimal sumAllFixedCostsValues();
 
@@ -17,11 +17,11 @@ public interface CalculatorService {
 
     Integer sumAllProfitValues();
 
-    Integer sumAllCommissionValues();
+    Integer sumAllCommissionValues();*/
 
     SumAllValues sumAllServices();
 
-    SumAllValues sumAllTaxes();
+    SumAllValues sumFindAllTaxes();
 
     SumAllValues totalMonthly();
 }
