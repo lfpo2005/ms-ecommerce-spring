@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -21,5 +22,7 @@ public class CommissionModel  extends BaseFieldsCalculation {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID commissionId;
+
+    private String sellerName;
 
 }

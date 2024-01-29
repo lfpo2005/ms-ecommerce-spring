@@ -12,47 +12,47 @@ import java.util.UUID;
 public class CompanyDto {
 
     public interface CompanyView{
-        public static interface RegistrationPost {}
-        public static interface UserPut {}
+        public static interface CompanyPost {}
+        public static interface CompanyPut {}
     }
 
    
     private UUID companyId;
     
-    @NotBlank(groups =  {CompanyDto.CompanyView.RegistrationPost.class})
-    @JsonView({CompanyDto.CompanyView.RegistrationPost.class})
+    @NotBlank(groups =  {CompanyView.CompanyPost.class})
+    @JsonView({CompanyView.CompanyPost.class})
     private String cnpj;
 
-    @JsonView({CompanyDto.CompanyView.RegistrationPost.class})
+    @JsonView({CompanyView.CompanyPost.class})
     private String stateRegistration;
 
-    @JsonView({CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
+    @JsonView({CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
     private String municipalRegistration;
 
-    @NotBlank(groups =  {CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
-    @JsonView({CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
+    @NotBlank(groups =  {CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
+    @JsonView({CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
     private String fantasyName;
 
-    @NotBlank(groups =  {CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
-    @JsonView({CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
+    @NotBlank(groups =  {CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
+    @JsonView({CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
     private String companyName;
 
-    @NotBlank(groups =  {CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
-    @JsonView({CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
+    @NotBlank(groups =  {CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
+    @JsonView({CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
     private String category;
 
-    @NotBlank(groups =  {CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
-    @JsonView({CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
+    @NotBlank(groups =  {CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
+    @JsonView({CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
     private String email;
 
-    @NotBlank(groups =  {CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
-    @JsonView({CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
+    @NotBlank(groups =  {CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
+    @JsonView({CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
     private String nameContact;
 
-    @JsonView({CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
+    @JsonView({CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
     private String site;
 
-    @JsonView({CompanyDto.CompanyView.RegistrationPost.class, CompanyDto.CompanyView.UserPut.class})
+    @JsonView({CompanyView.CompanyPost.class, CompanyView.CompanyPut.class})
     private String description;
     
     

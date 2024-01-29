@@ -25,4 +25,7 @@ public class InputCostsModel implements Serializable {
     private double yield;
     private BigDecimal yieldPerUnit;
 
+
+    //TODO: Create the metods to calculate the cost per unit
+
 }

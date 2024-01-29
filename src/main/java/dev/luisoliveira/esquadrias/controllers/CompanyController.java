@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import dev.luisoliveira.esquadrias.configs.security.UserDetailsImpl;
 import dev.luisoliveira.esquadrias.dtos.CompanyDto;
 import dev.luisoliveira.esquadrias.dtos.resp.CompanyRespDTO;
-import dev.luisoliveira.esquadrias.models.AddressModel;
 import dev.luisoliveira.esquadrias.models.CompanyModel;
-import dev.luisoliveira.esquadrias.models.PhoneModel;
 import dev.luisoliveira.esquadrias.models.UserModel;
 import dev.luisoliveira.esquadrias.services.CompanyService;
 import dev.luisoliveira.esquadrias.services.UserService;
@@ -47,8 +45,8 @@ public class CompanyController {
 
     @PreAuthorize("hasAnyRole('CUSTOMER')")
     @PostMapping("/users/createCompany")
-    public ResponseEntity<Object> registerCompany(@RequestBody @Validated(CompanyDto.CompanyView.RegistrationPost.class)
-                                                  @JsonView(CompanyDto.CompanyView.RegistrationPost.class) CompanyDto companyDto) {
+    public ResponseEntity<Object> registerCompany(@RequestBody @Validated(CompanyDto.CompanyView.CompanyPost.class)
+                                                  @JsonView(CompanyDto.CompanyView.CompanyPost.class) CompanyDto companyDto) {
 
         log.debug("POST registerCompany CompanyDto received: ------> {}", companyDto.toString());
         try {
