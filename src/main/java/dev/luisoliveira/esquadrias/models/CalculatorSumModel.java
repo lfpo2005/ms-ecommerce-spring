@@ -1,8 +1,10 @@
 package dev.luisoliveira.esquadrias.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,26 +17,34 @@ import java.util.UUID;
 @Setter
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-//@Entity
-//@Table(name = "TB_CALCULATOR_SUM")
+
 public class CalculatorSumModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
-//
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-//    private UUID calculatorSumId;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal totalDepreciation;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal totalFixedCosts;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal totalVariableCosts;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal totalEmployeeCosts;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Integer totalTaxes;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Integer totalProfit;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Integer totalCommission;
-
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Integer totalSumTaxesCommissionProfit;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal totalSumServices;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal totalMonthly;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private BigDecimal valueWorkDay;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private BigDecimal valueWorkHour;
 
     @JsonIgnore
     @ManyToOne

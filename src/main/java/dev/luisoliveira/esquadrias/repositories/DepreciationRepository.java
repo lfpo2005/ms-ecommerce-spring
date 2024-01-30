@@ -14,6 +14,6 @@ public interface DepreciationRepository extends JpaRepository<DepreciationModel,
 
     List<DepreciationModel> findAllByUser_UserId(UUID userId);
 
-    @Query("SELECT SUM(d.priceEquipment) FROM DepreciationModel d where d.user.userId = :userId")
+    @Query("SELECT SUM(d.priceEquipment/120) FROM DepreciationModel d where d.user.userId = :userId")
     BigDecimal priceEquipment(UUID userId);
 }
