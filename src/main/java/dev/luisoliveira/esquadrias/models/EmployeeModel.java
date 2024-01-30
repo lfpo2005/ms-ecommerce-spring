@@ -56,7 +56,7 @@ public class EmployeeModel implements Serializable {
 
     @NotNull(message = "Salary is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "Salary must be greater than 0")
-    private BigDecimal salary;
+    private BigDecimal salary = BigDecimal.ZERO;
 
     @NotNull(message = "socialCharges is required")
     @DecimalMin(value = "0.0", inclusive = false, message = "socialCharges must be greater than 0")

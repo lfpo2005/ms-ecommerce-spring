@@ -15,15 +15,15 @@ import java.util.UUID;
 @Setter
 @Getter
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@Entity
-@Table(name = "TB_CALCULATOR_SUM")
+//@Entity
+//@Table(name = "TB_CALCULATOR_SUM")
 public class CalculatorSumModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID calculatorSumId;
+//
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    private UUID calculatorSumId;
     private BigDecimal totalDepreciation;
     private BigDecimal totalFixedCosts;
     private BigDecimal totalVariableCosts;

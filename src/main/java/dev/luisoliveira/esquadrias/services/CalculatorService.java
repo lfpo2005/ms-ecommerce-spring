@@ -8,16 +8,13 @@ import java.util.UUID;
 
 public interface CalculatorService {
 
-
-
     CalculatorSumModel totalMonthly(UUID userId) throws CalculationException;
-
     Optional<CalculatorSumModel> findById(UUID userId);
-
-    CalculatorSumModel save(CalculatorSumModel calculatorSumModel);
-
-    CalculatorSumModel findByUser_UserId(UUID userId);
-
-
-    boolean existsByUser_UserId(UUID userId);
+//
+//    CalculatorSumModel save(CalculatorSumModel calculatorSumModel);
+//
+//    CalculatorSumModel findByUser_UserId(UUID userId);
+//
+//
+//    boolean existsByUser_UserId(UUID userId);
 }

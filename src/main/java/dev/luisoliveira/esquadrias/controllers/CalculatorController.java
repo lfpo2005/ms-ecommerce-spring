@@ -27,28 +27,26 @@ public class CalculatorController {
     UserService userService;
 
 
-    @PostMapping
-    public void calculateSum(Authentication authentication) {
-
-        try {
-            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-            UUID userId = userDetails.getUserId();
-            log.info("Authentication {} ", userDetails.getUsername());
-
-            if (calculatorService.existsByUser_UserId(userId)) {
-                log.warn("CalculatorSumModel {} is already Taken!: ------> ", userId);
-            }
-            Optional<CalculatorSumModel> calculatorSumModelOptional = calculatorService.findById(userId);
-            var calculatorSumModel = calculatorSumModelOptional.get();
-            calculatorSumModel.setUser(userId);
-
-            calculatorService.save(calculatorSumModel);
-
-        } catch (Exception e) {
-            log.error("Specific error occurred", e);
-            throw new RuntimeException(e);
-        }
-    }
+//    @PostMapping
+//    public void calculateSum(Authentication authentication) {
+//
+//        try {
+//            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+//            UUID userId = userDetails.getUserId();
+//            log.info("Authentication {} ", userDetails.getUsername());
+//
+//            if (calculatorService.existsByUser_UserId(userId)) {
+//                log.warn("CalculatorSumModel {} is already Taken!: ------> ", userId);
+//            }
+//            Optional<CalculatorSumModel> calculatorSumModelOptional = calculatorService.findById(userId);
+//            var calculatorSumModel = calculatorSumModelOptional.get();
+//            calculatorSumModel.setUser(userId);
+//            calculatorService.save(calculatorSumModel);
+//        } catch (Exception e) {
+//            log.error("Specific error occurred", e);
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     @GetMapping
     //@Cacheable(value = "sumValuesCache", key = "#userId")
@@ -59,58 +57,18 @@ public class CalculatorController {
             UUID userId = userDetails.getUserId();
             log.info("Authentication {} ", userDetails.getUsername());
 
-            CalculatorSumModel calculatorSum = calculatorService.findByUser_UserId(userId);
+   //         CalculatorSumModel calculatorSum = calculatorService.findByUser_UserId(userId);
             log.info("GET getFinancialSumAllValues userId: ------> {}", userId);
-            if (calculatorSum == null || calculatorSum.getCalculatorSumId() == null) {
-                calculateSum(authentication);
-            }
-            Optional<CalculatorSumModel> calculatorSumModelOptional = calculatorService.findById(userId);
-            return ResponseEntity.status(HttpStatus.OK).body(calculatorSumModelOptional);
+//            if (calculatorSum == null || calculatorSum.getCalculatorSumId() == null) {
+//                calculateSum(authentication);
+//            }
+     //       Optional<CalculatorSumModel> calculatorSumModelOptional = calculatorService.findById(userId);
+            return ResponseEntity.status(HttpStatus.OK).body(calculatorService.totalMonthly(userId));
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
-    @PutMapping
-    public void updateSumValues(Authentication authentication, UUID calculatorSumId) throws CalculationException {
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        UUID userId = userDetails.getUserId();
-        log.info("Authentication {} ", userDetails.getUsername());
-
-        Optional<CalculatorSumModel> calculatorSumModelOptional = calculatorService.findById(calculatorSumId);
-        calculatorSumModelOptional.get().getCalculatorSumId();
-        System.out.println("GetCalculatorSumId():  ---------------------> " + calculatorSumModelOptional.get().getCalculatorSumId());
-
-        if (calculatorService.existsByUser_UserId(userId)) {
-            log.warn("CalculatorSumModel {} is already Taken!: ------> ", userId);
-        }
-        if (calculatorSumModelOptional.isPresent() && calculatorSumModelOptional.get().getCalculatorSumId() != null) {
-            CalculatorSumModel calculator = calculatorSumModelOptional.get();
-            if (calculator.getUser().getUserId().equals(userId)) {
-                saveSum(calculatorSumModelOptional);
-            } else {
-                log.warn("CalculatorSumModel {} is already Taken!: ------> ", userId);
-            }
-        } else {
-            calculateSum(authentication);
-        }
-    }
-
-    private void saveSum(Optional<CalculatorSumModel> calculatorSumModelOptional) throws CalculationException {
-        var calculatorSumModel = calculatorSumModelOptional.get();
-        CalculatorSumModel calculatedTotalMonthly = calculatorService.totalMonthly(calculatorSumModel.getUser().getUserId());
-        calculatorSumModel.setTotalMonthly(calculatedTotalMonthly.getTotalMonthly());
-        calculatorSumModel.setTotalDepreciation(calculatedTotalMonthly.getTotalDepreciation());
-        calculatorSumModel.setTotalFixedCosts(calculatedTotalMonthly.getTotalFixedCosts());
-        calculatorSumModel.setTotalVariableCosts(calculatedTotalMonthly.getTotalVariableCosts());
-        calculatorSumModel.setTotalEmployeeCosts(calculatedTotalMonthly.getTotalEmployeeCosts());
-        calculatorSumModel.setTotalTaxes(calculatedTotalMonthly.getTotalTaxes());
-        calculatorSumModel.setTotalProfit(calculatedTotalMonthly.getTotalProfit());
-        calculatorSumModel.setTotalCommission(calculatedTotalMonthly.getTotalCommission());
-        calculatorSumModel.setTotalSumTaxesCommissionProfit(calculatedTotalMonthly.getTotalSumTaxesCommissionProfit());
-        calculatorSumModel.setTotalSumServices(calculatedTotalMonthly.getTotalSumServices());
-        calculatorService.save(calculatorSumModel);
-    }
 }
