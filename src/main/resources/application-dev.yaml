@@ -24,7 +24,7 @@ spring:
     rollback-on-commit-failure: true
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
       dialect: org.hibernate.dialect.PostgreSQLDialect
       jdbc:
         lob.non-contextual-creation: true

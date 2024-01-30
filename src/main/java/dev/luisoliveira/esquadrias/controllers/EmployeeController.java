@@ -28,7 +28,7 @@ import java.util.UUID;
 @RestController
 @Log4j2
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping
+@RequestMapping("/employee")
 public class EmployeeController {
 
     @Autowired
@@ -192,4 +192,5 @@ public class EmployeeController {
         }
         return null;
     }
+
 }

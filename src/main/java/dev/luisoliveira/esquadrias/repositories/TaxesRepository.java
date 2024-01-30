@@ -12,6 +12,6 @@ public interface TaxesRepository extends JpaRepository<TaxesModel, UUID> {
 
     List<TaxesModel> findAllByUser_UserId(UUID userId);
 
-    @Query("SELECT SUM(t.valuePercentage) FROM TaxesModel t")
-    Integer sumAllTaxesValues();
+    @Query("SELECT SUM(t.valuePercentage) FROM TaxesModel t where t.user.userId = :userId")
+    Integer sumAllTaxesValues(UUID userId);
 }

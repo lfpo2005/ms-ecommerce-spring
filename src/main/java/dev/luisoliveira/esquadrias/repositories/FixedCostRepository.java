@@ -12,7 +12,6 @@ public interface FixedCostRepository extends JpaRepository<FixedCostModel, UUID>
 
     boolean existsByNameCostsAndUser_UserId(String nameCosts, UUID userId);
     List<FixedCostModel> findAllByUser_UserId(UUID userId);
-
-    @Query("SELECT SUM(f.valueFixedCosts) FROM FixedCostModel f")
-    BigDecimal valueFixedCosts();
+    @Query("SELECT SUM(f.valueFixedCosts) FROM FixedCostModel f where f.user.userId = :userId")
+    BigDecimal valueFixedCosts(UUID userId);
 }

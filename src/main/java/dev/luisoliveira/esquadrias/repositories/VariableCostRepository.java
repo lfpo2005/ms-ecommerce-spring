@@ -13,6 +13,6 @@ public interface VariableCostRepository extends JpaRepository<VariableCostModel,
 
     List<VariableCostModel> findAllByUser_UserId(UUID userId);
 
-    @Query("SELECT SUM(v.valueVariableCosts) FROM VariableCostModel v")
-    BigDecimal valueVariableCosts();
+    @Query("SELECT SUM(v.valueVariableCosts) FROM VariableCostModel v where v.user.userId = :userId")
+    BigDecimal valueVariableCosts(UUID userId);
 }

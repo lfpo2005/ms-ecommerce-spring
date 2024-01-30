@@ -12,6 +12,6 @@ public interface CommissionRepository extends JpaRepository<CommissionModel, UUI
 
     List<CommissionModel> findAllByUser_UserId(UUID userId);
 
-    @Query("SELECT SUM(c.valuePercentage) FROM CommissionModel c")
-    Integer sumAllCommissionValues();
+    @Query("SELECT SUM(c.valuePercentage) FROM CommissionModel c where c.user.userId = :userId")
+    Integer sumAllCommissionValues(UUID userId);
 }

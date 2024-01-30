@@ -12,6 +12,6 @@ public interface ProfitRepository extends JpaRepository<ProfitModel, UUID> {
 
     List<ProfitModel> findAllByUser_UserId(UUID userId);
 
-    @Query("SELECT SUM(p.valuePercentage) FROM ProfitModel p")
-    Integer sumAllProfitValues();
+    @Query("SELECT SUM(p.valuePercentage) FROM ProfitModel p where p.user.userId = :userId")
+    Integer sumAllProfitValues(UUID userId);
 }

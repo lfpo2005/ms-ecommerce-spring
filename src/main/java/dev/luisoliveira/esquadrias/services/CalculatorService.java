@@ -1,27 +1,23 @@
 package dev.luisoliveira.esquadrias.services;
 
-import dev.luisoliveira.esquadrias.models.SumAllValues;
+import dev.luisoliveira.esquadrias.exceptions.CalculationException;
+import dev.luisoliveira.esquadrias.models.CalculatorSumModel;
 
-import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface CalculatorService {
-/*    BigDecimal sumAllDepreciationValues();
 
-    BigDecimal sumAllFixedCostsValues();
 
-    BigDecimal sumAllVariableCostsValues();
 
-    BigDecimal sumAllEmployeesValues();
+    CalculatorSumModel totalMonthly(UUID userId) throws CalculationException;
 
-    Integer sumAllTaxesValues();
+    Optional<CalculatorSumModel> findById(UUID userId);
 
-    Integer sumAllProfitValues();
+    CalculatorSumModel save(CalculatorSumModel calculatorSumModel);
 
-    Integer sumAllCommissionValues();*/
+    CalculatorSumModel findByUser_UserId(UUID userId);
 
-    SumAllValues sumAllServices();
 
-    SumAllValues sumFindAllTaxes();
-
-    SumAllValues totalMonthly();
+    boolean existsByUser_UserId(UUID userId);
 }

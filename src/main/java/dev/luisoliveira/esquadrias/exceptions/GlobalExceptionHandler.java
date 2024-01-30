@@ -120,5 +120,26 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(value = {UserNotFoundException.class})
+    public ResponseEntity<Object> UserNotFoundException(Exception ex) {
+        log.error(ex.getClass().getSimpleName(), ex);
+        var response = new Error(
+                GenericErrorsEnum.NOT_FOUND.getCode(),
+                GenericErrorsEnum.NOT_FOUND.getReason(),
+                ex.getMessage(),
+                GenericErrorsEnum.NOT_FOUND.getDescription()
+        );
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);    }
 
+    @ExceptionHandler(value = {CalculationException.class})
+    public ResponseEntity<Object> CalculationException(Exception ex) {
+        log.error(ex.getClass().getSimpleName(), ex);
+        var response = new Error(
+                GenericErrorsEnum.BAD_REQUEST.getCode(),
+                GenericErrorsEnum.BAD_REQUEST.getReason(),
+                ex.getMessage(),
+                GenericErrorsEnum.BAD_REQUEST.getDescription()
+        );
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 }
