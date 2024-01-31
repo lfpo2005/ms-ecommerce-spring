@@ -1,5 +1,5 @@
 {
-  "name": "esquadrias",
+  "name": "calculator",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lfpo2005/esquadrias-spring.git"
+    "url": "https://github.com/lfpo2005/calculator-spring.git"
   },
   "private": true
 }

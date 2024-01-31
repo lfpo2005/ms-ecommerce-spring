@@ -1,3 +1,99 @@
 
-<!--//Criar os metodos de entrada de Costs-->
 
+        @Override
+        public BigDecimal sumAllDepreciationValues() {
+        return depreciationRepository.priceEquipment();
+        }
+
+        @Override
+        public BigDecimal sumAllFixedCostsValues() {
+        return fixedCostRepository.valueFixedCosts();
+        }
+
+        @Override
+        public BigDecimal sumAllVariableCostsValues() {
+        return variableCostRepository.valueVariableCosts();
+        }
+
+        @Override
+        public BigDecimal sumAllEmployeesValues() {
+        return employeeRepository.valueEmployees();
+        }
+
+        @Override
+        public Integer sumAllTaxesValues() {
+        return taxesRepository.sumAllTaxesValues();
+        }
+
+        @Override
+        public Integer sumAllProfitValues() {
+        return profitRepository.sumAllProfitValues();
+        }
+
+        @Override
+        public Integer sumAllCommissionValues() {
+        return commissionRepository.sumAllCommissionValues();
+        }
+
+
+        @Override
+        public SumAllValues sumAllServices() {
+        SumAllValues calculatorSumModel = new SumAllValues();
+
+        calculatorSumModel.setTotalDepreciation(depreciationRepository.priceEquipment());
+        calculatorSumModel.setTotalFixedCosts(fixedCostRepository.valueFixedCosts());
+        calculatorSumModel.setTotalVariableCosts(variableCostRepository.valueVariableCosts());
+        calculatorSumModel.setTotalEmployeeCosts(employeeRepository.valueEmployees());
+
+
+        BigDecimal totalSumServices = calculatorSumModel.getTotalDepreciation()
+        .add(calculatorSumModel.getTotalFixedCosts())
+        .add(calculatorSumModel.getTotalVariableCosts())
+        .add(calculatorSumModel.getTotalEmployeeCosts());
+        calculatorSumModel.setTotalSumServices(totalSumServices);
+
+        return calculatorSumModel;
+        }
+
+        @Override
+        public SumAllValues sumAllTaxes() {
+        SumAllValues calculatorSumModel = new SumAllValues();
+        calculatorSumModel.setTotalTaxes(taxesRepository.sumAllTaxesValues());
+        calculatorSumModel.setTotalProfit(profitRepository.sumAllProfitValues());
+        calculatorSumModel.setTotalCommission(commissionRepository.sumAllCommissionValues());
+
+        Integer totalSumTaxes = calculatorSumModel.getTotalTaxes()
+        + calculatorSumModel.getTotalProfit()
+        + calculatorSumModel.getTotalCommission();
+        calculatorSumModel.setTotalSumTaxes(totalSumTaxes);
+
+        return calculatorSumModel;
+        }
+
+        public SumAllValues totalMonthly() {
+        SumAllValues sumAllTaxes = sumAllTaxes();
+        SumAllValues sumAllServices = sumAllServices();
+
+        // Converte o valor inteiro de porcentagem para um formato decimal
+        BigDecimal porcentagem = new BigDecimal(sumAllTaxes.getTotalSumTaxes()).divide(new BigDecimal(100));
+
+        log.info("Porcentagem: " + porcentagem);
+        // Calcula o valor adicional com base na porcentagem
+        BigDecimal valorAdicional = sumAllServices.getTotalSumServices().multiply(porcentagem);
+
+        // Calcula o totalMonthly como a soma de totalSumServices e o valor adicional
+        BigDecimal totalMonthly = sumAllServices.getTotalSumServices().add(valorAdicional);
+
+        SumAllValues calculatorSumModel = new SumAllValues();
+
+
+        calculatorSumModel.setTotalSumTaxes(sumAllTaxes.getTotalSumTaxes());
+        calculatorSumModel.setTotalSumServices(sumAllServices.getTotalSumServices());
+        calculatorSumModel.setTotalMonthly(totalMonthly);
+
+
+        return calculatorSumModel;
+        }
+
+
+        }
