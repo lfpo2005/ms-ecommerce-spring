@@ -12,7 +12,7 @@ import java.util.Map;
 @RestController
 @Log4j2
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/currency")
+@RequestMapping("/currencies")
 public class CurrencyController {
 
     @Autowired

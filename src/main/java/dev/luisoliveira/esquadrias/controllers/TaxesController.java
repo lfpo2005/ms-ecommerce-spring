@@ -143,7 +143,7 @@ public class TaxesController {
     }
 
     @PreAuthorize("hasAnyRole('USER')")
-    @DeleteMapping("/{taxesId}/delete-taxes")
+    @DeleteMapping("/{taxesId}")
     public ResponseEntity<Object> deleteTaxes(@PathVariable(value = "taxesId") UUID taxesId,
                                               Authentication authentication) {
         try {

@@ -33,7 +33,7 @@ import java.util.*;
 @RestController
 @Log4j2
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/company")
+@RequestMapping("/companies")
 public class CompanyController {
 
     @Autowired

@@ -121,7 +121,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PutMapping("/{userId}/deactivate-delete-user")
+    @PutMapping("/{userId}/deactivate-exclude-user")
     public ResponseEntity<Object> deactivateAndDeleteUser(@PathVariable(value = "userId") UUID userId) {
 
         try {

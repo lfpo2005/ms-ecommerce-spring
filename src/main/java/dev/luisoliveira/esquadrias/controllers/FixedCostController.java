@@ -24,7 +24,7 @@ import java.util.UUID;
 @RestController
 @Log4j2
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/fixedCost")
+@RequestMapping("/fixedCosts")
 public class FixedCostController {
 
     @Autowired
@@ -143,7 +143,7 @@ public class FixedCostController {
     }
 
     @PreAuthorize("hasAnyRole('USER')")
-    @DeleteMapping("/{fixedCostId}/delete-fixed-cost")
+    @DeleteMapping("/{fixedCostId}")
     public ResponseEntity<Object> deleteFixedCost(@PathVariable(value = "fixedCostId") UUID fixedCostId,
                                                   Authentication authentication) {
         try {

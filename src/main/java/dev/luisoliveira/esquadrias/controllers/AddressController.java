@@ -30,7 +30,7 @@ import java.util.UUID;
 @RestController
 @Log4j2
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/address")
+@RequestMapping("/addresses")
 public class AddressController {
 
     @Autowired

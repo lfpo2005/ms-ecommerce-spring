@@ -144,7 +144,7 @@ public class VariableCostController {
     }
 
     @PreAuthorize("hasAnyRole('USER')")
-    @DeleteMapping("/{variableCostModelId}/delete-variable-cost")
+    @DeleteMapping("/{variableCostModelId}")
     public ResponseEntity<Object> deleteVariableCost(@PathVariable(value = "variableCostModelId") UUID variableCostModelId,
                                                   Authentication authentication) {
         try {

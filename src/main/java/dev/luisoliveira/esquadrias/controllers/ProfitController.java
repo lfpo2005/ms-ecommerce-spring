@@ -22,7 +22,7 @@ import java.util.UUID;
 @RestController
 @Log4j2
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/profit")
+@RequestMapping("/profits")
 public class ProfitController {
 
     @Autowired
@@ -141,7 +141,7 @@ public class ProfitController {
     }
 
     @PreAuthorize("hasAnyRole('USER')")
-    @DeleteMapping("/{profitId}/delete-profit")
+    @DeleteMapping("/{profitId}")
     public ResponseEntity<Object> deleteProfit(@PathVariable(value = "profitId") UUID profitId,
                                                    Authentication authentication) {
         try {

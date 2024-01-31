@@ -19,7 +19,7 @@ import java.util.UUID;
 @RestController
 @Log4j2
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/calculator")
+@RequestMapping("/calculators")
 public class CalculatorController {
 
     @Autowired

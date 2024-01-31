@@ -22,7 +22,7 @@ import java.util.UUID;
 @RestController
 @Log4j2
 @CrossOrigin(origins = "*", maxAge = 3600)
-@RequestMapping("/commission")
+@RequestMapping("/commissions")
 public class CommissionController {
 
     @Autowired
@@ -135,7 +135,7 @@ public class CommissionController {
         }
     }
     @PreAuthorize("hasAnyRole('USER')")
-    @DeleteMapping("/{commissionId}/delete-commission")
+    @DeleteMapping("/{commissionId}")
     public ResponseEntity<Object> deleteCommission(@PathVariable(value = "commissionId") UUID commissionId,
                                                    Authentication authentication) {
         try {
