@@ -2,7 +2,7 @@ server:
   port: 8091
   forward-headers-strategy: native
   servlet:
-    context-path: '/esquadrias'
+    context-path: '/calculator'
 
 spring:
   datasource:
@@ -43,13 +43,13 @@ spring:
 
 logging:
   level:
-    com.luisoliveira.esquadrias: TRACE
+    com.luisoliveira.calculator: TRACE
     root: INFO
     org.springframework.cache: INFO
     org.springframework.web: TRACE
     org.hibernate: INFO
 
-esquadrias:
+calculator:
   auth:
     jwtSecret: t7w!z%C*F-JaNdRgUkXp2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B&E)H@McQfTjWn
     jwtExpirationMs: 14400000

@@ -1,0 +1,14 @@
+package dev.calculator.services;
+
+import dev.calculator.models.AddressModel;
+
+import java.util.Optional;
+import java.util.UUID;
+
+public interface AddressService {
+
+
+    AddressModel save(AddressModel addressModel);
+
+    Optional<AddressModel> findById(UUID addressId);
+}
