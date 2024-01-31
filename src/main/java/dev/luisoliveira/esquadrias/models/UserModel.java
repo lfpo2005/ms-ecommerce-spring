@@ -9,10 +9,7 @@ import dev.luisoliveira.esquadrias.enums.UserType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.hateoas.RepresentationModel;
@@ -23,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Data
 @Getter
 @Setter
 @AllArgsConstructor

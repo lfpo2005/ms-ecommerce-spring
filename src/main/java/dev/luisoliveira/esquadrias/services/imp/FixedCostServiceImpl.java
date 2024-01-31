@@ -40,6 +40,5 @@ public class FixedCostServiceImpl implements FixedCostService {
     public FixedCostModel save(FixedCostModel fixedCost) {
         fixedCostRepository.save(fixedCost);
         return fixedCost;
-
     }
 }

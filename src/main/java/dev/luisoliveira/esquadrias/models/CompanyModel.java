@@ -3,10 +3,7 @@ package dev.luisoliveira.esquadrias.models;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.validator.constraints.br.CNPJ;
@@ -17,6 +14,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+@Data
 @Getter
 @Setter
 @AllArgsConstructor

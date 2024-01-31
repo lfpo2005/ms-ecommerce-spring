@@ -11,9 +11,7 @@ import java.util.UUID;
 public interface DepreciationRepository extends JpaRepository<DepreciationModel, UUID> {
 
     boolean existsByEquipmentAndUser_UserId(String equipment, UUID userId);
-
     List<DepreciationModel> findAllByUser_UserId(UUID userId);
-
     @Query("SELECT SUM(d.priceEquipment/120) FROM DepreciationModel d where d.user.userId = :userId")
     BigDecimal priceEquipment(UUID userId);
 }

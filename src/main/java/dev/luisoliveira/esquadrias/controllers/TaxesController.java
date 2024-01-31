@@ -29,7 +29,7 @@ public class TaxesController {
     TaxesService taxesService;
 
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/createTaxes")
+    @PostMapping("/register-taxes")
     public ResponseEntity<Object> registerTaxes(Authentication authentication,
                                                 @RequestBody @Validated(TaxesDto.TaxesView.TaxesPost.class)
                                                 @JsonView(TaxesDto.TaxesView.TaxesPost.class) TaxesDto taxesDto) {
@@ -52,7 +52,7 @@ public class TaxesController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -70,7 +70,7 @@ public class TaxesController {
             return ResponseEntity.status(HttpStatus.OK).body(taxesModels);
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -85,7 +85,6 @@ public class TaxesController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<TaxesModel> taxesModelOptional = taxesService.findById(taxesId);
-
             if (taxesModelOptional.isPresent()) {
                 TaxesModel taxesModels = taxesModelOptional.get();
                 if (taxesModels.getUser().getUserId().equals(userId)) {
@@ -102,7 +101,7 @@ public class TaxesController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -118,7 +117,6 @@ public class TaxesController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<TaxesModel> taxesModelOptional = taxesService.findById(taxesId);
-
             if (taxesModelOptional.isPresent()) {
                 TaxesModel taxesModel = taxesModelOptional.get();
                 if (taxesModel.getUser().getUserId().equals(userId)) {
@@ -140,12 +138,12 @@ public class TaxesController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
     @PreAuthorize("hasAnyRole('USER')")
-    @DeleteMapping("/{taxesId}/deleteTaxes")
+    @DeleteMapping("/{taxesId}/delete-taxes")
     public ResponseEntity<Object> deleteTaxes(@PathVariable(value = "taxesId") UUID taxesId,
                                               Authentication authentication) {
         try {
@@ -154,7 +152,6 @@ public class TaxesController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<TaxesModel> taxesModelOptional = taxesService.findById(taxesId);
-
             if (taxesModelOptional.isPresent()) {
                 TaxesModel taxesModel = taxesModelOptional.get();
                 if (taxesModel.getUser().getUserId().equals(userId)) {
@@ -172,7 +169,7 @@ public class TaxesController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 }

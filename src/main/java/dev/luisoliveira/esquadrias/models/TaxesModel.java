@@ -2,13 +2,11 @@ package dev.luisoliveira.esquadrias.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.UUID;
 
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
@@ -23,8 +21,3 @@ public class TaxesModel extends BaseFieldsCalculation {
     private UUID taxesId;
 
 }
-//    private TaxesModel sumFindAllTaxes() {
-//        TaxesModel taxesModel = new TaxesModel();
-//        taxesModel.setValuePercentage(taxesRepository.sumAllTaxesValues());
-//        return taxesModel;
-//    }

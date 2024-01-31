@@ -34,7 +34,7 @@ public class FixedCostController {
     UserService userService;
 
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/createFixedCost")
+    @PostMapping("/register-fixed-cost")
     public ResponseEntity<Object> registerFixedCost(Authentication authentication,
                                                     @RequestBody @Validated(FixedCostDto.FixedCostView.FixedCostPost.class)
                                                     @JsonView(FixedCostDto.FixedCostView.FixedCostPost.class) FixedCostDto fixedCostDto) {
@@ -43,7 +43,6 @@ public class FixedCostController {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
             log.info("Authentication {} ", userDetails.getUsername());
-
             if (fixedCostService.existsByNameCostsAndUser_UserId(fixedCostDto.getNameCosts(), userId)) {
                 log.warn("FixedCost {} is already Taken!: ------> ", fixedCostDto.getFixedCostId());
                 return ResponseEntity.badRequest().body("Error: FixedCost is Already Taken!");
@@ -54,10 +53,9 @@ public class FixedCostController {
             fixedCostService.save(fixedCostModel);
             log.info("POST registerFixedCost FixedCostDto received: ------> {}", fixedCostDto.toString());
             return ResponseEntity.status(HttpStatus.CREATED).body(fixedCostModel);
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -69,13 +67,12 @@ public class FixedCostController {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
             log.info("Authentication {} ", userDetails.getUsername());
-
             List<FixedCostModel> fixedCostModel = fixedCostService.findAllByUserId(userId);
             log.info("GET getAllFixedCosts FixedCostDto received: ------> {}", fixedCostModel.toString());
             return ResponseEntity.status(HttpStatus.OK).body(fixedCostModel);
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -83,14 +80,12 @@ public class FixedCostController {
     @GetMapping("/{fixedCostId}")
     public ResponseEntity<Object> getOneFixedCost(@PathVariable(value = "fixedCostId") UUID fixedCostId,
                                                   Authentication authentication) {
-
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<FixedCostModel> fixedCostModelOptional = fixedCostService.findById(fixedCostId);
-
             if (fixedCostModelOptional.isPresent()) {
                 FixedCostModel fixedCostModel = fixedCostModelOptional.get();
                 if (fixedCostModel.getUser().getUserId().equals(userId)) {
@@ -107,10 +102,9 @@ public class FixedCostController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
-
     @PreAuthorize("hasAnyRole('USER')")
     @PutMapping("/{fixedCostId}")
     public ResponseEntity<Object> updateFixedCost(@PathVariable(value = "fixedCostId") UUID fixedCostId,
@@ -123,7 +117,6 @@ public class FixedCostController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<FixedCostModel> fixedCostModelOptional = fixedCostService.findById(fixedCostId);
-
             if (fixedCostModelOptional.isPresent()) {
                 FixedCostModel fixedCost = fixedCostModelOptional.get();
                 if (fixedCost.getUser().getUserId().equals(userId)) {
@@ -145,12 +138,12 @@ public class FixedCostController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
     @PreAuthorize("hasAnyRole('USER')")
-    @DeleteMapping("/{fixedCostId}/deleteFixedCost")
+    @DeleteMapping("/{fixedCostId}/delete-fixed-cost")
     public ResponseEntity<Object> deleteFixedCost(@PathVariable(value = "fixedCostId") UUID fixedCostId,
                                                   Authentication authentication) {
         try {
@@ -159,7 +152,6 @@ public class FixedCostController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<FixedCostModel> fixedCostModelOptional = fixedCostService.findById(fixedCostId);
-
             if (fixedCostModelOptional.isPresent()) {
                 FixedCostModel fixedCost = fixedCostModelOptional.get();
                 if (fixedCost.getUser().getUserId().equals(userId)) {
@@ -174,10 +166,9 @@ public class FixedCostController {
                 log.warn("DELETE deleteFixedCost FixedCostDto received: ------> {}", fixedCostModelOptional.toString());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: FixedCost not found");
             }
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 }

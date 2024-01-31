@@ -13,8 +13,6 @@ import java.lang.annotation.*;
 public @interface UsernameConstraint {
 	
 	String message() default "Invalid username";
-
 	Class<?>[] groups() default { };
-
 	Class<? extends Payload>[] payload() default {};
 }

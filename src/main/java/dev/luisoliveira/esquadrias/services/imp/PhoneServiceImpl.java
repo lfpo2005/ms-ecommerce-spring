@@ -19,7 +19,6 @@ public class PhoneServiceImpl implements PhoneService {
     public PhoneModel save(PhoneModel phone) {
         return phoneRepository.save(phone);
     }
-
     @Override
     public Optional<PhoneModel> findById(UUID phoneId) {
         return phoneRepository.findById(phoneId);

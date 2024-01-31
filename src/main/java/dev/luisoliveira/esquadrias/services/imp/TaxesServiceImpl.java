@@ -20,7 +20,6 @@ public class TaxesServiceImpl implements TaxesService {
     public boolean existsByNameCostsAndUser_UserId(String name, UUID userId) {
         return taxesRepository.existsByNameAndUser_UserId(name, userId);
     }
-
     @Override
     public TaxesModel save(TaxesModel taxesModel) {
         return taxesRepository.save(taxesModel);

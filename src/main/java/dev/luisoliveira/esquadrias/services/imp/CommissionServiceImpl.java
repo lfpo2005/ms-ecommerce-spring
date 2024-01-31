@@ -20,22 +20,18 @@ public class CommissionServiceImpl implements CommissionService {
     public boolean existsByNameCostsAndUser_UserId(String name, UUID userId) {
         return commissionRepository.existsByNameAndUser_UserId(name, userId);
     }
-
     @Override
     public CommissionModel save(CommissionModel commissionModel) {
         return commissionRepository.save(commissionModel);
     }
-
     @Override
     public List<CommissionModel> findAllByUserId(UUID userId) {
         return commissionRepository.findAllByUser_UserId(userId);
     }
-
     @Override
     public Optional<CommissionModel> findById(UUID commissionId) {
         return commissionRepository.findById(commissionId);
     }
-
     @Override
     public void delete(CommissionModel fixedCost) {
         commissionRepository.delete(fixedCost);

@@ -29,7 +29,7 @@ public class ProfitController {
     ProfitService profitService;
 
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/createProfit")
+    @PostMapping("/register-profit")
     public ResponseEntity<Object> registerProfit(Authentication authentication,
                                                      @RequestBody @Validated(ProfitDto.ProfitView.ProfitPost.class)
                                                      @JsonView(ProfitDto.ProfitView.ProfitPost.class) ProfitDto profitDto) {
@@ -38,7 +38,6 @@ public class ProfitController {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
             log.info("Authentication {} ", userDetails.getUsername());
-
             if (profitService.existsByNameCostsAndUser_UserId(profitDto.getName(), userId)) {
                 log.warn("Profit {} is already Taken!: ------> ", profitDto.getProfitId());
                 return ResponseEntity.badRequest().body("Error: Profit is Already Taken!");
@@ -49,10 +48,9 @@ public class ProfitController {
             profitService.save(profitModel);
             log.info("POST registerProfit ProfitDto received: ------> {}", profitDto.toString());
             return ResponseEntity.status(HttpStatus.CREATED).body(profitModel);
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -70,7 +68,7 @@ public class ProfitController {
             return ResponseEntity.status(HttpStatus.OK).body(profitModels);
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -85,7 +83,6 @@ public class ProfitController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<ProfitModel> profitModelsOptional = profitService.findById(profitId);
-
             if (profitModelsOptional.isPresent()) {
                 ProfitModel profitModels = profitModelsOptional.get();
                 if (profitModels.getUser().getUserId().equals(userId)) {
@@ -102,7 +99,7 @@ public class ProfitController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -118,7 +115,6 @@ public class ProfitController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<ProfitModel> profitModelsOptional = profitService.findById(profitId);
-
             if (profitModelsOptional.isPresent()) {
                 ProfitModel profitModel = profitModelsOptional.get();
                 if (profitModel.getUser().getUserId().equals(userId)) {
@@ -140,12 +136,12 @@ public class ProfitController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
     @PreAuthorize("hasAnyRole('USER')")
-    @DeleteMapping("/{profitId}/deleteProfit")
+    @DeleteMapping("/{profitId}/delete-profit")
     public ResponseEntity<Object> deleteProfit(@PathVariable(value = "profitId") UUID profitId,
                                                    Authentication authentication) {
         try {
@@ -154,7 +150,6 @@ public class ProfitController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<ProfitModel> profitModelsOptional = profitService.findById(profitId);
-
             if (profitModelsOptional.isPresent()) {
                 ProfitModel fixedCost = profitModelsOptional.get();
                 if (fixedCost.getUser().getUserId().equals(userId)) {
@@ -169,10 +164,9 @@ public class ProfitController {
                 log.warn("DELETE deleteProfit Profit received: ------> {}", profitModelsOptional.toString());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Profit not found");
             }
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 }

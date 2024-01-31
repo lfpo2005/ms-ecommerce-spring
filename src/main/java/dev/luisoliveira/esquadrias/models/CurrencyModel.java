@@ -2,7 +2,7 @@ package dev.luisoliveira.esquadrias.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-
+@Data
 @Getter
 @Setter
 @ToString

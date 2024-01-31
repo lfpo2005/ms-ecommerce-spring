@@ -29,16 +29,14 @@ public class CommissionController {
     CommissionService commissionService;
 
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/createCommission")
+    @PostMapping("/create-commission")
     public ResponseEntity<Object> registerCommission(Authentication authentication,
                                                      @RequestBody @Validated(CommissionDto.CommissionView.CommissionPost.class)
                                                      @JsonView(CommissionDto.CommissionView.CommissionPost.class) CommissionDto commissionDto) {
-
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
             log.info("Authentication {} ", userDetails.getUsername());
-
             if (commissionService.existsByNameCostsAndUser_UserId(commissionDto.getName(), userId)) {
                 log.warn("Commission {} is already Taken!: ------> ", commissionDto.getCommissionId());
                 return ResponseEntity.badRequest().body("Error: Commission is Already Taken!");
@@ -52,10 +50,9 @@ public class CommissionController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
-
     @PreAuthorize("hasAnyRole('USER')")
     @GetMapping
     public ResponseEntity<Object> getAllCommission(Authentication authentication) {
@@ -70,22 +67,19 @@ public class CommissionController {
             return ResponseEntity.status(HttpStatus.OK).body(commissionModels);
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
-
     @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/{commissionId}")
     public ResponseEntity<Object> getOneCommission(@PathVariable(value = "commissionId") UUID commissionId,
                                                    Authentication authentication) {
-
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<CommissionModel> commissionModelsOptional = commissionService.findById(commissionId);
-
             if (commissionModelsOptional.isPresent()) {
                 CommissionModel commissionModels = commissionModelsOptional.get();
                 if (commissionModels.getUser().getUserId().equals(userId)) {
@@ -99,13 +93,11 @@ public class CommissionController {
                 log.warn("GET getOneCommission Commission received: ------> {}", commissionModelsOptional.toString());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Commission not found");
             }
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
-
     @PreAuthorize("hasAnyRole('USER')")
     @PutMapping("/{commissionId}")
     public ResponseEntity<Object> updateCommission(@PathVariable(value = "commissionId") UUID commissionId,
@@ -118,7 +110,6 @@ public class CommissionController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<CommissionModel> commissionModelsOptional = commissionService.findById(commissionId);
-
             if (commissionModelsOptional.isPresent()) {
                 CommissionModel commissionModel = commissionModelsOptional.get();
                 if (commissionModel.getUser().getUserId().equals(userId)) {
@@ -138,15 +129,13 @@ public class CommissionController {
                 log.warn("PUT updateCommission Commission received: ------> {}", commissionModelsOptional.toString());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Commission not found");
             }
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
-
     @PreAuthorize("hasAnyRole('USER')")
-    @DeleteMapping("/{commissionId}/deleteCommission")
+    @DeleteMapping("/{commissionId}/delete-commission")
     public ResponseEntity<Object> deleteCommission(@PathVariable(value = "commissionId") UUID commissionId,
                                                    Authentication authentication) {
         try {
@@ -155,7 +144,6 @@ public class CommissionController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<CommissionModel> commissionModelsOptional = commissionService.findById(commissionId);
-
             if (commissionModelsOptional.isPresent()) {
                 CommissionModel fixedCost = commissionModelsOptional.get();
                 if (fixedCost.getUser().getUserId().equals(userId)) {
@@ -170,10 +158,9 @@ public class CommissionController {
                 log.warn("DELETE deleteCommission Commission received: ------> {}", commissionModelsOptional.toString());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: Commission not found");
             }
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 }

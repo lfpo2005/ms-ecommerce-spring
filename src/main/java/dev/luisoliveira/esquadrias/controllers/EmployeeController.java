@@ -40,14 +40,12 @@ public class EmployeeController {
     UserCompanyValidationUtil userCompanyValidationUtil;
 
     @PreAuthorize("hasAnyRole('CUSTOMER')")
-    @PostMapping("company/registerEmployee")
+    @PostMapping("company/register-employee")
     public ResponseEntity<Object> registerEmployee(@RequestBody @Validated(EmployeeDto.EmployeeView.EmployeePost.class)
                                                    @JsonView(EmployeeDto.EmployeeView.EmployeePost.class) EmployeeDto employeeDto) {
 
         log.debug("POST registerEmployee EmployeeDto received: ------> {}", employeeDto.toString());
-
         try {
-
             Optional<CompanyModel> companyOptional = userCompanyValidationUtil.validateUserAndCompany();
             if (!companyOptional.isPresent()) {
                 log.warn("User not authenticated, not found or company not found");
@@ -81,12 +79,12 @@ public class EmployeeController {
             }
         } catch (Exception e) {
             log.error("POST registerEmployee EmployeeDto error: ------> {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            throw e;
         }
     }
 
     @PreAuthorize("hasAnyRole('CUSTOMER')")
-    @PutMapping("company/{employeeId}/updateEmployee")
+    @PutMapping("company/{employeeId}")
     public ResponseEntity<Object> updateEmployee(@PathVariable("employeeId") UUID employeeId,
                                                  @RequestBody @Validated(EmployeeDto.EmployeeView.EmployeePut.class)
                                                  @JsonView(EmployeeDto.EmployeeView.EmployeePut.class) EmployeeDto employeeDto) {
@@ -99,14 +97,12 @@ public class EmployeeController {
                 log.warn("User not authenticated, not found or company not found");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated, not found or company not found");
             }
-
             if (employeeId == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The employeeId field must not be null");
             }
             if (!DateUtil.isValidBirthDate(employeeDto.getBirthDate())) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Invalid BirthDate format! Valid format: dd-MM-yyyy");
             }
-
             Optional<EmployeeModel> employeeModelOptional = employeeService.findByEmployeeIdAndCompany(employeeId, companyOptional.get());
             if (!employeeModelOptional.isPresent() || employeeModelOptional.get().getActive() == false) {
                 log.warn("Employee not found in the company!");
@@ -132,12 +128,12 @@ public class EmployeeController {
 
         } catch (Exception e) {
             log.error("PUT updateEmployee EmployeeDto error: ------> {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            throw e;
         }
     }
 
     @PreAuthorize("hasAnyRole('CUSTOMER')")
-    @PutMapping("company/{employeeId}/reasonDismissal")
+    @PutMapping("company/{employeeId}/reason-dismissal")
     public ResponseEntity<Object> reasonDismissal(@PathVariable("employeeId") UUID employeeId,
                                                   @RequestBody @Validated(EmployeeDto.EmployeeView.ReasonDismissalPut.class)
                                                   @JsonView(EmployeeDto.EmployeeView.ReasonDismissalPut.class) EmployeeDto employeeDto) {
@@ -150,11 +146,9 @@ public class EmployeeController {
                 log.warn("User not authenticated, not found or company not found");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated, not found or company not found");
             }
-
             if (employeeId == null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The employeeId field must not be null");
             }
-
             Optional<EmployeeModel> employeeModelOptional = employeeService.findByEmployeeIdAndCompany(employeeId, companyOptional.get());
             if (!employeeModelOptional.isPresent()) {
                 log.warn("Employee not found in the company!");
@@ -166,15 +160,12 @@ public class EmployeeController {
             employeeModel.setUpdateDate(LocalDateTime.now(ZoneId.of("UTC")));
             employeeModel.setActive(false);
             employeeModel.setCompany(companyOptional.get());
-
             log.info("PUT reasonDismissal EmployeeDto received: ------> {}", employeeDto.toString());
             employeeService.save(employeeModel);
-            log.trace("Employee {} updated successfully!", employeeModel.getFullName());
             return ResponseEntity.status(HttpStatus.OK).body(employeeModel);
-
         } catch (Exception e) {
             log.error("PUT reasonDismissal EmployeeDto error: ------> {}", e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            throw e;
         }
     }
 

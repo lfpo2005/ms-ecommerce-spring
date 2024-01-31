@@ -9,7 +9,6 @@ import java.util.UUID;
 
 public interface TaxesRepository extends JpaRepository<TaxesModel, UUID> {
     boolean existsByNameAndUser_UserId(String name, UUID userId);
-
     List<TaxesModel> findAllByUser_UserId(UUID userId);
 
     @Query("SELECT SUM(t.valuePercentage) FROM TaxesModel t where t.user.userId = :userId")

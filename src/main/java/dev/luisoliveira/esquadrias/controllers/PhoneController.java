@@ -45,7 +45,7 @@ public class PhoneController {
     UserCompanyValidationUtil userCompanyValidationUtil;
 
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/users/createPhone")
+    @PostMapping("/users/register-phone")
     public ResponseEntity<Object> registerPhoneForUser(@RequestBody @Validated(PhoneDto.PhoneView.RegistrationPost.class)
                                                   @JsonView(PhoneDto.PhoneView.RegistrationPost.class) PhoneDto phoneDto) {
 
@@ -72,12 +72,12 @@ public class PhoneController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
     @PreAuthorize("hasAnyRole('CUSTOMER')")
-    @PostMapping("/companies/createPhone")
+    @PostMapping("/companies/register-phone")
     public ResponseEntity<Object> registerPhoneForCompany(@RequestBody @Validated(PhoneDto.PhoneView.RegistrationPost.class)
                                                           @JsonView(PhoneDto.PhoneView.RegistrationPost.class) PhoneDto phoneDto) {
         try {
@@ -86,28 +86,23 @@ public class PhoneController {
                 log.warn("User not authenticated, not found or company not found");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated, not found or company not found");
             }
-
             if (phoneDto.getPhoneId() != null) {
                 log.error("The phoneId field must be null");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The phoneId field must be null");
             }
-
             var phoneModel = new PhoneModel();
             BeanUtils.copyProperties(phoneDto, phoneModel);
             phoneModel.setCompany(companyOptional.get());
             phoneService.save(phoneModel);
             log.info("POST registerPhone PhoneModel saved: ------> {}", phoneModel.toString());
             return ResponseEntity.status(HttpStatus.CREATED).body(phoneModel);
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
-
-
     @PreAuthorize("hasAnyRole('USER')")
-    @PutMapping("user/updatePhone/{phoneId}")
+    @PutMapping("user/update-phone/{phoneId}")
     public ResponseEntity<Object> updatePhone(@PathVariable UUID phoneId,
                                                 @RequestBody
                                                 @Validated(PhoneDto.PhoneView.RegistrationPost.class)
@@ -115,8 +110,7 @@ public class PhoneController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("POST registerPhone PhoneDto received: ------> {}", phoneDto.toString());
-        Optional<UserModel> userModelOptional = userService.findById(userDetails.getUserId());
-
+        //Optional<UserModel> userModelOptional = userService.findById(userDetails.getUserId());
         try {
             Optional<PhoneModel> phoneModelOptional = phoneService.findById(phoneId);
             if (phoneModelOptional == null) {
@@ -131,8 +125,7 @@ public class PhoneController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
-
 }

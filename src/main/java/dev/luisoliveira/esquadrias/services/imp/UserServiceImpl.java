@@ -29,9 +29,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserModel> findById(UUID userId) {
         return userRepository.findById(userId);
-
     }
-
     @Transactional
     @Override
     public Optional<UserModel> findByIdWithAddressesAndPhones(UUID userId) {
@@ -42,13 +40,6 @@ public class UserServiceImpl implements UserService {
         }
         return userModelOptional;
     }
-
-/*
-    @Override
-    public Optional<UserModel> findByIdWithAddressesAndPhones(UUID userId) {
-        return userRepository.findByIdWithAddressesAndPhones(userId);
-    }
-*/
 
     @Transactional
     @Override
@@ -77,13 +68,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByFullName(fullName);
     }
 
-
     @Transactional
     @Override
     public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
         return userRepository.findAll(spec, pageable);
     }
-
     @Override
     public UserModel updateUser(UserModel userModel) {
         return userRepository.save(userModel);
@@ -93,6 +82,5 @@ public class UserServiceImpl implements UserService {
     public UserModel updatePassword(UserModel userModel) {
         return save(userModel);
     }
-
 
 }

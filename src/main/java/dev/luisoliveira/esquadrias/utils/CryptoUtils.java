@@ -18,7 +18,6 @@ public class CryptoUtils {
         byte[] encryptedValue = cipher.doFinal(value.getBytes());
         return Base64.getEncoder().encodeToString(encryptedValue);
     }
-
     public static String decrypt(String value) throws Exception {
         SecretKey secretKey = new SecretKeySpec(KEY, ALGORITHM);
         Cipher cipher = Cipher.getInstance(ALGORITHM);

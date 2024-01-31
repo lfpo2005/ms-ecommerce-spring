@@ -33,7 +33,7 @@ public class DepreciationController {
     UserService userService;
 
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/createDepreciation")
+    @PostMapping("/create-depreciation")
     public ResponseEntity<Object> registerDepreciation(Authentication authentication,
                                                        @RequestBody @Validated(DepreciationDto.DepreciationView.DepreciationPost.class)
                                                        @JsonView(DepreciationDto.DepreciationView.DepreciationPost.class) DepreciationDto depreciationDto) {
@@ -42,7 +42,6 @@ public class DepreciationController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         UUID userId = userDetails.getUserId();
         log.info("Authentication {} ", userDetails.getUsername());
-
             if (depreciationService.existsByEquipmentAndUserId(depreciationDto.getEquipment(), userId)) {
                 log.warn("Depreciation {} is already Taken!: ------> ", depreciationDto.getDepreciationId());
                 return ResponseEntity.badRequest().body("Error: Depreciation is Already Taken!");
@@ -53,10 +52,9 @@ public class DepreciationController {
                 depreciationService.save(depreciationModel);
                 log.info("POST registerDepreciation DepreciationDto received: ------> {}", depreciationDto.toString());
                 return ResponseEntity.status(HttpStatus.CREATED).body(depreciationModel);
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
     @PreAuthorize("hasAnyRole('USER')")
@@ -64,18 +62,15 @@ public class DepreciationController {
     public ResponseEntity<Object> findAllDepreciation(Authentication authentication) {
 
         try {
-            // Extrai o ID do usuário logado
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
             log.info("Authentication {} ", userDetails.getUsername());
-
-            // Chama o serviço passando o ID do usuário
             List<DepreciationModel> depreciation = depreciationService.findAllByUserId(userId);
             log.info("Depreciation {} ", depreciation);
             return ResponseEntity.ok(depreciation);
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -84,18 +79,12 @@ public class DepreciationController {
                                                      Authentication authentication) {
 
         try {
-            // Extrai o ID do usuário logado
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
             log.info("Authentication {} ", userDetails.getUsername());
-
-            // Busca a depreciação pelo ID
             Optional<DepreciationModel> depreciationOptional = depreciationService.findById(depreciationId);
-
             if (depreciationOptional.isPresent()) {
                 DepreciationModel depreciation = depreciationOptional.get();
-
-                // Verifica se a depreciação pertence ao usuário logado
                 if (depreciation.getUser().getUserId().equals(userId)) {
                     return ResponseEntity.ok(depreciation);
                 } else {
@@ -104,33 +93,25 @@ public class DepreciationController {
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Depreciation not found");
             }
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
-
-
-    @PutMapping("/{depreciationId}/updateDepreciation")
+    @PutMapping("/{depreciationId}/update-depreciation")
     public ResponseEntity<Object> updateDepreciation(@PathVariable("depreciationId") UUID depreciationId,
                                                      @RequestBody
                                                      @Validated(DepreciationDto.DepreciationView.DepreciationPut.class)
                                                      @JsonView(DepreciationDto.DepreciationView.DepreciationPut.class)
                                                      DepreciationDto depreciationDto, Authentication authentication ) {
         try {
-            // Extrai o ID do usuário logado
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
             log.info("Authentication {} ", userDetails.getUsername());
 
-            // Busca a depreciação pelo ID
             Optional<DepreciationModel> depreciationOptional = depreciationService.findById(depreciationId);
-
             if (depreciationOptional.isPresent()) {
                 DepreciationModel depreciation = depreciationOptional.get();
-
-                // Verifica se a depreciação pertence ao usuário logado
                 if (depreciation.getUser().getUserId().equals(userId)) {
                     var depreciationModel = depreciationOptional.get();
                     depreciationModel.setEquipment(depreciationDto.getEquipment());
@@ -138,7 +119,6 @@ public class DepreciationController {
                     depreciationModel.setQuantityEquipment(depreciationDto.getQuantityEquipment());
                     depreciationModel.setPriceEquipment(depreciationDto.getPriceEquipment());
                     return ResponseEntity.ok(depreciationService.save(depreciationModel));
-
                 } else {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
                 }
@@ -148,8 +128,7 @@ public class DepreciationController {
             }
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
-
 }

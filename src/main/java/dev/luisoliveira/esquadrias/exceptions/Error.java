@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,5 +23,8 @@ public class Error {
 
     @JsonProperty(value = "status")
     private String status;
+
+    @JsonProperty(value = "errorId")
+    private UUID errorId;
 
 }

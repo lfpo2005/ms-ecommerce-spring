@@ -14,11 +14,8 @@ import java.util.UUID;
 public interface UserRepository extends JpaRepository<UserModel, UUID>, JpaSpecificationExecutor<UserModel> {
 
     Boolean existsByUsername(String username);
-
     Boolean existsByEmail(String email);
-
     Boolean existsByFullName(String fullName);
-
     @EntityGraph(attributePaths = "roles", type = EntityGraph.EntityGraphType.FETCH)
     Optional<UserModel> findByUsername(String username);
 

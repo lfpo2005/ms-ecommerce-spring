@@ -61,7 +61,6 @@ public class AuthenticationController {
         log.debug("POST registerUser UserDto received: ------> {}", userDto.toString());
 
         try {
-
             if (userService.existsByUsername(userDto.getUsername())) {
                 log.warn("Username {} is Already Taken!: ------> ", userDto.getUsername());
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Username is Already Taken!");
@@ -82,8 +81,6 @@ public class AuthenticationController {
             RoleModel roleModel = roleService.findByRoleName(RoleType.ROLE_USER)
                     .orElseThrow(() -> new RuntimeException("Error: Role is not Found."));
             userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-
             var userModel = new UserModel();
             BeanUtils.copyProperties(userDto, userModel);
             userModel.setUserType(UserType.USER);
@@ -106,17 +103,23 @@ public class AuthenticationController {
 
         }catch (Exception e) {
             log.error("Exception occurred: ", e);
-            throw  new RuntimeException(e);
+            throw e;
         }
     }
 
     @PostMapping("/login")
     public ResponseEntity<JwtDto> authenticateUser(@Valid @RequestBody LoginDto loginDto) {
+        try {
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginDto.getUsername(), loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtProvider.generateJwt(authentication);
         return ResponseEntity.ok(new JwtDto(jwt));
+        } catch (Exception e) {
+            log.error("Exception occurred: ", e);
+            throw e;
+        }
     }
     @RequestMapping(value="/logout", method = RequestMethod.POST)
     public ResponseEntity<?> logoutPage (HttpServletRequest request, HttpServletResponse response) {

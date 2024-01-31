@@ -23,5 +23,4 @@ public class CurrencyController {
         Map<String, CurrencyModel> currencies = currencyService.getCurrency(currencyEnum);
         return ResponseEntity.ok(currencies);
     }
-
 }

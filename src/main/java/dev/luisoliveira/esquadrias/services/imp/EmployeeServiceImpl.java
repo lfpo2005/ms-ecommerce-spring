@@ -26,13 +26,11 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Optional<EmployeeModel> findByEmployeeIdAndCompany(UUID employeeId, CompanyModel companyModel) {
         return employeeRepository.findByEmployeeIdAndCompany(employeeId, companyModel);
     }
-
     @Override
     public EmployeeModel save(EmployeeModel employeeModel) {
         employeeRepository.save(employeeModel);
         return employeeModel;
     }
-
     @Override
     public Boolean existsByFullName(String fullName) {
         return employeeRepository.existsByFullName(fullName);

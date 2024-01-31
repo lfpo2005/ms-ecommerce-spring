@@ -28,7 +28,6 @@ public class CompanyServiceImpl implements CompanyService {
         return companyRepository.findById(companyId);
     }
 
-
     @Transactional
     @Override
     public Optional<CompanyModel> findByIdWithAddressesAndPhones(UUID companyId) {
@@ -44,6 +43,5 @@ public class CompanyServiceImpl implements CompanyService {
     public Page<CompanyModel> findAll(Pageable pageable) {
         return companyRepository.findAll(pageable);
     }
-
 
 }

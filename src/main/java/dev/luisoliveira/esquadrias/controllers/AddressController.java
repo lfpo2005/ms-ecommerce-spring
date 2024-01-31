@@ -49,17 +49,15 @@ public class AddressController {
     UserCompanyValidationUtil userCompanyValidationUtil;
 
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/users/createUserAddress")
+    @PostMapping("/users/register-user-address")
     public ResponseEntity<Object> registerUserAddress(@RequestBody @Validated(AddressDto.AddressView.RegistrationPost.class)
                                                   @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         UserModel loggedInUser = userService.findById(userDetails.getUserId()).get();
-
         log.debug("POST registerAddress AddressDto received: ------> {}", addressDto.toString());
-        Optional<UserModel> userModelOptional = userService.findById(loggedInUser.getUserId());
 
+        Optional<UserModel> userModelOptional = userService.findById(loggedInUser.getUserId());
         try {
             if (!userModelOptional.isPresent()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
@@ -73,21 +71,18 @@ public class AddressController {
             addressModel.setUser(userModelOptional.get());
             addressService.save(addressModel);
             return ResponseEntity.status(HttpStatus.CREATED).body(addressModel);
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+            throw e;
         }
     }
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/employee/{employeeId}/registerEmployeeAddress")
+    @PostMapping("/employee/{employeeId}/register-employee-address")
     public ResponseEntity<Object> registerEmployeeAddress(@PathVariable(value = "employeeId") UUID employeeId,
                                                          @RequestBody @Validated(AddressDto.AddressView.RegistrationPost.class)
                                                          @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto) {
-
         log.debug("POST registerEmployeeAddress AddressDto received: ------> {}", addressDto.toString());
         Optional<EmployeeModel> employeeModelOptional = employeeService.findById(employeeId);
-
         try {
             if (!employeeModelOptional.isPresent()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
@@ -101,24 +96,21 @@ public class AddressController {
             addressModel.setCompany(employeeModelOptional.get().getCompany());
             addressService.save(addressModel);
             return ResponseEntity.status(HttpStatus.CREATED).body(addressModel);
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+            throw e;
         }
     }
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/company/createCompanyAddress")
+    @PostMapping("/company/register-company-address")
     public ResponseEntity<Object> registerCompanyAddress(@RequestBody @Validated(AddressDto.AddressView.RegistrationPost.class)
                                                       @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto) {
-
         try {
             Optional<CompanyModel> companyOptional = userCompanyValidationUtil.validateUserAndCompany();
             if (!companyOptional.isPresent()) {
                 log.warn("User not authenticated, not found or company not found");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated, not found or company not found");
             }
-
             if (addressDto.getAddressId() != null) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The addressId field must be null");
             }
@@ -131,16 +123,22 @@ public class AddressController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+            throw e;
         }
    }
     @PreAuthorize("hasAnyRole('USER')")
-    @PutMapping("/{userId}/updateAddress/{addressId}")
+    @PutMapping("/update-address/{addressId}")
     public ResponseEntity<Object> updateAddress(@PathVariable UUID addressId,
                                                 @RequestBody
                                                 @Validated(AddressDto.AddressView.RegistrationPost.class)
-                                                @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto) {
+                                                @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto,
+                                                Authentication authentication) {
+
         try {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            UUID userId = userDetails.getUserId();
+            log.info("Authentication {} ", userDetails.getUsername());
+
             Optional<AddressModel> addressModelOptional = addressService.findById(addressId);
             if (addressModelOptional == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address not found");
@@ -151,7 +149,7 @@ public class AddressController {
             return ResponseEntity.ok(addressModel);
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
+            throw e;
         }
-    }
+    } //TODO: Implementar a validação de usuário
 }

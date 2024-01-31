@@ -34,11 +34,10 @@ public class VariableCostController {
     UserService userService;
 
     @PreAuthorize("hasAnyRole('USER')")
-    @PostMapping("/createVariableCost")
+    @PostMapping("/register-variable-cost")
     public ResponseEntity<Object> registerVariableCost(Authentication authentication,
                                                        @RequestBody @Validated(VariableCostDto.VariableCostView.VariableCostPost.class)
                                                        @JsonView(VariableCostDto.VariableCostView.VariableCostPost.class) VariableCostDto variableCostDto) {
-
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
@@ -57,7 +56,7 @@ public class VariableCostController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
@@ -75,12 +74,12 @@ public class VariableCostController {
             return ResponseEntity.status(HttpStatus.OK).body(variableCostModel);
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
     @PreAuthorize("hasAnyRole('USER')")
-    @GetMapping("/{variableCostId}/getOneVariableCost")
+    @GetMapping("/{variableCostId}")
     public ResponseEntity<Object> getOneVariableCost(@PathVariable(value = "variableCostId") UUID variableCostId,
                                                   Authentication authentication) {
 
@@ -90,7 +89,6 @@ public class VariableCostController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<VariableCostModel> variableCostModelOptional = variableCostService.findById(variableCostId);
-
             if (variableCostModelOptional.isPresent()) {
                 VariableCostModel variableCostModel = variableCostModelOptional.get();
                 if (variableCostModel.getUser().getUserId().equals(userId)) {
@@ -104,14 +102,13 @@ public class VariableCostController {
                 log.warn("GET getOneFVariableCost variableCost received: ------> {}", variableCostModelOptional.toString());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: VariableCost not found");
             }
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
     @PreAuthorize("hasAnyRole('USER')")
-    @PutMapping("/{variableCostModelId}/updateVariableCost")
+    @PutMapping("/{variableCostModelId}")
     public ResponseEntity<Object> updateVariableCost(@PathVariable(value = "variableCostModelId") UUID variableCostModelId,
                                                   @RequestBody @Validated(VariableCostDto.VariableCostView.VariableCostPut.class)
                                                   @JsonView(VariableCostDto.VariableCostView.VariableCostPut.class)VariableCostDto variableCostModelDto,
@@ -122,11 +119,8 @@ public class VariableCostController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<VariableCostModel> variableCostModelOptional = variableCostService.findById(variableCostModelId);
-
             if (variableCostModelOptional.isPresent()) {
-
                 VariableCostModel variableCostModel = variableCostModelOptional.get();
-
                 if (variableCostModel.getUser().getUserId().equals(userId)) {
                     var variableCostModelModel = variableCostModelOptional.get();
                     variableCostModelModel.setNameCosts(variableCostModelDto.getNameCosts());
@@ -143,15 +137,14 @@ public class VariableCostController {
                 log.warn("PUT updateVariableCost VariableCost received: ------> {}", variableCostModelOptional.toString());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Error: VariableCost not found");
             }
-
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
 
     @PreAuthorize("hasAnyRole('USER')")
-    @DeleteMapping("/{variableCostModelId}/deleteVariableCost")
+    @DeleteMapping("/{variableCostModelId}/delete-variable-cost")
     public ResponseEntity<Object> deleteVariableCost(@PathVariable(value = "variableCostModelId") UUID variableCostModelId,
                                                   Authentication authentication) {
         try {
@@ -160,7 +153,6 @@ public class VariableCostController {
             log.info("Authentication {} ", userDetails.getUsername());
 
             Optional<VariableCostModel> variableCostModelOptional = variableCostService.findById(variableCostModelId);
-
             if (variableCostModelOptional.isPresent()) {
                 VariableCostModel variableCostModel = variableCostModelOptional.get();
                 if (variableCostModel.getUser().getUserId().equals(userId)) {
@@ -178,8 +170,7 @@ public class VariableCostController {
 
         } catch (Exception e) {
             log.error("Specific error occurred", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            throw e;
         }
     }
-
 }

@@ -9,7 +9,6 @@ public class UsernameConstraintImpl implements ConstraintValidator<UsernameConst
 	public void initialize(UsernameConstraint constraintAnnotation) {
 		ConstraintValidator.super.initialize(constraintAnnotation);
 	}
-
 	@Override
 	public boolean isValid(String username, ConstraintValidatorContext context) {
 

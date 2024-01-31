@@ -20,17 +20,14 @@ public class VariableCostServiceImpl implements VariableCostService {
     public VariableCostModel save(VariableCostModel variableCostModel) {
         return variableCostRepository.save(variableCostModel);
     }
-
     @Override
     public boolean existsByNameCostsAndUser_UserId(String nameCosts, UUID userId) {
         return variableCostRepository.existsByNameCostsAndUser_UserId(nameCosts, userId);
     }
-
     @Override
     public List<VariableCostModel> findAllByUserId(UUID userId) {
         return variableCostRepository.findAllByUser_UserId(userId);
     }
-
     @Override
     public Optional<VariableCostModel> findById(UUID variableCostId) {
         return variableCostRepository.findById(variableCostId);

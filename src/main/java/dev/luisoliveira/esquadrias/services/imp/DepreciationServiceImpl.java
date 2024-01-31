@@ -16,14 +16,11 @@ public class DepreciationServiceImpl implements DepreciationService {
     @Autowired
     DepreciationRepository depreciationRepository;
 
-
-
     @Override
     public DepreciationModel save(DepreciationModel depreciation) {
         depreciationRepository.save(depreciation);
         return depreciation;
     }
-
     @Override
     public Object findAll() {
         return depreciationRepository.findAll();
@@ -43,5 +40,4 @@ public class DepreciationServiceImpl implements DepreciationService {
     public Optional<DepreciationModel> findById(UUID depreciationId) {
         return depreciationRepository.findById(depreciationId);
     }
-
 }

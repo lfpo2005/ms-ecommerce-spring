@@ -20,7 +20,6 @@ public class ProfitServiceImpl implements ProfitService {
     public boolean existsByNameCostsAndUser_UserId(String name, UUID userId) {
         return profitRepository.existsByNameAndUser_UserId(name, userId);
     }
-
     @Override
     public ProfitModel save(ProfitModel profitModel) {
         return profitRepository.save(profitModel);

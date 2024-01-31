@@ -44,8 +44,4 @@ public class DepreciationModel implements Serializable {
         this.user.setUserId(userId);
     }
 
-
-/*    public void setUser(Optional<UserModel> user) {
-        this.user = user;
-    }*/
 }

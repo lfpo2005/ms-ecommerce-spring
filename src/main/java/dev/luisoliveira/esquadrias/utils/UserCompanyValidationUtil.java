@@ -16,12 +16,8 @@ import java.util.Optional;
 @Component
 public class UserCompanyValidationUtil {
 
-    private final UserService userService;
-
     @Autowired
-    public UserCompanyValidationUtil(UserService userService) {
-        this.userService = userService;
-    }
+    UserService userService;
 
     public Optional<CompanyModel> validateUserAndCompany() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -29,7 +25,6 @@ public class UserCompanyValidationUtil {
             log.error("Unauthenticated user");
             return Optional.empty();
         }
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.trace("Logged in user: {}", userDetails.getUsername());
 
@@ -45,7 +40,6 @@ public class UserCompanyValidationUtil {
             log.error("Company not found for user");
             return Optional.empty();
         }
-
         return Optional.of(company);
     }
 }

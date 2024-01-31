@@ -9,7 +9,6 @@ import java.util.UUID;
 
 public interface CommissionRepository extends JpaRepository<CommissionModel, UUID> {
     boolean existsByNameAndUser_UserId(String name, UUID userId);
-
     List<CommissionModel> findAllByUser_UserId(UUID userId);
 
     @Query("SELECT SUM(c.valuePercentage) FROM CommissionModel c where c.user.userId = :userId")
