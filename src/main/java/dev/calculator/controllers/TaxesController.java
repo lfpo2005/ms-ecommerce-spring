@@ -8,6 +8,7 @@ import dev.calculator.models.TaxesModel;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +29,7 @@ public class TaxesController {
     @Autowired
     TaxesService taxesService;
 
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/register-taxes")
     public ResponseEntity<Object> registerTaxes(Authentication authentication,
@@ -104,7 +106,7 @@ public class TaxesController {
             throw e;
         }
     }
-
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @PutMapping("/{taxesId}")
     public ResponseEntity<Object> updateTaxes(@PathVariable(value = "taxesId") UUID taxesId,
@@ -141,7 +143,7 @@ public class TaxesController {
             throw e;
         }
     }
-
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @DeleteMapping("/{taxesId}")
     public ResponseEntity<Object> deleteTaxes(@PathVariable(value = "taxesId") UUID taxesId,

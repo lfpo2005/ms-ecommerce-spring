@@ -6,6 +6,8 @@ import dev.calculator.services.CalculatorService;
 import dev.calculator.services.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -27,6 +29,7 @@ public class CalculatorController {
     @Autowired
     UserService userService;
 
+    @Cacheable(value = "totalMonthly", key = "#root.args[0].name") // key = "#root.args[0].name" recupera o userId que esta vindo do authentication
     @GetMapping("/sum-all-values")
     public ResponseEntity<Object> getAllSumAllValues(Authentication authentication) throws CalculationException {
 

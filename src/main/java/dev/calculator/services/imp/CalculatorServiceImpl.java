@@ -76,6 +76,7 @@ public class CalculatorServiceImpl implements CalculatorService {
             calculatorSumModel.setTotalMonthly(amountMonthly.setScale(2, RoundingMode.HALF_UP));
             calculatorSumModel.setValueWorkDay(amountMonthly.divide(new BigDecimal(22), 2, BigDecimal.ROUND_HALF_UP));
             calculatorSumModel.setValueWorkHour(calculatorSumModel.getValueWorkDay().divide(new BigDecimal(8), 2, BigDecimal.ROUND_HALF_UP));
+           calculatorSumModel.setValueWorkMinute(calculatorSumModel.getValueWorkHour().divide(new BigDecimal(60), 2, BigDecimal.ROUND_HALF_UP));
             return calculatorSumModel;
         } catch (Exception e) {
             log.error("Specific error occurred", e);
@@ -93,5 +94,8 @@ public class CalculatorServiceImpl implements CalculatorService {
         financialData = totalMonthly(userId);
         return Optional.ofNullable(financialData);
     }
+
+
+
 }
 

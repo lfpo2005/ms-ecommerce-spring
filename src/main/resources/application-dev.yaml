@@ -24,7 +24,7 @@ spring:
     rollback-on-commit-failure: true
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
       dialect: org.hibernate.dialect.PostgreSQLDialect
       jdbc:
         lob.non-contextual-creation: true
@@ -40,6 +40,11 @@ spring:
   servlet:
     multipart:
       enabled: true
+  cache:
+    type: caffeine
+    caffeine:
+      specs:
+        postAllCache: maximumSize=500,expireAfterWrite=10m
 
 logging:
   level:

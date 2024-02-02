@@ -12,6 +12,7 @@ import dev.calculator.utils.DateUtil;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,6 +38,7 @@ public class EmployeeController {
     @Autowired
     UserCompanyValidationUtil userCompanyValidationUtil;
 
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('CUSTOMER')")
     @PostMapping("company/register-employee")
     public ResponseEntity<Object> registerEmployee(@RequestBody @Validated(EmployeeDto.EmployeeView.EmployeePost.class)
@@ -81,6 +83,7 @@ public class EmployeeController {
         }
     }
 
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('CUSTOMER')")
     @PutMapping("company/{employeeId}")
     public ResponseEntity<Object> updateEmployee(@PathVariable("employeeId") UUID employeeId,
@@ -130,6 +133,7 @@ public class EmployeeController {
         }
     }
 
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('CUSTOMER')")
     @PutMapping("company/{employeeId}/reason-dismissal")
     public ResponseEntity<Object> reasonDismissal(@PathVariable("employeeId") UUID employeeId,

@@ -10,6 +10,7 @@ import dev.calculator.models.FixedCostModel;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,6 +34,7 @@ public class FixedCostController {
     @Autowired
     UserService userService;
 
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/register-fixed-cost")
     public ResponseEntity<Object> registerFixedCost(Authentication authentication,
@@ -105,6 +107,7 @@ public class FixedCostController {
             throw e;
         }
     }
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @PutMapping("/{fixedCostId}")
     public ResponseEntity<Object> updateFixedCost(@PathVariable(value = "fixedCostId") UUID fixedCostId,
@@ -141,7 +144,7 @@ public class FixedCostController {
             throw e;
         }
     }
-
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @DeleteMapping("/{fixedCostId}")
     public ResponseEntity<Object> deleteFixedCost(@PathVariable(value = "fixedCostId") UUID fixedCostId,

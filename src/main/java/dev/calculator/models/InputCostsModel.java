@@ -3,6 +3,7 @@ package dev.calculator.models;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import dev.calculator.enums.MeasurementUnit;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
@@ -23,12 +24,13 @@ public class InputCostsModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID inputCostsId;
-    private BigDecimal value;
-    private String measure;
+    private BigDecimal costPerUnit;
+    private String quantityUnit;
+    @Enumerated(EnumType.STRING)
     private MeasurementUnit unit;
-    private double yield;
+    private BigDecimal producedQuantity;
     private BigDecimal yieldPerUnit;
-
+    private String description;
 
     //TODO: Create the metods to calculate the cost per unit
 

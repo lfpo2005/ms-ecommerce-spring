@@ -8,6 +8,8 @@ import dev.calculator.models.CommissionModel;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,6 +30,7 @@ public class CommissionController {
     @Autowired
     CommissionService commissionService;
 
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/create-commission")
     public ResponseEntity<Object> registerCommission(Authentication authentication,
@@ -98,6 +101,7 @@ public class CommissionController {
             throw e;
         }
     }
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @PutMapping("/{commissionId}")
     public ResponseEntity<Object> updateCommission(@PathVariable(value = "commissionId") UUID commissionId,
@@ -134,6 +138,7 @@ public class CommissionController {
             throw e;
         }
     }
+    @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @DeleteMapping("/{commissionId}")
     public ResponseEntity<Object> deleteCommission(@PathVariable(value = "commissionId") UUID commissionId,

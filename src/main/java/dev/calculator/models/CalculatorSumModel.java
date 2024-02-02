@@ -44,6 +44,8 @@ public class CalculatorSumModel implements Serializable {
     private BigDecimal valueWorkDay;
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     private BigDecimal valueWorkHour;
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
+    private BigDecimal valueWorkMinute;
 
     @JsonIgnore
     @ManyToOne
