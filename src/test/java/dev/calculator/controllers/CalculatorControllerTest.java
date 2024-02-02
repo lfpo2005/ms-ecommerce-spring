@@ -1,9 +1,9 @@
-package dev.calculator.controllers;
+package dev.ecommerce.controllers;
 
-import dev.calculator.configs.security.UserDetailsImpl;
-import dev.calculator.exceptions.CalculationException;
-import dev.calculator.models.CalculatorSumModel;
-import dev.calculator.services.CalculatorService;
+import dev.ecommerce.configs.security.UserDetailsImpl;
+import dev.ecommerce.exceptions.CalculationException;
+import dev.ecommerce.models.CalculatorSumModel;
+import dev.ecommerce.services.CalculatorService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

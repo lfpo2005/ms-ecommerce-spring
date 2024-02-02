@@ -1,10 +1,10 @@
-package dev.calculator.controllers;
+package dev.ecommerce.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.calculator.configs.security.JwtProvider;
-import dev.calculator.dtos.LoginDto;
-import dev.calculator.dtos.UserDto;
-import dev.calculator.services.UserService;
+import dev.ecommerce.configs.security.JwtProvider;
+import dev.ecommerce.dtos.LoginDto;
+import dev.ecommerce.dtos.UserDto;
+import dev.ecommerce.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
