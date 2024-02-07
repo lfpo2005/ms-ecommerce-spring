@@ -50,8 +50,11 @@ public class AddressController {
 
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/users/register-user-address")
-    public ResponseEntity<Object> registerUserAddress(@RequestBody @Validated(AddressDto.AddressView.RegistrationPost.class)
-                                                  @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto) {
+    public ResponseEntity<Object> registerUserAddress(@RequestBody
+                                                      @Validated(AddressDto.AddressView.RegistrationPost.class)
+                                                      @JsonView(AddressDto.AddressView.RegistrationPost.class)
+                                                      AddressDto addressDto) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         UserModel loggedInUser = userService.findById(userDetails.getUserId()).get();
@@ -79,8 +82,11 @@ public class AddressController {
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/employee/{employeeId}/register-employee-address")
     public ResponseEntity<Object> registerEmployeeAddress(@PathVariable(value = "employeeId") UUID employeeId,
-                                                         @RequestBody @Validated(AddressDto.AddressView.RegistrationPost.class)
-                                                         @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto) {
+                                                          @RequestBody
+                                                          @Validated(AddressDto.AddressView.RegistrationPost.class)
+                                                          @JsonView(AddressDto.AddressView.RegistrationPost.class)
+                                                          AddressDto addressDto) {
+
         log.debug("POST registerEmployeeAddress AddressDto received: ------> {}", addressDto.toString());
         Optional<EmployeeModel> employeeModelOptional = employeeService.findById(employeeId);
         try {
@@ -103,8 +109,10 @@ public class AddressController {
     }
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/company/register-company-address")
-    public ResponseEntity<Object> registerCompanyAddress(@RequestBody @Validated(AddressDto.AddressView.RegistrationPost.class)
-                                                      @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto) {
+    public ResponseEntity<Object> registerCompanyAddress(@RequestBody
+                                                         @Validated(AddressDto.AddressView.RegistrationPost.class)
+                                                         @JsonView(AddressDto.AddressView.RegistrationPost.class)
+                                                         AddressDto addressDto) {
         try {
             Optional<CompanyModel> companyOptional = userCompanyValidationUtil.validateUserAndCompany();
             if (!companyOptional.isPresent()) {
@@ -131,8 +139,8 @@ public class AddressController {
     public ResponseEntity<Object> updateAddress(@PathVariable UUID addressId,
                                                 @RequestBody
                                                 @Validated(AddressDto.AddressView.RegistrationPost.class)
-                                                @JsonView(AddressDto.AddressView.RegistrationPost.class) AddressDto addressDto,
-                                                Authentication authentication) {
+                                                @JsonView(AddressDto.AddressView.RegistrationPost.class)
+                                                AddressDto addressDto, Authentication authentication) {
 
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();

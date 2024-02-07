@@ -46,7 +46,8 @@ public class CompanyController {
     @PreAuthorize("hasAnyRole('CUSTOMER')")
     @PostMapping("/users/create-company")
     public ResponseEntity<Object> registerCompany(@RequestBody @Validated(CompanyDto.CompanyView.CompanyPost.class)
-                                                  @JsonView(CompanyDto.CompanyView.CompanyPost.class) CompanyDto companyDto) {
+                                                  @JsonView(CompanyDto.CompanyView.CompanyPost.class)
+                                                  CompanyDto companyDto) {
 
         log.debug("POST registerCompany CompanyDto received: ------> {}", companyDto.toString());
         try {
@@ -97,7 +98,8 @@ public class CompanyController {
     }
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<Object> getAllCompany(@PageableDefault(page = 0, size = 10, sort = "companyId", direction = Sort.Direction.ASC) Pageable pageable) {
+    public ResponseEntity<Object> getAllCompany(@PageableDefault(page = 0, size = 10, sort = "companyId",
+                                                direction = Sort.Direction.ASC) Pageable pageable) {
         try {
             Page<CompanyModel> companyModelOptional = companyService.findAll(pageable);
             if (companyModelOptional == null) {

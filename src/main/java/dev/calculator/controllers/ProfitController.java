@@ -30,9 +30,10 @@ public class ProfitController {
 
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/register-profit")
-    public ResponseEntity<Object> registerProfit(Authentication authentication,
-                                                     @RequestBody @Validated(ProfitDto.ProfitView.ProfitPost.class)
-                                                     @JsonView(ProfitDto.ProfitView.ProfitPost.class) ProfitDto profitDto) {
+    public ResponseEntity<Object> registerProfit(@RequestBody
+                                                 @Validated(ProfitDto.ProfitView.ProfitPost.class)
+                                                 @JsonView(ProfitDto.ProfitView.ProfitPost.class)
+                                                 ProfitDto profitDto, Authentication authentication) {
 
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -74,8 +75,8 @@ public class ProfitController {
 
     @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/{profitId}")
-    public ResponseEntity<Object> getOneProfit(@PathVariable(value = "profitId") UUID profitId,
-                                                   Authentication authentication) {
+    public ResponseEntity<Object> getOneProfit(@PathVariable(value = "profitId")
+                                               UUID profitId, Authentication authentication) {
 
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();

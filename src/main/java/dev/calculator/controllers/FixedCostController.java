@@ -37,9 +37,10 @@ public class FixedCostController {
     @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/register-fixed-cost")
-    public ResponseEntity<Object> registerFixedCost(Authentication authentication,
-                                                    @RequestBody @Validated(FixedCostDto.FixedCostView.FixedCostPost.class)
-                                                    @JsonView(FixedCostDto.FixedCostView.FixedCostPost.class) FixedCostDto fixedCostDto) {
+    public ResponseEntity<Object> registerFixedCost(@RequestBody
+                                                    @Validated(FixedCostDto.FixedCostView.FixedCostPost.class)
+                                                    @JsonView(FixedCostDto.FixedCostView.FixedCostPost.class)
+                                                    FixedCostDto fixedCostDto, Authentication authentication) {
 
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -80,8 +81,8 @@ public class FixedCostController {
 
     @PreAuthorize("hasAnyRole('USER')")
     @GetMapping("/{fixedCostId}")
-    public ResponseEntity<Object> getOneFixedCost(@PathVariable(value = "fixedCostId") UUID fixedCostId,
-                                                  Authentication authentication) {
+    public ResponseEntity<Object> getOneFixedCost(@PathVariable(value = "fixedCostId")
+                                                  UUID fixedCostId, Authentication authentication) {
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
@@ -112,8 +113,8 @@ public class FixedCostController {
     @PutMapping("/{fixedCostId}")
     public ResponseEntity<Object> updateFixedCost(@PathVariable(value = "fixedCostId") UUID fixedCostId,
                                                   @RequestBody @Validated(FixedCostDto.FixedCostView.FixedCostPut.class)
-                                                  @JsonView(FixedCostDto.FixedCostView.FixedCostPut.class) FixedCostDto fixedCostDto,
-                                                  Authentication authentication) {
+                                                  @JsonView(FixedCostDto.FixedCostView.FixedCostPut.class)
+                                                  FixedCostDto fixedCostDto, Authentication authentication) {
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
@@ -147,8 +148,8 @@ public class FixedCostController {
     @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @DeleteMapping("/{fixedCostId}")
-    public ResponseEntity<Object> deleteFixedCost(@PathVariable(value = "fixedCostId") UUID fixedCostId,
-                                                  Authentication authentication) {
+    public ResponseEntity<Object> deleteFixedCost(@PathVariable(value = "fixedCostId")
+                                                  UUID fixedCostId, Authentication authentication) {
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();

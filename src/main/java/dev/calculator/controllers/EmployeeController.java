@@ -41,8 +41,10 @@ public class EmployeeController {
     @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('CUSTOMER')")
     @PostMapping("company/register-employee")
-    public ResponseEntity<Object> registerEmployee(@RequestBody @Validated(EmployeeDto.EmployeeView.EmployeePost.class)
-                                                   @JsonView(EmployeeDto.EmployeeView.EmployeePost.class) EmployeeDto employeeDto) {
+    public ResponseEntity<Object> registerEmployee(@RequestBody
+                                                   @Validated(EmployeeDto.EmployeeView.EmployeePost.class)
+                                                   @JsonView(EmployeeDto.EmployeeView.EmployeePost.class)
+                                                   EmployeeDto employeeDto) {
 
         log.debug("POST registerEmployee EmployeeDto received: ------> {}", employeeDto.toString());
         try {
@@ -87,8 +89,10 @@ public class EmployeeController {
     @PreAuthorize("hasAnyRole('CUSTOMER')")
     @PutMapping("company/{employeeId}")
     public ResponseEntity<Object> updateEmployee(@PathVariable("employeeId") UUID employeeId,
-                                                 @RequestBody @Validated(EmployeeDto.EmployeeView.EmployeePut.class)
-                                                 @JsonView(EmployeeDto.EmployeeView.EmployeePut.class) EmployeeDto employeeDto) {
+                                                 @RequestBody
+                                                 @Validated(EmployeeDto.EmployeeView.EmployeePut.class)
+                                                 @JsonView(EmployeeDto.EmployeeView.EmployeePut.class)
+                                                 EmployeeDto employeeDto) {
 
         log.debug("PUT updateEmployee EmployeeDto received: ------> {}", employeeDto.toString());
 
@@ -137,8 +141,10 @@ public class EmployeeController {
     @PreAuthorize("hasAnyRole('CUSTOMER')")
     @PutMapping("company/{employeeId}/reason-dismissal")
     public ResponseEntity<Object> reasonDismissal(@PathVariable("employeeId") UUID employeeId,
-                                                  @RequestBody @Validated(EmployeeDto.EmployeeView.ReasonDismissalPut.class)
-                                                  @JsonView(EmployeeDto.EmployeeView.ReasonDismissalPut.class) EmployeeDto employeeDto) {
+                                                  @RequestBody
+                                                  @Validated(EmployeeDto.EmployeeView.ReasonDismissalPut.class)
+                                                  @JsonView(EmployeeDto.EmployeeView.ReasonDismissalPut.class)
+                                                  EmployeeDto employeeDto) {
 
         log.debug("PUT reasonDismissal EmployeeDto received: ------> {}", employeeDto.toString());
 

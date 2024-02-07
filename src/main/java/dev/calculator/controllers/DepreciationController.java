@@ -36,9 +36,10 @@ public class DepreciationController {
     @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/register-depreciation")
-    public ResponseEntity<Object> registerDepreciation(Authentication authentication,
-                                                       @RequestBody @Validated(DepreciationDto.DepreciationView.DepreciationPost.class)
-                                                       @JsonView(DepreciationDto.DepreciationView.DepreciationPost.class) DepreciationDto depreciationDto) {
+    public ResponseEntity<Object> registerDepreciation(@RequestBody
+                                                       @Validated(DepreciationDto.DepreciationView.DepreciationPost.class)
+                                                       @JsonView(DepreciationDto.DepreciationView.DepreciationPost.class)
+                                                       DepreciationDto depreciationDto, Authentication authentication) {
 
         try {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();

@@ -37,9 +37,10 @@ public class VariableCostController {
     @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/register-variable-cost")
-    public ResponseEntity<Object> registerVariableCost(Authentication authentication,
-                                                       @RequestBody @Validated(VariableCostDto.VariableCostView.VariableCostPost.class)
-                                                       @JsonView(VariableCostDto.VariableCostView.VariableCostPost.class) VariableCostDto variableCostDto) {
+    public ResponseEntity<Object> registerVariableCost(@RequestBody
+                                                       @Validated(VariableCostDto.VariableCostView.VariableCostPost.class)
+                                                       @JsonView(VariableCostDto.VariableCostView.VariableCostPost.class)
+                                                       VariableCostDto variableCostDto, Authentication authentication) {
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
@@ -113,9 +114,11 @@ public class VariableCostController {
     @PreAuthorize("hasAnyRole('USER')")
     @PutMapping("/{variableCostModelId}")
     public ResponseEntity<Object> updateVariableCost(@PathVariable(value = "variableCostModelId") UUID variableCostModelId,
-                                                  @RequestBody @Validated(VariableCostDto.VariableCostView.VariableCostPut.class)
-                                                  @JsonView(VariableCostDto.VariableCostView.VariableCostPut.class)VariableCostDto variableCostModelDto,
-                                                  Authentication authentication) {
+                                                     @RequestBody
+                                                     @Validated(VariableCostDto.VariableCostView.VariableCostPut.class)
+                                                     @JsonView(VariableCostDto.VariableCostView.VariableCostPut.class)
+                                                     VariableCostDto variableCostModelDto, Authentication authentication) {
+
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();

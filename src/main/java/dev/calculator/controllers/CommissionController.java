@@ -34,8 +34,10 @@ public class CommissionController {
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/create-commission")
     public ResponseEntity<Object> registerCommission(Authentication authentication,
-                                                     @RequestBody @Validated(CommissionDto.CommissionView.CommissionPost.class)
-                                                     @JsonView(CommissionDto.CommissionView.CommissionPost.class) CommissionDto commissionDto) {
+                                                     @RequestBody
+                                                     @Validated(CommissionDto.CommissionView.CommissionPost.class)
+                                                     @JsonView(CommissionDto.CommissionView.CommissionPost.class)
+                                                     CommissionDto commissionDto) {
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
@@ -105,9 +107,10 @@ public class CommissionController {
     @PreAuthorize("hasAnyRole('USER')")
     @PutMapping("/{commissionId}")
     public ResponseEntity<Object> updateCommission(@PathVariable(value = "commissionId") UUID commissionId,
-                                                   @RequestBody @Validated(CommissionDto.CommissionView.CommissionPut.class)
-                                                   @JsonView(CommissionDto.CommissionView.CommissionPut.class) CommissionDto fixedCostDto,
-                                                   Authentication authentication) {
+                                                   @RequestBody
+                                                   @Validated(CommissionDto.CommissionView.CommissionPut.class)
+                                                   @JsonView(CommissionDto.CommissionView.CommissionPut.class)
+                                                   CommissionDto fixedCostDto, Authentication authentication) {
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();

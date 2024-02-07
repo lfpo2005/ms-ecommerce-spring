@@ -35,8 +35,10 @@ public class CategoryController {
 
     @PreAuthorize("hasAnyRole('CUSTOMER')")
     @PostMapping("/create-category")
-    public ResponseEntity<Object> registerCategory(@RequestBody @Validated(CategoryDto.CategoryView.CategoryPost.class)
-                                                   @JsonView(CategoryDto.CategoryView.CategoryPost.class) CategoryDto categoryDto) {
+    public ResponseEntity<Object> registerCategory(@RequestBody
+                                                   @Validated(CategoryDto.CategoryView.CategoryPost.class)
+                                                   @JsonView(CategoryDto.CategoryView.CategoryPost.class)
+                                                   CategoryDto categoryDto) {
 
             log.debug("POST registerCategory CategoryDto received: ------> {}", categoryDto.toString());
             try {

@@ -44,8 +44,10 @@ public class PhoneController {
 
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/users/register-phone")
-    public ResponseEntity<Object> registerPhoneForUser(@RequestBody @Validated(PhoneDto.PhoneView.RegistrationPost.class)
-                                                  @JsonView(PhoneDto.PhoneView.RegistrationPost.class) PhoneDto phoneDto) {
+    public ResponseEntity<Object> registerPhoneForUser(@RequestBody
+                                                       @Validated(PhoneDto.PhoneView.RegistrationPost.class)
+                                                       @JsonView(PhoneDto.PhoneView.RegistrationPost.class)
+                                                       PhoneDto phoneDto) {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -76,8 +78,10 @@ public class PhoneController {
 
     @PreAuthorize("hasAnyRole('CUSTOMER')")
     @PostMapping("/companies/register-phone")
-    public ResponseEntity<Object> registerPhoneForCompany(@RequestBody @Validated(PhoneDto.PhoneView.RegistrationPost.class)
-                                                          @JsonView(PhoneDto.PhoneView.RegistrationPost.class) PhoneDto phoneDto) {
+    public ResponseEntity<Object> registerPhoneForCompany(@RequestBody
+                                                          @Validated(PhoneDto.PhoneView.RegistrationPost.class)
+                                                          @JsonView(PhoneDto.PhoneView.RegistrationPost.class)
+                                                          PhoneDto phoneDto) {
         try {
             Optional<CompanyModel> companyOptional = userCompanyValidationUtil.validateUserAndCompany();
             if (!companyOptional.isPresent()) {
@@ -104,7 +108,9 @@ public class PhoneController {
     public ResponseEntity<Object> updatePhone(@PathVariable UUID phoneId,
                                                 @RequestBody
                                                 @Validated(PhoneDto.PhoneView.RegistrationPost.class)
-                                                @JsonView(PhoneDto.PhoneView.RegistrationPost.class) PhoneDto phoneDto) {
+                                                @JsonView(PhoneDto.PhoneView.RegistrationPost.class)
+                                                PhoneDto phoneDto) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         log.debug("POST registerPhone PhoneDto received: ------> {}", phoneDto.toString());

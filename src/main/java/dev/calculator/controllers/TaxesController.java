@@ -32,9 +32,10 @@ public class TaxesController {
     @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @PostMapping("/register-taxes")
-    public ResponseEntity<Object> registerTaxes(Authentication authentication,
-                                                @RequestBody @Validated(TaxesDto.TaxesView.TaxesPost.class)
-                                                @JsonView(TaxesDto.TaxesView.TaxesPost.class) TaxesDto taxesDto) {
+    public ResponseEntity<Object> registerTaxes(@RequestBody
+                                                @Validated(TaxesDto.TaxesView.TaxesPost.class)
+                                                @JsonView(TaxesDto.TaxesView.TaxesPost.class)
+                                                TaxesDto taxesDto, Authentication authentication) {
 
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
@@ -111,8 +112,8 @@ public class TaxesController {
     @PutMapping("/{taxesId}")
     public ResponseEntity<Object> updateTaxes(@PathVariable(value = "taxesId") UUID taxesId,
                                               @RequestBody @Validated(TaxesDto.TaxesView.TaxesPut.class)
-                                              @JsonView(TaxesDto.TaxesView.TaxesPut.class) TaxesDto taxesModelDto,
-                                              Authentication authentication) {
+                                              @JsonView(TaxesDto.TaxesView.TaxesPut.class)
+                                              TaxesDto taxesModelDto, Authentication authentication) {
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
@@ -146,8 +147,8 @@ public class TaxesController {
     @CacheEvict(value = "totalMonthly", allEntries = true)
     @PreAuthorize("hasAnyRole('USER')")
     @DeleteMapping("/{taxesId}")
-    public ResponseEntity<Object> deleteTaxes(@PathVariable(value = "taxesId") UUID taxesId,
-                                              Authentication authentication) {
+    public ResponseEntity<Object> deleteTaxes(@PathVariable(value = "taxesId")
+                                              UUID taxesId, Authentication authentication) {
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();

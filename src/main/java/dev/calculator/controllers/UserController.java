@@ -53,7 +53,8 @@ public class UserController {
                                                        @RequestParam(required = false) String email,
                                                        @RequestParam(required = false) String fullName,
                                                        SpecificationTemplate.UserSpec spec,
-                                                       @PageableDefault(page = 0, size = 10, sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
+                                                       @PageableDefault(page = 0, size = 10, sort = "userId",
+                                                       direction = Sort.Direction.ASC) Pageable pageable,
                                                        Authentication authentication) {
 
         try {
@@ -74,13 +75,16 @@ public class UserController {
         }
     }
 
-    private static Specification<UserModel> getUserModelSpecification(Boolean active, Boolean deleted, String email, String fullName, SpecificationTemplate.UserSpec spec) {
-        Specification<UserModel> combinedSpec = Specification.where(spec);
+    private static Specification<UserModel> getUserModelSpecification(Boolean active,
+                                                                      Boolean deleted,
+                                                                      String email,
+                                                                      String fullName,
+                                                                      SpecificationTemplate.UserSpec spec) {
 
+        Specification<UserModel> combinedSpec = Specification.where(spec);
         if (active != null) {
             combinedSpec = combinedSpec.and(SpecificationTemplate.UserSpec.active(active));
         }
-
         if (deleted != null) {
             combinedSpec = combinedSpec.and(SpecificationTemplate.UserSpec.deleted(deleted));
         }

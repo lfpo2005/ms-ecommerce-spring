@@ -42,8 +42,10 @@ public class SubCategoryController {
 
     @PreAuthorize("hasAnyRole('CUSTOMER')")
     @PostMapping("/create-sub-category")
-    public ResponseEntity<Object> registerSubCategory(@RequestBody @Validated(SubCategoryDto.SubCategoryView.SubCategoryPost.class)
-                                                      @JsonView(SubCategoryDto.SubCategoryView.SubCategoryPost.class) SubCategoryDto subCategoryDto) {
+    public ResponseEntity<Object> registerSubCategory(@RequestBody
+                                                      @Validated(SubCategoryDto.SubCategoryView.SubCategoryPost.class)
+                                                      @JsonView(SubCategoryDto.SubCategoryView.SubCategoryPost.class)
+                                                      SubCategoryDto subCategoryDto) {
 
         log.debug("POST registerSubCategory SubCategoryDto received: ------> {}", subCategoryDto.toString());
         try {
