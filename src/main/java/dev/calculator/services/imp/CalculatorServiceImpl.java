@@ -1,6 +1,6 @@
 package dev.calculator.services.imp;
 
-import dev.calculator.exceptions.UserNotFoundException;
+import dev.calculator.exceptions.NotFoundException;
 import dev.calculator.repositories.*;
 import dev.calculator.models.CalculatorSumModel;
 import dev.calculator.models.UserModel;
@@ -88,7 +88,7 @@ public class CalculatorServiceImpl implements CalculatorService {
     public Optional<CalculatorSumModel> findById(UUID userId) {
         Optional<UserModel> userOptional = userRepository.findById(userId);
         if (!userOptional.isPresent()) {
-            throw new UserNotFoundException("User not found with ID: " + userId);
+            throw new NotFoundException("User not found with ID: " + userId);
         }
         CalculatorSumModel financialData = null;
         financialData = totalMonthly(userId);

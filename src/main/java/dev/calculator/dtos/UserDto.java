@@ -61,10 +61,8 @@ public class UserDto {
     @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
     private String birthDate;
 
-
 //    @JsonView({UserView.RegistrationPost.class, UserView.UserPut.class})
 //    private String phoneNumber;
-
 
     @NotBlank (groups = UserView.ImagePut.class)
     @JsonView(UserView.ImagePut.class)

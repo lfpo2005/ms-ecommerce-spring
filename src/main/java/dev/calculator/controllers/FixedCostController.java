@@ -47,7 +47,7 @@ public class FixedCostController {
             log.info("Authentication {} ", userDetails.getUsername());
             if (fixedCostService.existsByNameCostsAndUser_UserId(fixedCostDto.getNameCosts(), userId)) {
                 log.warn("FixedCost {} is already Taken!: ------> ", fixedCostDto.getFixedCostId());
-                return ResponseEntity.badRequest().body("Error: FixedCost is Already Taken!");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: FixedCost is Already Taken!");
             }
             var fixedCostModel = new FixedCostModel();
             BeanUtils.copyProperties(fixedCostDto, fixedCostModel);

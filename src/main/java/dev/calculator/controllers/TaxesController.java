@@ -43,7 +43,7 @@ public class TaxesController {
 
             if (taxesService.existsByNameCostsAndUser_UserId(taxesDto.getName(), userId)) {
                 log.warn("Taxes {} is already Taken!: ------> ", taxesDto.getTaxesId());
-                return ResponseEntity.badRequest().body("Error: Taxes is Already Taken!");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Taxes is Already Taken!");
             }
             var taxesModel = new TaxesModel();
             BeanUtils.copyProperties(taxesDto, taxesModel);

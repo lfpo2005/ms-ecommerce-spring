@@ -46,7 +46,7 @@ public class DepreciationController {
         log.info("Authentication {} ", userDetails.getUsername());
             if (depreciationService.existsByEquipmentAndUserId(depreciationDto.getEquipment(), userId)) {
                 log.warn("Depreciation {} is already Taken!: ------> ", depreciationDto.getDepreciationId());
-                return ResponseEntity.badRequest().body("Error: Depreciation is Already Taken!");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Depreciation is Already Taken!");
             }
                 var depreciationModel = new DepreciationModel();
                 BeanUtils.copyProperties(depreciationDto, depreciationModel);

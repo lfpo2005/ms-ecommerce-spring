@@ -59,7 +59,7 @@ public class PhoneController {
             }
             if (phoneDto.getPhoneId() != null) {
                 log.error("The phoneId field must be null");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The phoneId field must be null");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("The phoneId field must be null");
             }
             var phoneModel = new PhoneModel();
             BeanUtils.copyProperties(phoneDto, phoneModel);

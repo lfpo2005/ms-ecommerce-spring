@@ -88,7 +88,7 @@ public class AddressController {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Employee not found");
             }
             if (addressDto.getAddressId() != null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The addressId field must be null");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("The addressId field must be null");
             }
             var addressModel = new AddressModel();
             BeanUtils.copyProperties(addressDto, addressModel);
@@ -112,7 +112,7 @@ public class AddressController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not authenticated, not found or company not found");
             }
             if (addressDto.getAddressId() != null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The addressId field must be null");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("The addressId field must be null");
             }
             var addressModel = new AddressModel();
             BeanUtils.copyProperties(addressDto, addressModel);

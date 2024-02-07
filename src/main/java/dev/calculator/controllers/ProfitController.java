@@ -40,7 +40,7 @@ public class ProfitController {
             log.info("Authentication {} ", userDetails.getUsername());
             if (profitService.existsByNameCostsAndUser_UserId(profitDto.getName(), userId)) {
                 log.warn("Profit {} is already Taken!: ------> ", profitDto.getProfitId());
-                return ResponseEntity.badRequest().body("Error: Profit is Already Taken!");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Profit is Already Taken!");
             }
             var profitModel = new ProfitModel();
             BeanUtils.copyProperties(profitDto, profitModel);

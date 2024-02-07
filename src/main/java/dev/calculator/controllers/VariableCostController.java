@@ -47,7 +47,7 @@ public class VariableCostController {
 
             if (variableCostService.existsByNameCostsAndUser_UserId(variableCostDto.getNameCosts(), userId)) {
                 log.warn("VariableCost {} is already Taken!: ------> ", variableCostDto.getVariableCostId());
-                return ResponseEntity.badRequest().body("Error: VariableCost is Already Taken!");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: VariableCost is Already Taken!");
             }
             var variableCostModel = new VariableCostModel();
             BeanUtils.copyProperties(variableCostDto, variableCostModel);

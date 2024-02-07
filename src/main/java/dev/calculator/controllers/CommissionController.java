@@ -42,7 +42,7 @@ public class CommissionController {
             log.info("Authentication {} ", userDetails.getUsername());
             if (commissionService.existsByNameCostsAndUser_UserId(commissionDto.getName(), userId)) {
                 log.warn("Commission {} is already Taken!: ------> ", commissionDto.getCommissionId());
-                return ResponseEntity.badRequest().body("Error: Commission is Already Taken!");
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Commission is Already Taken!");
             }
             var commissionModel = new CommissionModel();
             BeanUtils.copyProperties(commissionDto, commissionModel);

@@ -53,6 +53,7 @@ public class CompanyController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UserModel loggedInUser = userService.findById(userDetails.getUserId()).get();
+            log.info("POST registerCompany UserModel found: ------> {}", loggedInUser.toString());
             if (loggedInUser == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
             }

@@ -30,9 +30,9 @@ public class CategoryModel implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID categoryId;
     @Column(nullable = false, unique = true, length = 60)
-    private String name;
+    private String categoryName;
     @Size(max = 500)
-    private String classDescription;
+    private String description;
     @JsonIgnore
     @Column(nullable = false)
     private Boolean active = true;
@@ -43,14 +43,15 @@ public class CategoryModel implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     private LocalDateTime updateAt;
 
-    @ManyToOne
-    @JoinColumn(name = "category_parent_id")
-    private CategoryModel parent;
-
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY )
     @Fetch(FetchMode.SUBSELECT)
-    private Set<ProductModel> products;
+    private Set<SubCategoryModel> subCategories;
+
+//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY )
+//    @Fetch(FetchMode.SUBSELECT)
+//    private Set<ProductModel> products;
 
 //    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 //    @OneToMany(mappedBy = "category", fetch = FetchType.LAZY )

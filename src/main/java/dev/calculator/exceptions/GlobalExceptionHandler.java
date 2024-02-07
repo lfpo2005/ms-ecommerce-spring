@@ -128,8 +128,8 @@ public class GlobalExceptionHandler {
     }
 
 
-    @ExceptionHandler(value = {UserNotFoundException.class})
-    public ResponseEntity<Object> UserNotFoundException(Exception ex) {
+    @ExceptionHandler(value = {NotFoundException.class})
+    public ResponseEntity<Object> NotFoundException(Exception ex) {
         log.error(ex.getClass().getSimpleName(), ex);
         var response = new Error(
                 GenericErrorsEnum.NOT_FOUND.getCode(),
