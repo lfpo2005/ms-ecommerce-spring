@@ -43,7 +43,6 @@ public class EmployeeModel implements Serializable {
     private String cpf;
     @Column(nullable = false)
     private String birthDate;
-
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss'Z'")
     @Column(nullable = false, updatable = false)
     private LocalDateTime admissionDate;
