@@ -6,7 +6,7 @@ server:
 
 spring:
   datasource:
-    url:  jdbc:postgresql://localhost:5432/esquadrias_dev_new?autoreconnect=true
+    url:  jdbc:postgresql://localhost:5432/ecommerce_dev_new?autoreconnect=true
     username: postgres
     password: 197197
   type: com.zaxxer.hikari.HikariDataSource
@@ -48,13 +48,13 @@ spring:
 
 logging:
   level:
-    com.luisoliveira.calculator: TRACE
+    dev.ecommerce: TRACE
     root: INFO
     org.springframework.cache: INFO
     org.springframework.web: TRACE
     org.hibernate: INFO
 
-calculator:
+ecommerce:
   auth:
     jwtSecret: t7w!z%C*F-JaNdRgUkXp2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B&E)H@McQfTjWn
     jwtExpirationMs: 14400000
