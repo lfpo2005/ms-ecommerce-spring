@@ -1,10 +1,10 @@
-package dev.luisoliveira.esquadrias.controllers;
+package dev.ecommerce.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.luisoliveira.esquadrias.configs.security.JwtProvider;
-import dev.luisoliveira.esquadrias.dtos.LoginDto;
-import dev.luisoliveira.esquadrias.dtos.UserDto;
-import dev.luisoliveira.esquadrias.services.UserService;
+import dev.ecommerce.configs.security.JwtProvider;
+import dev.ecommerce.dtos.LoginDto;
+import dev.ecommerce.dtos.UserDto;
+import dev.ecommerce.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
