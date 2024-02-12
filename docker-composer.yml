@@ -1,0 +1,70 @@
+version: '3.7'
+
+services:
+  user-management-db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_DB=user_management
+      - POSTGRES_USER=user_manager
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ./extras/user_management_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+
+  ###### KAFKA ######
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      - ZOOKEEPER_CLIENT_PORT=2181
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    depends_on:
+      - zookeeper
+    environment:
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
+    ports:
+      - "9092:9092"
+
+#  akhq:
+#    image: tchiotludo/akhq
+#    environment:
+#      AKHQ_CONFIGURATION: |
+#        akhq:
+#          connections:
+#            kafka-cluster:
+#              properties:
+#                bootstrap.servers: "kafka:9092"
+#    ports:
+#      - "8081:8080"
+#    depends_on:
+#      - kafka
+
+#  kafdrop:
+#    image: obsidiandynamics/kafdrop
+#    environment:
+#      - KAFKA_BROKERCONNECT=kafka:9092
+#      - SERVER_SERVLET_CONTEXTPATH=/
+#    ports:
+#      - "9000:9000"
+#    depends_on:
+#      - kafka
+
+
+#  ms-user-management:
+#    build: ./path/to/your/user-management/service
+#    environment:
+#      - DATABASE_HOST=user-management-db
+#      - DATABASE_USER=user_manager
+#      - DATABASE_PASSWORD=password
+#      - DATABASE_NAME=user_management
+#    ports:
+#      - "3000:3000"
+#    depends_on:
+#      - user-management-db
+
