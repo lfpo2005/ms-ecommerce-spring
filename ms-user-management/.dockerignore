@@ -1,0 +1,24 @@
+# Arquivos de compilação Java
+**/*.class
+**/*.jar
+**/*.war
+**/*.ear
+
+# Arquivos de dependência Maven
+**/target/
+**/build/
+**/bin/
+
+# Arquivos específicos de IDE
+**/.classpath
+**/.project
+**/.settings/
+
+# Logs e arquivos temporários
+**/logs/
+**/temp/
+**/work/
+
+# Outros arquivos gerados
+**/src/main/resources/application.properties
+target/**

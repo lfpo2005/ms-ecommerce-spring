@@ -19,10 +19,12 @@ public class UserProducer {
 
     @Value("${kafka.topic.name}")
     private String topicName;
+    @Value("${kafka.url}")
+    private String serverUrl;
 
     public UserProducer() {
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         this.producer = new KafkaProducer<>(props);

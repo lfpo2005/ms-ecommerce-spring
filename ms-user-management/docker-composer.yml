@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+
+  user-management-db:
+    image: postgres:15
+    environment:
+      - POSTGRES_DB=user_management
+      - POSTGRES_USER=user_manager
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - ./extras/user_management_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    networks:
+      - ms-ecommerce-spring
+
+  ms-user-management:
+    build: ../ms-user-management
+#    restart: always
+    image: ms-user-management:latest
+    environment:
+      - DATABASE_HOST=user-management-db
+      - DATABASE_USER=user_manager
+      - DATABASE_PASSWORD=password
+      - DATABASE_NAME=user_management
+    ports:
+      - "3000:3000"
+    depends_on:
+      - user-management-db
+    networks:
+      - ms-ecommerce-spring
+
+networks:
+  ms-ecommerce-spring:
+    external: true
+

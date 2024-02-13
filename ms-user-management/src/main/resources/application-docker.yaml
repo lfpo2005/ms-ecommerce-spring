@@ -1,0 +1,70 @@
+server:
+  port: 3000
+  forward-headers-strategy: native
+  servlet:
+    context-path: '/ecommerce'
+
+spring:
+  datasource:
+    url:  jdbc:postgresql://user-management-db:5432/user_management?autoreconnect=true
+    username: user_manager
+    password: password
+  type: com.zaxxer.hikari.HikariDataSource
+  hikari:
+    connection-timeout: 20000
+    minimum-idle: 200
+    maximum-pool-size: 550
+    idle-timeout: 10000
+    pool-name: PoolHikari
+    auto-commit: false
+  dbcp2:
+    pool-prepared-statements: true
+    max-open-prepared-statements: 550
+  transaction:
+    rollback-on-commit-failure: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.PostgreSQLDialect
+      jdbc:
+        lob.non-contextual-creation: true
+    properties:
+      hibernate:
+        show_sql: true
+  output:
+    ansi:
+      enabled: Always
+  mvc:
+    resources:
+      add-mappings: false
+  servlet:
+    multipart:
+      enabled: true
+  kafka:
+    bootstrap-servers: kafka:9092
+    consumer:
+      group-id: group-ecommerce
+      auto-offset-reset: earliest
+    producer:
+      acks: all
+
+kafka:
+  topic:
+    name: new_user
+  url: kafka:9092
+
+logging:
+  level:
+    dev.msusermanagement: DEBUG
+    root: INFO
+    org.springframework.cache: INFO
+    org.springframework.web: TRACE
+    org.hibernate: INFO
+
+ecommerce:
+  auth:
+    jwtSecret: t7w!z%C*F-JaNdRgUkXp2s5v8x/A?D(G+KbPeShVmYq3t6w9z$B&E)H@McQfTjWn
+    jwtExpirationMs: 14400000
+    key: IWKrTz2CssvRPe6mXoQV5A==
+    algorithm: AES
+

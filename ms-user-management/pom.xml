@@ -11,7 +11,7 @@
     <groupId>dev.ecommerce</groupId>
     <artifactId>ms-user-management</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <packaging>war</packaging>
+    <!--<packaging>war</packaging>-->
     <name>ms-user-management</name>
     <description>ms-user-management</description>
     <properties>
