@@ -80,7 +80,7 @@ public class AuthenticationController {
             userProducer.sendUserDetails(userModel);
             log.debug("POST registerUser userModel saved: ------> {}", userModel.getUserId());
             log.trace("User saved successfully ------> userId: {} ", userModel.getUserId());
-            return ResponseEntity.status(HttpStatus.CREATED).body(userModel);
+            return ResponseEntity.status(HttpStatus.CREATED).body("User saved successfully!");
         } catch (Exception e) {
             log.error("Specific error occurred", e);
             throw e;

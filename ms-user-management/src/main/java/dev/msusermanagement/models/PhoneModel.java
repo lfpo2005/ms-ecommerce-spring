@@ -36,18 +36,6 @@ public class PhoneModel implements Serializable {
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    private UserModel user;
-
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-//    private CompanyModel company;
-//
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-//    private EmployeeModel employee;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "supplierId")
-//    private SupplierModel supplier;
+    private UserModel userPhone;
 
 }

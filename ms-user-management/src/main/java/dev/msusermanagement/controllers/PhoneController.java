@@ -57,7 +57,7 @@ public class PhoneController {
             }
             var phoneModel = new PhoneModel();
             BeanUtils.copyProperties(phoneDto, phoneModel);
-            phoneModel.setUser(userModelOptional.get());
+            phoneModel.setUserPhone(userModelOptional.get());
             phoneService.save(phoneModel);
             log.info("POST registerPhone PhoneModel saved: ------> {}", phoneModel.toString());
             return ResponseEntity.status(HttpStatus.CREATED).body(phoneModel);

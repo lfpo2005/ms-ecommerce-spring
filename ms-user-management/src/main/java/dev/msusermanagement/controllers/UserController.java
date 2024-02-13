@@ -55,21 +55,21 @@ public class UserController {
                                                        @RequestParam(required = false) String fullName,
                                                        SpecificationTemplate.UserSpec spec,
                                                        @PageableDefault(page = 0, size = 10, sort = "userId",
-                                                       direction = Sort.Direction.ASC) Pageable pageable,
+                                                               direction = Sort.Direction.ASC) Pageable pageable,
                                                        Authentication authentication) {
 
         try {
             UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        log.info("Authentication {} ", userDetails.getUsername());
-        
-        final Specification<UserModel> combinedSpec = getUserModelSpecification(active, deleted, email, fullName, spec);
-        Page<UserModel> userModelPage = userService.findAll(combinedSpec, pageable);
-        if (!userModelPage.isEmpty()) {
-            for (UserModel user : userModelPage.toList()) {
-                user.add(linkTo(methodOn(UserController.class).getOneUser(user.getUserId())).withSelfRel());
+            log.info("Authentication {} ", userDetails.getUsername());
+
+            final Specification<UserModel> combinedSpec = getUserModelSpecification(active, deleted, email, fullName, spec);
+            Page<UserModel> userModelPage = userService.findAll(combinedSpec, pageable);
+            if (!userModelPage.isEmpty()) {
+                for (UserModel user : userModelPage.toList()) {
+                    user.add(linkTo(methodOn(UserController.class).getOneUser(user.getUserId())).withSelfRel());
+                }
             }
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
+            return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
         } catch (Exception e) {
             log.error("Specific error occurred", e);
             throw e;
@@ -97,13 +97,15 @@ public class UserController {
         }
         return combinedSpec;
     }
+
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "userId") UUID userId) {
 
         try {
-            Optional<UserModel> userModelOptional = userService.findByIdWithAddressesAndPhones(userId);
-            if (userModelOptional.isPresent()) {
+           Optional<UserModel> userModelOptional = userService.findByIdWithAddressesAndPhones(userId);
+            //Optional<UserModel> userModelOptional = userService.findById(userId);
+           if (userModelOptional.isPresent()) {
                 UserModel user = userModelOptional.get();
 
                 Set<AddressModel> addresses = user.getAddress();
@@ -113,10 +115,11 @@ public class UserController {
                 response.put("user", user);
                 response.put("addresses", addresses);
                 response.put("phones", phones);
-                return ResponseEntity.status(HttpStatus.OK).body(response);
+                   return ResponseEntity.status(HttpStatus.OK).body(response);
+                //   return ResponseEntity.status(HttpStatus.OK).body(user);
 
             } else {
-                log.debug("GET getOneUser CompanyModel found: ------> {}", userModelOptional.get().toString());
+                log.debug("User not found for ID: " + userId);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
             }
         } catch (Exception e) {
@@ -131,20 +134,20 @@ public class UserController {
 
         try {
             log.debug("PUT deactivateUser UserDto received: ------> {}", userId.toString());
-        Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (userModelOptional.isPresent() && userModelOptional.get().getDeleted() == true) {
-            log.debug("User not found, deactivate user ------> userId: {} ", userModelOptional.get().getUserId());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already deleted");
-        } else {
-            var userModel = userModelOptional.get();
-            userModel.setActive(false);
-            userModel.setDeleted(true);
-            userModel.setDeleteAt(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.save(userModel);
-            log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
-            log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
-            return ResponseEntity.status(HttpStatus.OK).body(userModel);
-        }
+            Optional<UserModel> userModelOptional = userService.findById(userId);
+            if (userModelOptional.isPresent() && userModelOptional.get().getDeleted() == true) {
+                log.debug("User not found, deactivate user ------> userId: {} ", userModelOptional.get().getUserId());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already deleted");
+            } else {
+                var userModel = userModelOptional.get();
+                userModel.setActive(false);
+                userModel.setDeleted(true);
+                userModel.setDeleteAt(LocalDateTime.now(ZoneId.of("UTC")));
+                userService.save(userModel);
+                log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
+                log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
+                return ResponseEntity.status(HttpStatus.OK).body(userModel);
+            }
         } catch (Exception e) {
             log.error("Specific error occurred", e);
             throw e;
@@ -157,126 +160,128 @@ public class UserController {
 
         try {
             log.debug("PUT deactivateUser UserDto received: ------> {}", userId.toString());
-        Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (userModelOptional.isPresent() && userModelOptional.get().getActive() == false) {
-            log.debug("User not found or is disabled user ------> userId: {} ", userModelOptional.get().getUserId());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already disabled");
-        } else {
-            var userModel = userModelOptional.get();
-            userModel.setActive(false);
-            userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.save(userModel);
-            log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
-            log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
-            return ResponseEntity.status(HttpStatus.OK).body(userModel);
-        }
+            Optional<UserModel> userModelOptional = userService.findById(userId);
+            if (userModelOptional.isPresent() && userModelOptional.get().getActive() == false) {
+                log.debug("User not found or is disabled user ------> userId: {} ", userModelOptional.get().getUserId());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already disabled");
+            } else {
+                var userModel = userModelOptional.get();
+                userModel.setActive(false);
+                userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
+                userService.save(userModel);
+                log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
+                log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
+                return ResponseEntity.status(HttpStatus.OK).body(userModel);
+            }
         } catch (Exception e) {
             log.error("Specific error occurred", e);
             throw e;
         }
     }
+
     @PreAuthorize("hasAnyRole('ADMIN')")
     @PutMapping("/{userId}/activate-user")
     public ResponseEntity<Object> activateUser(@PathVariable(value = "userId") UUID userId) {
 
         log.debug("PUT deactivateUser UserDto received: ------> {}", userId.toString());
-            try {
-                Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (userModelOptional.isPresent() && userModelOptional.get().getActive() == true) {
-            log.debug("User not found or is active -----> userId: {} ", userModelOptional.get().getUserId());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already active");
-        } else {
-            var userModel = userModelOptional.get();
-            userModel.setActive(true);
-            userModel.setDeleted(false);
-            userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.save(userModel);
-            log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
-            log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
-            return ResponseEntity.status(HttpStatus.OK).body(userModel);
-        }
-            } catch (Exception e) {
-                log.error("Specific error occurred", e);
-                throw e;
+        try {
+            Optional<UserModel> userModelOptional = userService.findById(userId);
+            if (userModelOptional.isPresent() && userModelOptional.get().getActive() == true) {
+                log.debug("User not found or is active -----> userId: {} ", userModelOptional.get().getUserId());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already active");
+            } else {
+                var userModel = userModelOptional.get();
+                userModel.setActive(true);
+                userModel.setDeleted(false);
+                userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
+                userService.save(userModel);
+                log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
+                log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
+                return ResponseEntity.status(HttpStatus.OK).body(userModel);
             }
-        }//TODO: add validação de user autenticado caso seja necessário analisar ainda a necessidade
+        } catch (Exception e) {
+            log.error("Specific error occurred", e);
+            throw e;
+        }
+    }//TODO: add validação de user autenticado caso seja necessário analisar ainda a necessidade
 
     @PutMapping("/{userId}")
     public ResponseEntity<Object> updateUser(@PathVariable(value = "userId") UUID userId,
                                              @RequestBody @Validated(UserDto.UserView.UserPut.class)
                                              @JsonView(UserDto.UserView.UserPut.class) UserDto userDto) {
 
-            try {
-        log.debug("PUT updateUser UserDto received: ------> {}", userDto.toString());
-        Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (userModelOptional.isPresent() && userModelOptional.get().getDeleted() == false) {
-            var userModel = userModelOptional.get();
-            userModel.setFullName(userDto.getFullName());
-            userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.save(userModel);
-            log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
-            log.info("User updated successfully ------> userId: {} ", userModel.getUserId());
-            return ResponseEntity.status(HttpStatus.OK).body(userModel);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        }
-            } catch (Exception e) {
-                log.error("Specific error occurred", e);
-                throw e;
-            }//TODO: add validação de user autenticado
+        try {
+            log.debug("PUT updateUser UserDto received: ------> {}", userDto.toString());
+            Optional<UserModel> userModelOptional = userService.findById(userId);
+            if (userModelOptional.isPresent() && userModelOptional.get().getDeleted() == false) {
+                var userModel = userModelOptional.get();
+                userModel.setFullName(userDto.getFullName());
+                userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
+                userService.save(userModel);
+                log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
+                log.info("User updated successfully ------> userId: {} ", userModel.getUserId());
+                return ResponseEntity.status(HttpStatus.OK).body(userModel);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            }
+        } catch (Exception e) {
+            log.error("Specific error occurred", e);
+            throw e;
+        }//TODO: add validação de user autenticado
     }
+
     @PatchMapping("/{userId}/password")
     public ResponseEntity<Object> updatePassword(@PathVariable(value = "userId") UUID userId,
                                                  @RequestBody @Validated(UserDto.UserView.PasswordPut.class)
                                                  @JsonView(UserDto.UserView.PasswordPut.class) UserDto userDto) {
-            try {
-        log.debug("Request to update password for userId: {}", userId);
-        Optional<UserModel> userModelOptional = userService.findById(userId);
+        try {
+            log.debug("Request to update password for userId: {}", userId);
+            Optional<UserModel> userModelOptional = userService.findById(userId);
 
-        if (userModelOptional.isPresent() && !userModelOptional.get().getDeleted()) {
-            var userModel = userModelOptional.get();
-            if (!passwordEncoder.matches(userDto.getOldPassword(), userModel.getPassword())) {
-                log.debug("Mismatched old password for userId: {}", userId);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Mismatched old password!");
+            if (userModelOptional.isPresent() && !userModelOptional.get().getDeleted()) {
+                var userModel = userModelOptional.get();
+                if (!passwordEncoder.matches(userDto.getOldPassword(), userModel.getPassword())) {
+                    log.debug("Mismatched old password for userId: {}", userId);
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Mismatched old password!");
+                } else {
+                    userModel.setPassword(passwordEncoder.encode(userDto.getPassword()));
+                    userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
+                    userService.updatePassword(userModel);
+                    log.info("Password updated successfully for userId: {}", userId);
+                    return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
+                }
             } else {
-                userModel.setPassword(passwordEncoder.encode(userDto.getPassword()));
-                userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
-                userService.updatePassword(userModel);
-                log.info("Password updated successfully for userId: {}", userId);
-                return ResponseEntity.status(HttpStatus.OK).body("Password updated successfully.");
+                log.debug("User not found or deleted for userId: {}", userId);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
             }
-        } else {
-            log.debug("User not found or deleted for userId: {}", userId);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+        } catch (Exception e) {
+            log.error("Specific error occurred", e);
+            throw e;
         }
-            } catch (Exception e) {
-                log.error("Specific error occurred", e);
-                throw e;
-            }
-        }//TODO: add validação de user autenticado
+    }//TODO: add validação de user autenticado
 
     @PatchMapping("/{userId}/image")
     public ResponseEntity<Object> updateImage(@PathVariable(value = "userId") UUID userId,
                                               @RequestBody @Validated(UserDto.UserView.ImagePut.class)
                                               @JsonView(UserDto.UserView.ImagePut.class) UserDto userDto) {
-            try {
-        log.debug("PUT updateImage UserDto received: ------> {}", userDto.toString());
+        try {
+            log.debug("PUT updateImage UserDto received: ------> {}", userDto.toString());
 
-        Optional<UserModel> userModelOptional = userService.findById(userId);
-        if (!userModelOptional.isPresent()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
-        } else {
-            var userModel = userModelOptional.get();
-            userModel.setImageUrl(userDto.getImageUrl());
-            userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
-            userService.save(userModel);
-            log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
-            log.info("User updated Image successfully ------> userId: {} ", userModel.getUserId());
-            return ResponseEntity.status(HttpStatus.OK).body(userModel);
-        }
-            } catch (Exception e) {
-                log.error("Specific error occurred", e);
-                throw e;
+            Optional<UserModel> userModelOptional = userService.findById(userId);
+            if (!userModelOptional.isPresent()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+            } else {
+                var userModel = userModelOptional.get();
+                userModel.setImageUrl(userDto.getImageUrl());
+                userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
+                userService.save(userModel);
+                log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
+                log.info("User updated Image successfully ------> userId: {} ", userModel.getUserId());
+                return ResponseEntity.status(HttpStatus.OK).body(userModel);
             }
-        } //TODO: add validação de user autenticado
+        } catch (Exception e) {
+            log.error("Specific error occurred", e);
+            throw e;
+        }
+    } //TODO: add validação de user autenticado
 }

@@ -43,27 +43,14 @@ public class AddressModel implements Serializable {
     private String neighborhood;
     @Size(max = 500)
     private String description;
-    @JsonIgnore
-    @Column(nullable = false)
-    private Boolean active = true;
-
     @NotNull
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AddressType type;
 
-
-
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne(fetch = FetchType.LAZY, optional = true)
-    private UserModel user;
-//
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-//    private CompanyModel company;
-//
-//    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//    @ManyToOne(fetch = FetchType.LAZY, optional = true)
-//    private EmployeeModel employee;
+    private UserModel userAddress;
+
 
 }

@@ -60,7 +60,7 @@ public class AddressController {
             var addressModel = new AddressModel();
             BeanUtils.copyProperties(addressDto, addressModel);
             addressModel.setType(AddressType.RESIDENTIAL);
-            addressModel.setUser(userModelOptional.get());
+            addressModel.setUserAddress(userModelOptional.get());
             addressService.save(addressModel);
             return ResponseEntity.status(HttpStatus.CREATED).body(addressModel);
         } catch (Exception e) {
