@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   user-management-db:
-    image: postgres:latest
+    image: postgres:15
     environment:
       - POSTGRES_DB=user_management
       - POSTGRES_USER=user_manager

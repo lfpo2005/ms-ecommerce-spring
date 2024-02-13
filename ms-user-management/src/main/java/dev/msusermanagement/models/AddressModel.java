@@ -12,8 +12,6 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.util.UUID;
-
-@Data
 @Getter
 @Setter
 @AllArgsConstructor

@@ -58,8 +58,7 @@ logging:
     root: INFO
     org.springframework.cache: INFO
     org.springframework.web: TRACE
-    org.hibernate: trace
-    org.springframework.data: DEBUG
+    org.hibernate: INFO
 
 ecommerce:
   auth:

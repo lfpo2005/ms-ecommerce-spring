@@ -101,31 +101,31 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "userId") UUID userId) {
-
         try {
-           Optional<UserModel> userModelOptional = userService.findByIdWithAddressesAndPhones(userId);
-            //Optional<UserModel> userModelOptional = userService.findById(userId);
-           if (userModelOptional.isPresent()) {
+            Optional<UserModel> userModelOptional = userService.findByIdWithAddressesAndPhones(userId);
+            if (userModelOptional.isPresent()) {
                 UserModel user = userModelOptional.get();
-
                 Set<AddressModel> addresses = user.getAddress();
                 Set<PhoneModel> phones = user.getPhones();
-
                 Map<String, Object> response = new HashMap<>();
                 response.put("user", user);
                 response.put("addresses", addresses);
                 response.put("phones", phones);
-                   return ResponseEntity.status(HttpStatus.OK).body(response);
-                //   return ResponseEntity.status(HttpStatus.OK).body(user);
-
+                return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
-                log.debug("User not found for ID: " + userId);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+                Optional<UserModel> userModel = userService.findById(userId);
+                if (userModel.isPresent()) {
+                    UserModel user = userModel.get();
+                    return ResponseEntity.status(HttpStatus.OK).body(user);
+                } else {
+                    log.debug("User not found for ID: " + userId);
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
+                }
             }
         } catch (Exception e) {
             log.error("Specific error occurred", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro: " + e.getMessage());
-        } //TODO:  melhorar a mensagem retorno
+        }
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
