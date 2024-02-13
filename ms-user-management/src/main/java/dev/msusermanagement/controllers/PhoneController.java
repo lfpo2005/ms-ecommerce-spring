@@ -39,35 +39,34 @@ public class PhoneController {
     public ResponseEntity<Object> registerPhoneForUser(@RequestBody
                                                        @Validated(PhoneDto.PhoneView.RegistrationPost.class)
                                                        @JsonView(PhoneDto.PhoneView.RegistrationPost.class)
-                                                       PhoneDto phoneDto) {
+                                                       PhoneDto phoneDto, Authentication authentication) {
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        log.debug("POST registerPhone PhoneDto received: ------> {}", phoneDto.toString());
+        log.trace("POST registerPhone PhoneDto received: ------> {}", phoneDto.toString());
         Optional<UserModel> userModelOptional = userService.findById(userDetails.getUserId());
 
         try {
             if (!userModelOptional.isPresent()) {
-                log.error("User not found");
+                log.trace("User not found");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
             }
             if (phoneDto.getPhoneId() != null) {
-                log.error("The phoneId field must be null");
+                log.trace("The phoneId field must be null");
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("The phoneId field must be null");
             }
             var phoneModel = new PhoneModel();
             BeanUtils.copyProperties(phoneDto, phoneModel);
             phoneModel.setUserPhone(userModelOptional.get());
+            log.trace("POST registerPhone PhoneModel created: ------> {}", phoneModel.toString());
             phoneService.save(phoneModel);
-            log.info("POST registerPhone PhoneModel saved: ------> {}", phoneModel.toString());
-            return ResponseEntity.status(HttpStatus.CREATED).body(phoneModel);
+            log.trace("POST registerPhone PhoneModel saved: ------> {}", phoneModel.toString());
+            return ResponseEntity.status(HttpStatus.CREATED).body("Phone registered successfully");
 
         } catch (Exception e) {
-            log.error("Specific error occurred", e);
+            log.trace("Specific error occurred", e);
             throw e;
         }
     }
-
 
     @PreAuthorize("hasAnyRole('USER')")
     @PutMapping("user/update-phone/{phoneId}")

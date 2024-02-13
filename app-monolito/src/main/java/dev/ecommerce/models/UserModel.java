@@ -86,7 +86,6 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
     @OneToOne(mappedBy = "responsibleUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private CompanyModel company;
 
-
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "TB_USERS_ROLES",
