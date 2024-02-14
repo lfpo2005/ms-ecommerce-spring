@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import dev.msusermanagement.dtos.UserEventDto;
 import dev.msusermanagement.enums.UserType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -12,6 +13,7 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.RepresentationModel;
 
 
@@ -91,4 +93,13 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleModel> roles = new HashSet<>();
 
+
+    public UserEventDto convertToUserEventDto() {
+        var userEventDto = new UserEventDto();
+        BeanUtils.copyProperties(this, userEventDto);
+        userEventDto.setUserType(this.getUserType().toString());
+        userEventDto.setUpdateAt(this.getUpdateAt().toString());
+        return userEventDto;
+
+    }
 }

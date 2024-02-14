@@ -56,8 +56,7 @@ public class AuthenticationController {
     @Autowired
     AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserProducer userProducer;
+
 
     @PostMapping("/signup")
     public ResponseEntity<Object> registerUser(@RequestBody @Validated(UserDto.UserView.RegistrationPost.class)
@@ -76,8 +75,8 @@ public class AuthenticationController {
             userModel.getRoles().add(roleModel);
 
             validatedAndCryptoCPF(userDto, userModel);
-            userService.save(userModel);
-            userProducer.sendUserDetails(userModel);
+            userService.saveUser(userModel);
+
             log.debug("POST registerUser userModel saved: ------> {}", userModel.getUserId());
             log.trace("User saved successfully ------> userId: {} ", userModel.getUserId());
             return ResponseEntity.status(HttpStatus.CREATED).body("User saved successfully!");

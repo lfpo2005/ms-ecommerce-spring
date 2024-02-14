@@ -1,6 +1,8 @@
 package dev.msusermanagement.services.impl;
 
 
+import dev.msusermanagement.configurations.kafka.UserProducer;
+import dev.msusermanagement.enums.ActionType;
 import dev.msusermanagement.models.UserModel;
 import dev.msusermanagement.repositories.UserRepository;
 import dev.msusermanagement.services.UserService;
@@ -20,6 +22,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    private UserProducer userProducer;
 
     @Override
     public List<UserModel> findAll() {
@@ -81,6 +86,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByCpf(String encryptedCpf) {
         return userRepository.existsByCpf(encryptedCpf);
+    }
+
+    @Transactional
+    @Override
+    public UserModel saveUser(UserModel userModel) {
+       userModel = save(userModel);
+       userProducer.publishUserEvent(userModel.convertToUserEventDto(), ActionType.CREATE);
+       return userModel;
     }
 
     @Override

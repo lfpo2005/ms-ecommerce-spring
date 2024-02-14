@@ -36,4 +36,6 @@ public interface UserService {
     UserModel updateUser(UserModel userModel);
 
     boolean existsByCpf(String encryptedCpf);
+
+    UserModel saveUser(UserModel userModel);
 }

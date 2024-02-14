@@ -1,6 +1,8 @@
 package dev.msusermanagement.configurations.kafka;
 
-import dev.msusermanagement.models.UserModel;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dev.msusermanagement.dtos.UserEventDto;
+import dev.msusermanagement.enums.ActionType;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -8,9 +10,7 @@ import org.apache.kafka.clients.producer.ProducerRecord;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.Properties;
-
 
 @Service
 public class UserProducer {
@@ -19,36 +19,27 @@ public class UserProducer {
 
     @Value("${kafka.topic.name}")
     private String topicName;
-    @Value("${kafka.url}")
-    private String serverUrl;
+//    @Value("${kafka.bootstrap-servers}")
+//    private String kafkaUrl;
 
     public UserProducer() {
         Properties props = new Properties();
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
+       // props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+       // props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         this.producer = new KafkaProducer<>(props);
     }
 
-    public void sendUserDetails(UserModel userModel) {
-        String userId = String.valueOf(userModel.getUserId());
-        String fullName = userModel.getFullName();
-        String userType = String.valueOf(userModel.getUserType());
-        String email = userModel.getEmail();
-        String cpf = userModel.getCpf();
-        Boolean active = userModel.getActive();
-        LocalDateTime updatedAt = LocalDateTime.now();
-
-        String userRecord = String.format("{" +
-                                            "\n\"userId\":\"%s\"," +
-                                            "\n\"fullName\":\"%s\"," +
-                                            "\n\"email\":\"%s\"," +
-                                            "\n\"cpf\":\"%s\"," +
-                                            "\n\"userType\":\"%s\"," +
-                                            "\n\"active\":%s," +
-                                            "\n\"updatedAt\":\"%s\"\n" +
-                                            "}",
-                                            userId, fullName, email, cpf, userType, active, updatedAt);
-        producer.send(new ProducerRecord<>(topicName, userId, userRecord));
+    public void publishUserEvent(UserEventDto userEventDto, ActionType actionType) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            userEventDto.setActionType(actionType.toString());
+            String userEventDtoJson = objectMapper.writeValueAsString(userEventDto);
+            producer.send(new ProducerRecord<>(topicName, "", userEventDtoJson));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
