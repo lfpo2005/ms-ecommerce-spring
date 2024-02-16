@@ -1,0 +1,9 @@
+spring:
+  profiles:
+    active: dev
+  application:
+    name: ecommerce-service-registry
+logging:
+  level:
+    service-registry: TRACE
+    root: debug
