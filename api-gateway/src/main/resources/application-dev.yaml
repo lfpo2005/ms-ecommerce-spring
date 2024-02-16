@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: api-gateway
+  config:
+    import: 'configserver:'
+  cloud:
+    config:
+      discovery:
+        serviceId: ecommerce-config-server
+      username: configServer
+      password: 'ecommerce123cs'
+
+
+
+logging:
+  level:
+    api-gateway: TRACE
+    root: trace
+
+
+
+
