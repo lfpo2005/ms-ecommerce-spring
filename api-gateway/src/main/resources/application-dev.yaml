@@ -10,8 +10,6 @@ spring:
       username: configServer
       password: 'ecommerce123cs'
 
-
-
 logging:
   level:
     api-gateway: TRACE
