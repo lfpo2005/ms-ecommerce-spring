@@ -11,29 +11,19 @@ import java.util.UUID;
 
 public interface UserService {
     List<UserModel> findAll();
-
     Optional<UserModel> findById(UUID userId);
-
     Optional<UserModel> findByIdWithAddressesAndPhones(UUID userId);
-
-    void delete(UserModel userModel);
-
     UserModel save(UserModel userModel);
-
     Boolean existsByUsername(String username);
-
     Boolean existsByEmail(String email);
     Boolean existsByFullName(String fullName);
-
     Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable);
-
-   // UserModel saveUser(UserModel userModel);
-
-  //  void deleteUser(UserModel userModel);
-
     UserModel updatePassword(UserModel userModel);
-
     UserModel updateUser(UserModel userModel);
-
     boolean existsByCpf(String encryptedCpf);
+    UserModel saveUser(UserModel userModel);
+    UserModel deactivateUser(UserModel userModel);
+    UserModel saveActiveUser(UserModel userModel);
+    UserModel saveUpdateUser(UserModel userModel);
+    UserModel deactivateAndDeleteUser(UserModel userModel);
 }

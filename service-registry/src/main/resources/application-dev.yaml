@@ -1,0 +1,17 @@
+server:
+  port: 8761
+
+ecommerce:
+  serviceRegistry:
+    username: serviceregistry
+    password: 'ecommerce123sr'
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    service-url:
+      defaultZone: 'http://${ecommerce.serviceRegistry.username}:${ecommerce.serviceRegistry.password}@localhost:8761/eureka'
+
+
+

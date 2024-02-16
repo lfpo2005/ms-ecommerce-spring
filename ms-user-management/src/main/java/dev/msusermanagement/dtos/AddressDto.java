@@ -12,6 +12,7 @@ import java.util.UUID;
 public class AddressDto {
 
 
+
     public interface AddressView{
         public static interface RegistrationPost {}
         public static interface UserPut {}
@@ -48,6 +49,9 @@ public class AddressDto {
 
     @JsonView({AddressView.RegistrationPost.class, AddressView.UserPut.class})
     private String description;
+
+    @JsonView({AddressView.RegistrationPost.class, AddressView.UserPut.class})
+    private String type;
 
 //    @NotBlank(groups =  {AddressDto.AddressView.RegistrationPost.class, AddressDto.AddressView.UserPut.class})
 //    @JsonView({AddressDto.AddressView.RegistrationPost.class, AddressDto.AddressView.UserPut.class})

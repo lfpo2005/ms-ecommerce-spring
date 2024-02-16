@@ -1,0 +1,41 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: ecommerce-config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/lfpo2005/ecommerce-config-server-repo
+          default-label: main
+          username: lfpo2005
+          password: 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
+#          username: ${GITHUB_USER}
+#          password: ${GITHUB_PASS}
+    bootstrap:
+      enabled: true
+
+ecommerce:
+  configServer:
+    username: configserver
+    password: 'ecommerce123cs'
+  serviceRegistry:
+    username: serviceregistry
+    password: 'ecommerce123sr'
+
+eureka:
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: 'http://${ecommerce.serviceRegistry.username}:${ecommerce.serviceRegistry.password}@localhost:8761/eureka'
+  instance:
+    hostname: localhost
+
+
+logging:
+  level:
+    config-server: TRACE
+    root: DEBUG

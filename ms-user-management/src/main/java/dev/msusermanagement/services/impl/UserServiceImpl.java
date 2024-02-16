@@ -1,6 +1,9 @@
 package dev.msusermanagement.services.impl;
 
 
+import dev.msusermanagement.configurations.kafka.UserProducer;
+import dev.msusermanagement.dtos.UserEventDto;
+import dev.msusermanagement.enums.ActionType;
 import dev.msusermanagement.models.UserModel;
 import dev.msusermanagement.repositories.UserRepository;
 import dev.msusermanagement.services.UserService;
@@ -21,6 +24,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    private UserProducer userProducer;
+
     @Override
     public List<UserModel> findAll() {
         return userRepository.findAll();
@@ -39,12 +45,6 @@ public class UserServiceImpl implements UserService {
             userModelOptional.get().getPhones().size();
         }
         return userModelOptional;
-    }
-
-    @Transactional
-    @Override
-    public void delete(UserModel userModel) {
-        userRepository.delete(userModel);
     }
 
     @Override
@@ -81,6 +81,60 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsByCpf(String encryptedCpf) {
         return userRepository.existsByCpf(encryptedCpf);
+    }
+
+    @Transactional
+    @Override
+    public UserModel saveUser(UserModel userModel) {
+       userModel = save(userModel);
+       userProducer.publishUserEvent(userModel.convertToUserEventDto(), ActionType.CREATE);
+       return userModel;
+    }
+
+    @Transactional
+    @Override
+    public UserModel deactivateUser(UserModel userModel) {
+        userModel = save(userModel);
+        var userEventDto = new UserEventDto();
+        userEventDto.setUserId(userModel.getUserId());
+        userEventDto.setActive(userModel.getActive());
+        userEventDto.setDeleted(userModel.getDeleted());
+        userEventDto.setUpdateAt(userModel.getUpdateAt().toString());
+        userProducer.publishUserEvent(userEventDto, ActionType.DEACTIVATE);
+        return userModel;
+    }
+
+    @Transactional
+    @Override
+    public UserModel saveActiveUser(UserModel userModel) {
+        userModel = save(userModel);
+        var userEventDto = new UserEventDto();
+        userEventDto.setUserId(userModel.getUserId());
+        userEventDto.setActive(userModel.getActive());
+        userEventDto.setDeleted(userModel.getDeleted());
+        userEventDto.setUpdateAt(userModel.getUpdateAt().toString());
+        userProducer.publishUserEvent(userEventDto, ActionType.ACTIVE);
+        return userModel;
+    }
+
+    @Transactional
+    @Override
+    public UserModel saveUpdateUser(UserModel userModel) {
+        userModel = save(userModel);
+        userProducer.publishUserEvent(userModel.convertToUserEventDto(), ActionType.UPDATE);
+        return userModel;
+    }
+    @Transactional
+    @Override
+    public UserModel deactivateAndDeleteUser(UserModel userModel) {
+        userModel = save(userModel);
+        var userEventDto = new UserEventDto();
+        userEventDto.setUserId(userModel.getUserId());
+        userEventDto.setActive(userModel.getActive());
+        userEventDto.setDeleted(userModel.getDeleted());
+        userEventDto.setUpdateAt(userModel.getUpdateAt().toString());
+        userProducer.publishUserEvent(userEventDto, ActionType.DELETE);
+        return userModel;
     }
 
     @Override

@@ -56,8 +56,7 @@ public class AuthenticationController {
     @Autowired
     AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserProducer userProducer;
+
 
     @PostMapping("/signup")
     public ResponseEntity<Object> registerUser(@RequestBody @Validated(UserDto.UserView.RegistrationPost.class)
@@ -74,12 +73,10 @@ public class AuthenticationController {
             userModel.setCreatedAt(LocalDateTime.now(ZoneId.of("UTC")));
             userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
             userModel.getRoles().add(roleModel);
-
             validatedAndCryptoCPF(userDto, userModel);
-            userService.save(userModel);
-            userProducer.sendUserDetails(userModel);
+            userService.saveUser(userModel);
             log.debug("POST registerUser userModel saved: ------> {}", userModel.getUserId());
-            log.trace("User saved successfully ------> userId: {} ", userModel.getUserId());
+            log.info("User saved successfully ------> userId: {} ", userModel.getUserId());
             return ResponseEntity.status(HttpStatus.CREATED).body("User saved successfully!");
         } catch (Exception e) {
             log.error("Specific error occurred", e);
@@ -91,11 +88,12 @@ public class AuthenticationController {
         try {
             String encryptedCpf = CryptoUtils.encrypt(userDto.getCpf());
             if (userService.existsByCpf(encryptedCpf)) {
+                log.warn("CPF duplicated ---------------: {}", userDto.getCpf());
                 throw new CpfAlreadyTakenException();
             }
             userModel.setCpf(encryptedCpf);
         } catch (CpfAlreadyTakenException e) {
-            log.warn("CPF duplicated ---------------: {}", userDto.getCpf());
+            log.warn("CPF error ---------------: {}", userDto.getCpf());
             throw e;
         } catch (Exception e) {
             log.error("Error encrypting CPF", e);
@@ -105,15 +103,19 @@ public class AuthenticationController {
 
     private void validateUserRegistration(UserDto userDto) {
         if (userService.existsByUsername(userDto.getUsername())) {
+            log.warn("Username {} is Already Taken ", userDto.getUsername());
             throw new UsernameAlreadyTakenException();
         }
         if (userService.existsByEmail(userDto.getEmail())) {
+            log.warn("Email {} is Already Taken ", userDto.getEmail());
             throw new EmailAlreadyTakenException();
         }
         if (userService.existsByFullName(userDto.getFullName())) {
+            log.warn("FullName {} is Already Taken ", userDto.getFullName());
             throw new FullNameAlreadyTakenException();
         }
         if (!DateUtil.isValidBirthDate(userDto.getBirthDate())) {
+            log.warn("BirthDate {} is Invalid ", userDto.getBirthDate());
             throw new InvalidBirthDateFormatException();
         }
     }
@@ -134,11 +136,16 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     public ResponseEntity<?> logoutPage(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null) {
-            new SecurityContextLogoutHandler().logout(request, response, auth);
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null) {
+                new SecurityContextLogoutHandler().logout(request, response, auth);
+            }
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            log.error("Exception occurred: ", e);
+            throw e;
         }
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/")
