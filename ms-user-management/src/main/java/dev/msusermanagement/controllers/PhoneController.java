@@ -47,21 +47,17 @@ public class PhoneController {
 
         try {
             if (!userModelOptional.isPresent()) {
-                log.trace("User not found");
+                log.warn("User not found with id: {}", userDetails.getUserId());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
             }
-            if (phoneDto.getPhoneId() != null) {
-                log.trace("The phoneId field must be null");
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("The phoneId field must be null");
-            }
+
             var phoneModel = new PhoneModel();
             BeanUtils.copyProperties(phoneDto, phoneModel);
             phoneModel.setUserPhone(userModelOptional.get());
-            log.trace("POST registerPhone PhoneModel created: ------> {}", phoneModel.toString());
             phoneService.save(phoneModel);
-            log.trace("POST registerPhone PhoneModel saved: ------> {}", phoneModel.toString());
+            log.debug("Post registerPhone PhoneModel created: {}", phoneModel.getPhoneId());
+            log.info("Phone registered successfully --------> phoneId: {} ", phoneModel.getPhoneId());
             return ResponseEntity.status(HttpStatus.CREATED).body("Phone registered successfully");
-
         } catch (Exception e) {
             log.trace("Specific error occurred", e);
             throw e;
@@ -83,13 +79,13 @@ public class PhoneController {
         try {
             Optional<PhoneModel> phoneModelOptional = phoneService.findById(phoneId);
             if (phoneModelOptional == null) {
-                log.error("Phone not found");
+                log.warn("Phone not found with id: {}", phoneId.toString());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Phone not found");
             }
             var phoneModel = new PhoneModel();
             BeanUtils.copyProperties(phoneDto, phoneModel);
             phoneService.save(phoneModel);
-            log.info("POST registerPhone PhoneModel saved: ------> {}", phoneModel.toString());
+            log.info("POST registerPhone PhoneModel saved: ------> {}", phoneModel.getPhoneId());
             return ResponseEntity.status(HttpStatus.CREATED).body(phoneModel);
 
         } catch (Exception e) {

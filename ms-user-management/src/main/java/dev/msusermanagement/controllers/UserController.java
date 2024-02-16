@@ -69,6 +69,7 @@ public class UserController {
                     user.add(linkTo(methodOn(UserController.class).getOneUser(user.getUserId())).withSelfRel());
                 }
             }
+            log.info("Get all users --------> {}", userDetails.getUsername());
             return ResponseEntity.status(HttpStatus.OK).body(userModelPage);
         } catch (Exception e) {
             log.error("Specific error occurred", e);
@@ -101,6 +102,7 @@ public class UserController {
     @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getOneUser(@PathVariable(value = "userId") UUID userId) {
+        log.debug("GET getOneUser UserDto received: ------> {}", userId.toString());
         try {
             Optional<UserModel> userModelOptional = userService.findByIdWithAddressesAndPhones(userId);
             if (userModelOptional.isPresent()) {
@@ -111,14 +113,16 @@ public class UserController {
                 response.put("user", user);
                 response.put("addresses", addresses);
                 response.put("phones", phones);
+                log.info("Get one user with address and phone --------> {}", user.getUsername());
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
                 Optional<UserModel> userModel = userService.findById(userId);
                 if (userModel.isPresent()) {
                     UserModel user = userModel.get();
+                    log.info("Get one user --------> {}", user.getUsername());
                     return ResponseEntity.status(HttpStatus.OK).body(user);
                 } else {
-                    log.debug("User not found for ID: " + userId);
+                    log.warn("User not found for ID: " + userId);
                     return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found.");
                 }
             }
@@ -129,21 +133,22 @@ public class UserController {
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")
-    @PutMapping("/{userId}/deactivate-exclude-user")
+    @PutMapping("/{userId}/deactivate-delete-user")
     public ResponseEntity<Object> deactivateAndDeleteUser(@PathVariable(value = "userId") UUID userId) {
+
 
         try {
             log.debug("PUT deactivateUser UserDto received: ------> {}", userId.toString());
             Optional<UserModel> userModelOptional = userService.findById(userId);
             if (userModelOptional.isPresent() && userModelOptional.get().getDeleted() == true) {
-                log.debug("User not found, deactivate user ------> userId: {} ", userModelOptional.get().getUserId());
+                log.warn("User not found, deactivate user ------> userId: {} ", userModelOptional.get().getUserId());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found or already deleted");
             } else {
                 var userModel = userModelOptional.get();
                 userModel.setActive(false);
                 userModel.setDeleted(true);
                 userModel.setDeleteAt(LocalDateTime.now(ZoneId.of("UTC")));
-                userService.save(userModel);
+                userService.deactivateAndDeleteUser(userModel);
                 log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
                 log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
                 return ResponseEntity.status(HttpStatus.OK).body(userModel);
@@ -168,7 +173,7 @@ public class UserController {
                 var userModel = userModelOptional.get();
                 userModel.setActive(false);
                 userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
-                userService.save(userModel);
+                userService.deactivateUser(userModel);
                 log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
                 log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
                 return ResponseEntity.status(HttpStatus.OK).body(userModel);
@@ -194,7 +199,7 @@ public class UserController {
                 userModel.setActive(true);
                 userModel.setDeleted(false);
                 userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
-                userService.save(userModel);
+                userService.saveActiveUser(userModel);
                 log.debug("PATH deactivateUser userModel : ------> userId: {}", userModel.getUserId());
                 log.info("User deactivate successfully ------> userId: {} ", userModel.getUserId());
                 return ResponseEntity.status(HttpStatus.OK).body(userModel);
@@ -203,7 +208,7 @@ public class UserController {
             log.error("Specific error occurred", e);
             throw e;
         }
-    }//TODO: add validação de user autenticado caso seja necessário analisar ainda a necessidade
+    }
 
     @PutMapping("/{userId}")
     public ResponseEntity<Object> updateUser(@PathVariable(value = "userId") UUID userId,
@@ -217,7 +222,7 @@ public class UserController {
                 var userModel = userModelOptional.get();
                 userModel.setFullName(userDto.getFullName());
                 userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
-                userService.save(userModel);
+                userService.saveUpdateUser(userModel);
                 log.debug("PUT updateUser userModel : ------> userId: {}", userModel.getUserId());
                 log.info("User updated successfully ------> userId: {} ", userModel.getUserId());
                 return ResponseEntity.status(HttpStatus.OK).body(userModel);
@@ -227,7 +232,7 @@ public class UserController {
         } catch (Exception e) {
             log.error("Specific error occurred", e);
             throw e;
-        }//TODO: add validação de user autenticado
+        }
     }
 
     @PatchMapping("/{userId}/password")
@@ -258,7 +263,7 @@ public class UserController {
             log.error("Specific error occurred", e);
             throw e;
         }
-    }//TODO: add validação de user autenticado
+    }
 
     @PatchMapping("/{userId}/image")
     public ResponseEntity<Object> updateImage(@PathVariable(value = "userId") UUID userId,
@@ -283,5 +288,5 @@ public class UserController {
             log.error("Specific error occurred", e);
             throw e;
         }
-    } //TODO: add validação de user autenticado
+    }
 }

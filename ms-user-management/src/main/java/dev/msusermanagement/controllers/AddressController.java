@@ -48,20 +48,23 @@ public class AddressController {
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
         UserModel loggedInUser = userService.findById(userDetails.getUserId()).get();
         log.debug("POST registerAddress AddressDto received: ------> {}", addressDto.toString());
-
         Optional<UserModel> userModelOptional = userService.findById(loggedInUser.getUserId());
+
         try {
             if (!userModelOptional.isPresent()) {
+                log.warn("Username {} is Already Taken ", userDetails.getUserId());
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
             }
-            if (addressDto.getAddressId() != null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("The addressId field must be null");
-            }
+
             var addressModel = new AddressModel();
             BeanUtils.copyProperties(addressDto, addressModel);
+            if (addressDto.getType() == null){
             addressModel.setType(AddressType.RESIDENTIAL);
+            }
             addressModel.setUserAddress(userModelOptional.get());
             addressService.save(addressModel);
+            log.debug("POST registerAddress AddressModel created: ------> {}", addressModel.getAddressId());
+            log.info("Address created successfully ------> addressId: {} ", addressModel.getAddressId());
             return ResponseEntity.status(HttpStatus.CREATED).body(addressModel);
         } catch (Exception e) {
             log.error("Specific error occurred", e);
@@ -80,15 +83,16 @@ public class AddressController {
         try {
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             UUID userId = userDetails.getUserId();
-            log.info("Authentication {} ", userDetails.getUsername());
-
+            log.debug("Authentication {} --------> ", userDetails.getUsername());
             Optional<AddressModel> addressModelOptional = addressService.findById(addressId);
             if (addressModelOptional == null) {
+                log.error("Address not found with addressId {}", addressId);
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Address not found");
             }
             var addressModel = new AddressModel();
             BeanUtils.copyProperties(addressDto, addressModel);
             addressService.save(addressModel);
+            log.info("Address updated successfully -------> addressId: {} ", addressModel.getAddressId());
             return ResponseEntity.ok(addressModel);
         } catch (Exception e) {
             log.error("Specific error occurred", e);

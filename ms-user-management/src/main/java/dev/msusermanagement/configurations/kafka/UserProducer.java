@@ -7,6 +7,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,16 +18,17 @@ public class UserProducer {
 
     private final Producer<String, String> producer;
 
-    @Value("${kafka.topic.name}")
     private String topicName;
-//    @Value("${kafka.bootstrap-servers}")
-//    private String kafkaUrl;
+    private String kafkaUrl;
 
-    public UserProducer() {
+    @Autowired
+    public UserProducer(@Value("${kafka.topic.name}") String topicName,
+                        @Value("${spring.kafka.bootstrap-servers}") String kafkaUrl) {
+        this.topicName = topicName;
+        this.kafkaUrl = kafkaUrl;
+
         Properties props = new Properties();
-       // props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
-        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-       // props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "kafka:9092");
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         this.producer = new KafkaProducer<>(props);
