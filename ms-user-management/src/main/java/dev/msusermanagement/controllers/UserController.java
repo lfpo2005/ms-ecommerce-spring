@@ -62,7 +62,8 @@ public class UserController {
             UserDetails userDetails = (UserDetailsImpl) authentication.getPrincipal();
             log.info("Authentication {} ", userDetails.getUsername());
 
-            final Specification<UserModel> combinedSpec = getUserModelSpecification(active, deleted, email, fullName, spec);
+            final Specification<UserModel> combinedSpec = filterUserModelSpecification(active, deleted, email, fullName, spec);
+
             Page<UserModel> userModelPage = userService.findAll(combinedSpec, pageable);
             if (!userModelPage.isEmpty()) {
                 for (UserModel user : userModelPage.toList()) {
@@ -77,11 +78,11 @@ public class UserController {
         }
     }
 
-    private static Specification<UserModel> getUserModelSpecification(Boolean active,
-                                                                      Boolean deleted,
-                                                                      String email,
-                                                                      String fullName,
-                                                                      SpecificationTemplate.UserSpec spec) {
+    private static Specification<UserModel> filterUserModelSpecification(Boolean active,
+                                                                         Boolean deleted,
+                                                                         String email,
+                                                                         String fullName,
+                                                                         SpecificationTemplate.UserSpec spec) {
 
         Specification<UserModel> combinedSpec = Specification.where(spec);
         if (active != null) {
