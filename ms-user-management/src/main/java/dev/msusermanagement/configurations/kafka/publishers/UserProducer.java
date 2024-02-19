@@ -1,4 +1,4 @@
-package dev.msusermanagement.configurations.kafka;
+package dev.msusermanagement.configurations.kafka.publishers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.msusermanagement.dtos.UserEventDto;

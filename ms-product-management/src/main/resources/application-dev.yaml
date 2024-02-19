@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ms-user-management
+    name: ms-product-management
   config:
     import: 'configserver:'
   cloud:

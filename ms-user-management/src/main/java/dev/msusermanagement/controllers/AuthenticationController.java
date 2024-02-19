@@ -1,7 +1,6 @@
 package dev.msusermanagement.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import dev.msusermanagement.configurations.kafka.UserProducer;
 import dev.msusermanagement.configurations.security.JwtProvider;
 import dev.msusermanagement.dtos.JwtDto;
 import dev.msusermanagement.dtos.LoginDto;

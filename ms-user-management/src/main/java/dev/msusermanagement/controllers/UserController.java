@@ -211,6 +211,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('USER')")
     @PutMapping("/{userId}")
     public ResponseEntity<Object> updateUser(@PathVariable(value = "userId") UUID userId,
                                              @RequestBody @Validated(UserDto.UserView.UserPut.class)
