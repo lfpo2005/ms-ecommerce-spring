@@ -1,7 +1,7 @@
 package dev.msusermanagement.services.impl;
 
 
-import dev.msusermanagement.configurations.kafka.UserProducer;
+import dev.msusermanagement.configurations.kafka.publishers.UserProducer;
 import dev.msusermanagement.dtos.UserEventDto;
 import dev.msusermanagement.enums.ActionType;
 import dev.msusermanagement.models.UserModel;
@@ -29,6 +29,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserModel> findAll() {
+
         return userRepository.findAll();
     }
 
@@ -97,8 +98,7 @@ public class UserServiceImpl implements UserService {
         userModel = save(userModel);
         var userEventDto = new UserEventDto();
         userEventDto.setUserId(userModel.getUserId());
-        userEventDto.setActive(userModel.getActive());
-        userEventDto.setDeleted(userModel.getDeleted());
+        userEventDto.setActive(userModel.getActive().toString());
         userEventDto.setUpdateAt(userModel.getUpdateAt().toString());
         userProducer.publishUserEvent(userEventDto, ActionType.DEACTIVATE);
         return userModel;
@@ -110,8 +110,7 @@ public class UserServiceImpl implements UserService {
         userModel = save(userModel);
         var userEventDto = new UserEventDto();
         userEventDto.setUserId(userModel.getUserId());
-        userEventDto.setActive(userModel.getActive());
-        userEventDto.setDeleted(userModel.getDeleted());
+        userEventDto.setActive(userModel.getActive().toString());
         userEventDto.setUpdateAt(userModel.getUpdateAt().toString());
         userProducer.publishUserEvent(userEventDto, ActionType.ACTIVE);
         return userModel;
@@ -130,8 +129,7 @@ public class UserServiceImpl implements UserService {
         userModel = save(userModel);
         var userEventDto = new UserEventDto();
         userEventDto.setUserId(userModel.getUserId());
-        userEventDto.setActive(userModel.getActive());
-        userEventDto.setDeleted(userModel.getDeleted());
+        userEventDto.setActive(userModel.getActive().toString());
         userEventDto.setUpdateAt(userModel.getUpdateAt().toString());
         userProducer.publishUserEvent(userEventDto, ActionType.DELETE);
         return userModel;
