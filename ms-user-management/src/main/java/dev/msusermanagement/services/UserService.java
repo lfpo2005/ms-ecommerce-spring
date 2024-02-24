@@ -19,7 +19,7 @@ public interface UserService {
     Boolean existsByFullName(String fullName);
     Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable);
     UserModel updatePassword(UserModel userModel);
-    UserModel updateUser(UserModel userModel);
+
     boolean existsByCpf(String encryptedCpf);
     UserModel saveUser(UserModel userModel);
     UserModel deactivateUser(UserModel userModel);

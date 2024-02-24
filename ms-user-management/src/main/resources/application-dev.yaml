@@ -12,8 +12,8 @@ spring:
 
 logging:
   level:
-    dev.ecommerce: TRACE
+    dev.msusermanagement: TRACE
     root: INFO
-    org.springframework.cache: INFO
-    org.springframework.web: TRACE
+    org.springframework.cache: DEBUG
+    org.springframework.web: DEBUG
     org.hibernate: INFO

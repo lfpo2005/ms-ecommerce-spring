@@ -44,7 +44,7 @@ public class AdminController {
             userModel.setUserType(UserType.ADMIN);
             userModel.setUpdateAt(LocalDateTime.now(ZoneId.of("UTC")));
             userModel.getRoles().add(roleModel);
-            userService.updateUser(userModel);
+            userService.saveUpdateUser(userModel);
             return ResponseEntity.status(HttpStatus.OK).body(userModel);
         }
     }

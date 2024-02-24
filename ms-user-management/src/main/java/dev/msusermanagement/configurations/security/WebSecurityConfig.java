@@ -46,6 +46,7 @@ public class WebSecurityConfig {
     };
 
     private static final String[] AUTH_WHITELIST = {
+            "/status/**",
             "/auth/**",
             "/swagger-ui/**",
             "/swagger-ui.html",
@@ -115,14 +116,14 @@ public class WebSecurityConfig {
                 .anyRequest().authenticated()
         );
 
-        /*        http.authorizeHttpRequests((authorize) -> {
-            authorize.requestMatchers(AUTH_WHITELIST).permitAll();
-            if (env.acceptsProfiles(Profiles.of("dev"))) {
-                authorize.anyRequest().permitAll();
-            } else {
-                authorize.anyRequest().authenticated();
-            }
-        });*/
+//                http.authorizeHttpRequests((authorize) -> {
+//            authorize.requestMatchers(AUTH_WHITELIST).permitAll();
+//            if (env.acceptsProfiles(Profiles.of("dev"))) {
+//                authorize.anyRequest().permitAll();
+//            } else {
+//                authorize.anyRequest().authenticated();
+//            }
+//        });
 
         // Disable CSRF (if using JWT or if CSRF is not needed)
         http.csrf(csrf -> csrf.disable())

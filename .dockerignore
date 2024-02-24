@@ -21,4 +21,4 @@
 
 # Outros arquivos gerados
 **/src/main/resources/application.properties
-target/**
+target/**/.env-dev

@@ -74,10 +74,6 @@ public class UserServiceImpl implements UserService {
     public Page<UserModel> findAll(Specification<UserModel> spec, Pageable pageable) {
         return userRepository.findAll(spec, pageable);
     }
-    @Override
-    public UserModel updateUser(UserModel userModel) {
-        return userRepository.save(userModel);
-    }
 
     @Override
     public boolean existsByCpf(String encryptedCpf) {
