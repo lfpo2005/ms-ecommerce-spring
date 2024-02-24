@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import jdk.jfr.Description;
 import lombok.*;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -28,9 +29,9 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID productId;
-    @Column(nullable = false, unique = true, length = 20)
+    @Column(length = 20)
     private String sku;
-    @Size(min = 10, message = "Nome do produto deve ter mais de 10 letras")
+    @Size(min = 5, message = "Nome do produto deve ter mais de 10 letras")
     @NotNull(message = "Nome do produto deve ser informado")
     @Column(nullable = false, unique = true, length = 60)
     private String name;
@@ -44,30 +45,29 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     private String qrCode;
     @NotNull(message = "Descrição do produto deve ser informada")
     @Column(columnDefinition = "text", length = 2000, nullable = false)
+    @Description("Descrição do produto")
     private String description;
-    @Size(max = 500)
-    private String classDescription;
     @JsonIgnore
     @Column(nullable = false)
     private Boolean active = true;
     @NotNull(message = "O tipo da unidade deve ser informado")
     @Column(nullable = false)
-    private String typeUnit;
+    private String typeUnit; //add em um enum
     private BigDecimal price = BigDecimal.ZERO;
     private BigDecimal promotionalPrice = BigDecimal.ZERO;
     private Boolean promotional = false;
-    @Column(nullable = false, unique = true, length = 5)
+    @Column(length = 5)
     private String weight;
-    @Column(nullable = false, unique = true, length = 5)
+    @Column(length = 5)
     private String height;
-    @Column(nullable = false, unique = true, length = 5)
+    @Column(length = 5)
     private String width;
-    @Column(nullable = false, unique = true, length = 5)
+    @Column(length = 5)
     private String depth;
     private Integer saleQuantity = 0;
     @Column(columnDefinition = "text", length = 2000)
     private String imageUrl;
-    @Column(columnDefinition = "text", length = 2000, nullable = false)
+    @Column(columnDefinition = "text", length = 2000)
     private String imageThumbnailUrl;
     private Integer stockQuantity = 0;
     private Integer stockMinimum = 0;

@@ -7,6 +7,9 @@ import dev.luisoliveira.msproductmanagement.services.SubCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Service
 public class SubCategoryServiceImpl implements SubCategoryService {
 
@@ -22,4 +25,11 @@ public class SubCategoryServiceImpl implements SubCategoryService {
     public SubCategoryModel save(SubCategoryModel subCategoryModel) {
         return subCategoryRepository.save(subCategoryModel);
     }
+
+    @Override
+    public Optional<SubCategoryModel> findById(UUID subCategoryId) {
+        return subCategoryRepository.findById(subCategoryId);
+    }
+
+
 }

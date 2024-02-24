@@ -3,6 +3,8 @@ package dev.luisoliveira.msproductmanagement.configurations.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
+import org.springframework.core.env.Profiles;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -43,6 +45,18 @@ public class WebSecurityConfig {
         roleHierarchy.setHierarchy(hierarchy);
         return roleHierarchy;
     }
+    @Autowired
+    private Environment env;
+    private static final String[] AUTH_WHITELIST = {
+            "/actuator/info",
+            "/status/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/v3/api-docs",
+            "/v3/api-docs.yaml",
+            "/v3/api-docs.yaml/**"
+    };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -57,14 +71,27 @@ public class WebSecurityConfig {
                 // Define session management policy
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                )
 
-        http.csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers
                         .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Origin", "*"))
                         .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization"))
                         .addHeaderWriter(new StaticHeadersWriter("Access-Control-Expose-Headers", "Authorization"))
-                );
+                )
+//                .authorizeHttpRequests((authorize) -> authorize
+//                        .requestMatchers(AUTH_WHITELIST).permitAll()
+//                        .anyRequest().authenticated()
+//                );
+
+                .authorizeHttpRequests((authorize) -> {
+            authorize.requestMatchers(AUTH_WHITELIST).permitAll();
+            if (env.acceptsProfiles(Profiles.of("dev"))) {
+                authorize.anyRequest().permitAll();
+            } else {
+                authorize.anyRequest().authenticated();
+            }
+        });
 
         return http.build();
     }

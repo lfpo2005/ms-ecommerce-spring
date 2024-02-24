@@ -5,8 +5,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
-import java.util.UUID;
-
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SubCategoryDto {
@@ -17,14 +15,11 @@ public class SubCategoryDto {
         public static interface SubCategoryPut {}
     }
 
-    //private UUID categoryId;
     @NotBlank(groups = {SubCategoryView.SubCategoryPost.class, SubCategoryView.SubCategoryPut.class})
     @JsonView({SubCategoryView.SubCategoryPost.class, SubCategoryView.SubCategoryPut.class})
     private String subCategoryName;
     @JsonView({SubCategoryView.SubCategoryPost.class, SubCategoryView.SubCategoryPut.class})
     private String description;
 
-    @JsonView({SubCategoryView.SubCategoryPost.class, SubCategoryView.SubCategoryPut.class})
-    private UUID categoryId;
 
 }

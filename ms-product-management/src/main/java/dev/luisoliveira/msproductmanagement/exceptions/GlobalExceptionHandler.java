@@ -6,10 +6,8 @@ import dev.luisoliveira.msproductmanagement.exceptions.helper.MessagesEnum;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.transaction.TransactionSystemException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -18,8 +16,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-import java.sql.SQLException;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
@@ -30,7 +27,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<Error> noHandlerFoundException(NoHandlerFoundException e) {
-        UUID errorId = UUID.randomUUID();
         log.error(e.getClass().getSimpleName(), e);
 
         var errorReason = "Caminho '" + e.getRequestURL() + "' não encontrado para método '" + e.getHttpMethod() + "'";
@@ -39,8 +35,7 @@ public class GlobalExceptionHandler {
                 MessagesEnum.HTTP_404_NOT_FOUND.getCode(),
                 e.getMessage(),
                 errorReason,
-                MessagesEnum.HTTP_404_NOT_FOUND.getDescription(),
-                errorId
+                MessagesEnum.HTTP_404_NOT_FOUND.getDescription()
         );
 
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
@@ -56,8 +51,8 @@ public class GlobalExceptionHandler {
                 MessagesEnum.HTTP_400_BAD_REQUEST.getCode(),
                 errorReason,
                 e.getMessage(),
-                MessagesEnum.HTTP_400_BAD_REQUEST.getDescription(),
-                UUID.randomUUID()
+                MessagesEnum.HTTP_400_BAD_REQUEST.getDescription()
+                
         );
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -73,8 +68,8 @@ public class GlobalExceptionHandler {
                 GenericErrorsEnum.METHOD_NOT_ALLOWED.getCode(),
                 errorReason,
                 e.getMessage(),
-                GenericErrorsEnum.METHOD_NOT_ALLOWED.getDescription(),
-                UUID.randomUUID()
+                GenericErrorsEnum.METHOD_NOT_ALLOWED.getDescription()
+                
         );
 
         return new ResponseEntity<>(response, HttpStatus.METHOD_NOT_ALLOWED);
@@ -91,8 +86,7 @@ public class GlobalExceptionHandler {
                 (e.getBindingResult().getFieldError() != null)
                         ? e.getBindingResult().getFieldError().getDefaultMessage()
                         : e.getMessage(),
-                GenericErrorsEnum.BAD_REQUEST.getDescription(),
-                UUID.randomUUID()
+                GenericErrorsEnum.BAD_REQUEST.getDescription()
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
@@ -104,28 +98,14 @@ public class GlobalExceptionHandler {
                 GenericErrorsEnum.ERROR_GENERIC.getCode(),
                 GenericErrorsEnum.ERROR_GENERIC.getReason(),
                 e.getMessage(),
-                GenericErrorsEnum.ERROR_GENERIC.getDescription(),
-                UUID.randomUUID()
+                GenericErrorsEnum.ERROR_GENERIC.getDescription()
         );
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
-    @ExceptionHandler(value = {DataIntegrityViolationException.class,
-            ConstraintViolationException.class, SQLException.class, TransactionSystemException.class, JpaSystemException.class})
-    public ResponseEntity<Object> handleExceptionDataIntegrate(Exception ex){
-        log.error(ex.getClass().getSimpleName(), ex);
-        var response = new Error(
-                GenericErrorsEnum.BAD_REQUEST.getCode(),
-                GenericErrorsEnum.BAD_REQUEST.getReason(),
-                ex.getMessage(),
-                GenericErrorsEnum.BAD_REQUEST.getDescription(),
-                UUID.randomUUID()
-        );
 
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-    }
 
 
     @ExceptionHandler(value = {NotFoundException.class})
@@ -135,8 +115,7 @@ public class GlobalExceptionHandler {
                 GenericErrorsEnum.NOT_FOUND.getCode(),
                 GenericErrorsEnum.NOT_FOUND.getReason(),
                 ex.getMessage(),
-                GenericErrorsEnum.NOT_FOUND.getDescription(),
-                UUID.randomUUID()
+                GenericErrorsEnum.NOT_FOUND.getDescription()
         );
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);    }
 
@@ -147,9 +126,59 @@ public class GlobalExceptionHandler {
                 GenericErrorsEnum.BAD_REQUEST.getCode(),
                 GenericErrorsEnum.BAD_REQUEST.getReason(),
                 ex.getMessage(),
-                GenericErrorsEnum.BAD_REQUEST.getDescription(),
-                UUID.randomUUID()
+                GenericErrorsEnum.BAD_REQUEST.getDescription()
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+
+
+    @ExceptionHandler(TransactionSystemException.class)
+    public ResponseEntity<Error> handleTransactionSystemException(TransactionSystemException e) {
+        Throwable cause = e.getRootCause();
+        if (cause instanceof ConstraintViolationException) {
+            ConstraintViolationException constraintViolationException = (ConstraintViolationException) cause;
+
+            String messages = constraintViolationException.getConstraintViolations().stream()
+                    .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+                    .collect(Collectors.joining(", "));
+
+            var response = new Error(
+                    GenericErrorsEnum.BAD_REQUEST.getCode(),
+                    GenericErrorsEnum.BAD_REQUEST.getReason(),
+                    messages,
+                    GenericErrorsEnum.BAD_REQUEST.getDescription()
+            );
+
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        } else {
+            log.error(e.getClass().getSimpleName(), e);
+            var response = new Error(
+                    GenericErrorsEnum.BAD_REQUEST.getCode(),
+                    GenericErrorsEnum.BAD_REQUEST.getReason(),
+                    e.getMessage(),
+                    GenericErrorsEnum.BAD_REQUEST.getDescription()
+            );
+
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+    }
+//ConstraintViolationException
+    /*
+    @ExceptionHandler(value = {DataIntegrityViolationException.class,
+          SQLException.class, TransactionSystemException.class, JpaSystemException.class})
+    public ResponseEntity<Object> handleExceptionDataIntegrate(Exception ex){
+        log.error(ex.getClass().getSimpleName(), ex);
+        var response = new Error(
+                GenericErrorsEnum.BAD_REQUEST.getCode(),
+                GenericErrorsEnum.BAD_REQUEST.getReason(),
+                ex.getMessage(),
+                GenericErrorsEnum.BAD_REQUEST.getDescription()
+
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+*/
+
 }
