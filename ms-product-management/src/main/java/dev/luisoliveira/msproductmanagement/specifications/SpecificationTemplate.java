@@ -17,6 +17,7 @@ public class SpecificationTemplate {
 
     @Or({
             @Spec(path = "name", spec = Like.class),
+            @Spec(path = "sku", spec = Equal.class),
             @Spec(path = "codeBar", spec = Equal.class)
     })
     public interface ProductSpec extends Specification<ProductModel> {}

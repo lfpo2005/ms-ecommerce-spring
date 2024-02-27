@@ -22,7 +22,7 @@ public class UserProducer {
     private String kafkaUrl;
 
     @Autowired
-    public UserProducer(@Value("${kafka.topic.name}") String topicName,
+    public UserProducer(@Value("${kafka.topics.new-user.name}") String topicName,
                         @Value("${spring.kafka.bootstrap-servers}") String kafkaUrl) {
         this.topicName = topicName;
         this.kafkaUrl = kafkaUrl;

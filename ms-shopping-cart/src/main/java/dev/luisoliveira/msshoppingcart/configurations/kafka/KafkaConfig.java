@@ -1,6 +1,6 @@
-package dev.luisoliveira.msproductmanagement.configurations.kafka;
+package dev.luisoliveira.msshoppingcart.configurations.kafka;
 
-import dev.luisoliveira.msproductmanagement.dtos.UserEventDto;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -20,36 +20,33 @@ public class KafkaConfig {
     @Value("${spring.kafka.bootstrap-servers}")
     private String kafkaUrl;
 
-//    @Value("${kafka.topic.groupId}")
-//    private String groupId;
-
     @Bean
-    public ConsumerFactory<String, UserEventDto> consumerFactory() {
+    public ConsumerFactory<String, JsonNode> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaUrl);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, UserEventDto.class);
+        props.put(JsonDeserializer.VALUE_DEFAULT_TYPE, JsonNode.class);
         props.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-        return new DefaultKafkaConsumerFactory<>(props);
+        return new DefaultKafkaConsumerFactory<>(props, new StringDeserializer(),
+                new JsonDeserializer<>(JsonNode.class));
     }
 
     @Bean
-    public ConcurrentKafkaListenerContainerFactory<String, UserEventDto> kafkaListenerContainerFactory() {
-        ConcurrentKafkaListenerContainerFactory<String, UserEventDto> factory =
+    public ConcurrentKafkaListenerContainerFactory<String, JsonNode> kafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory<String, JsonNode> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
     }
 
+
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate() {
         return new KafkaTemplate<>(producer());
     }
-
-
 
     private ProducerFactory<String, String> producer() {
         Map<String, Object> props = new HashMap<>();
@@ -59,6 +56,5 @@ public class KafkaConfig {
 
         return new DefaultKafkaProducerFactory<>(props);
     }
-
 
 }

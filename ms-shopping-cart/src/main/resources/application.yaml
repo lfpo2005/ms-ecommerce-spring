@@ -2,4 +2,5 @@ spring:
   profiles:
     active: dev
   application:
-    name: ms-user-management
+    name: ms-shopping-cart
+

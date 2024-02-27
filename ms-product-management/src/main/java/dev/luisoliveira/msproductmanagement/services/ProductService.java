@@ -16,4 +16,6 @@ public interface ProductService {
     Page<ProductModel> findAllBySubCategory(Specification<ProductModel> spec, Pageable pageable);
 
     Optional<ProductModel> findProductIntoSubCategory(UUID subCategoryId, UUID productId);
+
+    ProductModel saveProduct(ProductModel productModel);
 }

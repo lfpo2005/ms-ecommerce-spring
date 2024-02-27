@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import dev.luisoliveira.msproductmanagement.dtos.ProductEventDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import jdk.jfr.Description;
 import lombok.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
@@ -29,7 +31,7 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID productId;
-    @Column(length = 20)
+    @Column(length = 20, unique = true, nullable = false)
     private String sku;
     @Size(min = 5, message = "Nome do produto deve ter mais de 10 letras")
     @NotNull(message = "Nome do produto deve ser informado")
@@ -82,4 +84,13 @@ public class ProductModel extends RepresentationModel<ProductModel> implements S
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     private SubCategoryModel subCategory;
+
+    public ProductEventDto convertToProductEventModel(){
+        var productEventDto = new ProductEventDto();
+        BeanUtils.copyProperties(this, productEventDto);
+        productEventDto.setPromotional(this.getPromotional().toString());
+        productEventDto.setPrice(this.getPrice().toString());
+        productEventDto.setPromotionalPrice(this.getPromotionalPrice().toString());
+        return productEventDto;
+    }
 }

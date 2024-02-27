@@ -1,5 +1,7 @@
 package dev.luisoliveira.msproductmanagement.services.impl;
 
+import dev.luisoliveira.msproductmanagement.configurations.kafka.publishers.ProductProducer;
+import dev.luisoliveira.msproductmanagement.enums.ActionType;
 import dev.luisoliveira.msproductmanagement.models.ProductModel;
 import dev.luisoliveira.msproductmanagement.repositories.ProductRepository;
 import dev.luisoliveira.msproductmanagement.services.ProductService;
@@ -18,6 +20,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     ProductRepository productRepository;
+
+    @Autowired
+    ProductProducer productProducer;
 
     @Transactional
     @Override
@@ -38,6 +43,13 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Optional<ProductModel> findProductIntoSubCategory(UUID subCategoryId, UUID productId) {
         return productRepository.findProductIntoSubCategory(subCategoryId, productId);
+    }
+
+    @Override
+    public ProductModel saveProduct(ProductModel productModel) {
+        productModel = save(productModel);
+        productProducer.publishProductEvent(productModel.convertToProductEventModel(), ActionType.CREATE);
+        return productModel;
     }
 
 

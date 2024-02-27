@@ -18,7 +18,7 @@ public class UserConsumer {
         this.userService = userService;
     }
 
-    @KafkaListener(topics = "${kafka.listener.topics.name}", groupId = "${kafka.topic.groupId}")
+    @KafkaListener(topics = {"stg_topic_new_user"}, groupId = "group-product")
     public void consume(UserEventDto userEventDto) throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.ACCEPT_EMPTY_ARRAY_AS_NULL_OBJECT, true);
@@ -32,22 +32,6 @@ public class UserConsumer {
             case DELETE:
                 userService.delete(userEventDto.getUserId());
                 break;
-
         }
-
-
-/*    @KafkaListener(topics = "${kafka.listener.topics.name}", groupId = "${kafka.topic.groupId}")
-    public void consume(UserEventDto userEventDto) {
-        var userModel = userEventDto.convertToUserModel();
-        switch (userEventDto.getActionType()) {
-            case CREATE:
-            case UPDATE:
-                userService.save(userModel);
-                break;
-            case DELETE:
-                userService.delete(userEventDto.getUserId());
-                break;
-        }
-    }*/
     }
 }

@@ -1,17 +1,16 @@
-package dev.luisoliveira.msproductmanagement.configurations.kafka.publishers;
+package dev.luisoliveira.msshoppingcart.configurations.kafka.publishers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dev.luisoliveira.msproductmanagement.dtos.ProductEventDto;
-import dev.luisoliveira.msproductmanagement.enums.ActionType;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public class ProductProducer {
 
-    @Autowired
+/*    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
     public void publishProductEvent(ProductEventDto productEventDto, ActionType actionType) {
@@ -24,5 +23,5 @@ public class ProductProducer {
         }
 
         kafkaTemplate.send("stg_topic_products", actionType.toString(), productEventDtoJson);
-    }
+    }*/
 }

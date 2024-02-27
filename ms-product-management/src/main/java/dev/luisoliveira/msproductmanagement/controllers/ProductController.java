@@ -58,7 +58,7 @@ public class ProductController {
                 productModel.setSubCategory(subCategoryModelOptional.get());
                 log.debug("ProductModel created: {} ", productModel.getProductId());
                 log.info("Saving new product, productId: {} to the database", productModel.getProductId());
-                productService.save(productModel);
+                productService.saveProduct(productModel);
                 return ResponseEntity.status(HttpStatus.CREATED).body(productDto);
             }
         } catch (Exception e) {

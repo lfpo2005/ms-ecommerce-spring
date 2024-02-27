@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ms-user-management
+    name: ms-shopping-cart
   config:
     import: 'configserver:'
   cloud:

@@ -93,15 +93,12 @@ public class UserModel extends RepresentationModel<UserModel> implements Seriali
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleModel> roles = new HashSet<>();
 
-
     public UserEventDto convertToUserEventDto() {
         var userEventDto = new UserEventDto();
         BeanUtils.copyProperties(this, userEventDto);
         userEventDto.setUserType(this.getUserType().toString());
         userEventDto.setUpdateAt(this.getUpdateAt().toString());
         userEventDto.setActive(this.getActive().toString());
-
         return userEventDto;
-
     }
 }
